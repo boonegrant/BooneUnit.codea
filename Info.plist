@@ -9,6 +9,11 @@
 		<string>CodeaUnit</string>
 		<string>BooneUnit</string>
 		<string>Main</string>
+		<string>Newfeature</string>
+	</array>
+	<key>Dependencies</key>
+	<array>
+		<string>Documents:table-tostring</string>
 	</array>
 	<key>Description</key>
 	<string>No description available</string>
