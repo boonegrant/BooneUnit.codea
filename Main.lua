@@ -19,8 +19,15 @@ end
 
 function memberTypeTest( targetDescription, target, targetMembersAndTypes )
     for key, value in pairs( targetMembersAndTypes ) do
-        _:test( string.format( 'Member test: %s contains %s "%s"',targetDescription, value, key ), function ()
+        _:test( string.format( 'Member type test: %s contains %s "%s"',targetDescription, value, key ), function ()
             _:expect( type( target[ key ] ) ).is( value )
+        end )
+    end
+end
+function memberValueTest( targetDescription, target, targetMembersAndValues )
+    for key, value in pairs( targetMembersAndValues ) do
+        _:test( string.format( 'Value test: %s["%s"] is "%s"',targetDescription, key, value ), function ()
+            _:expect( target[ key ] ).is( value )
         end )
     end
 end
@@ -49,13 +56,7 @@ function testBooneUnit()
                               reset = "function",
                               bork = "number",
                               beck = "number" }
-        for key, value in pairs( unitMembers ) do
-            _:test( string.format( 'booneUnit contains %s "%s"', value, key ), function ()
-                _:expect( type( booneUnit[ key ] ) ).is( value )
-            end )
-        end
-        
-        memberTypeTest( "auto booneUnit", booneUnit, unitMembers )
+        memberTypeTest( "booneUnit", booneUnit, unitMembers )
         
         ---[[ features is empty
         _:test( "booneUnit.features is empty", function ()
@@ -92,6 +93,11 @@ function testBooneUnit()
             _:expect( f[1] ).isnt( nil )
         end )
         
+        _:test( ".currentFeature == .features[1]", function ()
+            local t = booneUnit
+            _:expect( t.currentFeature ).is( t.features[1] )
+        end )
+        
         -- feature members 
         local featureMembers = { description = "string", 
                                  tests = "table", 
@@ -99,14 +105,14 @@ function testBooneUnit()
                                  runTests = "function",
                                  before = "function",
                                  after = "function" }
-        for k, v in pairs( featureMembers ) do
-            _:test( "features[1] has " .. k, function ()
-                local f = booneUnit.features
-                _:expect( f[ 1 ][ k ] ).isnt( nil )
-            end )
-        end
         memberTypeTest( "features[1]", booneUnit.features[1], featureMembers )
-        
+        local featureValues = { description = featureDesc, 
+                                tests = {}, 
+                                numTests = 0, 
+                                runTests = featureFunc,
+                                before = booneUnit.newFeature.before, 
+                                after = booneUnit.newFeature.after }
+        memberValueTest( "features[1]", booneUnit.features[1], featureValues )
         -- feature description 
         _:test( "feature description matches argument", function ()
             local target = booneUnit.features[1]

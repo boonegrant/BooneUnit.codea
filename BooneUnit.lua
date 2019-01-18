@@ -6,6 +6,7 @@ function booneUnit:reset ()
     self.bork = 17
     self.beck = 0.852
 end
+booneUnit:reset()
 
 function booneUnit:describe ( featureDescription, allTests )
     self.currentTest = nil    
@@ -45,6 +46,8 @@ end
 function booneUnit.newFeature:results()
     string.format( "Feature: %s -- Results go here", self.description )
 end
+function booneUnit.newFeature.before() end
+function booneUnit.newFeature.after() end
 
 -- Test class --
 booneUnit.newTest = class()
