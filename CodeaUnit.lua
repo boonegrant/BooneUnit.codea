@@ -14,8 +14,8 @@ function CodeaUnit:describe(feature, allTests)
     allTests()
 
     local passed = self.tests - self.failures - self.ignored - self.pending
-    local summary = string.format("%d Passed, %d Ignored, %d Failed, %d Pending", 
-                                  passed, self.ignored, self.failures, self.pending)
+    local summary = string.format("%s:\n%d Passed, %d Ignored, %d Pending, %d Failed", 
+                                  feature, passed, self.ignored, self.pending, self.failures)
     print(summary)
 end
 

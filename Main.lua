@@ -2,6 +2,27 @@
 
 -- Use this function to perform your initial setup
 function setup()
+    afun = function() 
+        print( "Average expectations" )
+        -- booneUnit.expect( math.pi ).is( 3 )
+    end
+    somefun = function() 
+        print( "Yabba-Dabba-Doo!" )
+        booneUnit:test( "Great: 2 + 2 = 4", function()
+            print("Great expectations")
+            -- booneUnit:expect( 2 + 2 ).is( 4 )
+        end )
+    end
+    
+    bloop = {}
+    bloop[somefun]=4
+    
+    print( table.tostring( bloop ) )
+    booneUnit:test("Average pie", afun )
+    booneUnit:test("Still average pie", afun )
+    booneUnit:describe( "Fred Flintstone", somefun )
+    booneUnit:describe( "Fred Flintstone 2", somefun )
+    booneUnit:test( "Would you like more pie?", afun )
     print("Hello World!")
 end
 
@@ -19,7 +40,7 @@ end
 
 function memberTypeTest( targetDescription, target, targetMembersAndTypes )
     for key, value in pairs( targetMembersAndTypes ) do
-        _:test( string.format( 'Member type test: %s contains %s "%s"',targetDescription, value, key ), function ()
+        _:test( string.format( 'Type test: %s contains %s "%s"',targetDescription, value, key ), function ()
             _:expect( type( target[ key ] ) ).is( value )
         end )
     end
@@ -34,16 +55,34 @@ end
 
 function testBooneUnit()
     --CodeaUnit.detailed = false
-    _:describe( "booneUnit", function ()
+    local theFeature = ""
+    local testDesc = "this is a test"
+    local testFunc = function ()
+        print( "testing!" )
+        return "some results"
+    end
+    local featureDesc = "HomerSimpson"
+    local featureFunc = function( scope ) 
+        print("woo-hoo!")
+        --test( testDesc, testFunc )
+        return( 42 )
+    end
+
+    -- Feature Creation --
+    _:describe( "booneUnit creates features", function ()
         _:before( function() end )
         
         _:test( "booneUnit exists", function ()
             _:expect( booneUnit ).isnt( nil )
         end )
         
-        -- init
-        _:test( "set/reset", function ()
+        -- reset exists
+        _:test( "reset exists", function ()
             _:expect( booneUnit.reset ).isnt( nil )
+        end )
+        
+        -- do a reset
+        _:test( "call booneUnit:reset() ", function ()
             _:expect( booneUnit:reset() ).is( nil )
         end )
         
@@ -71,19 +110,8 @@ function testBooneUnit()
         end )
         
         --call :describe()
-        local testDesc = "this is a test"
-        local testFunc = function ()
-            print( "testing!" )
-            return "some results"
-        end
-        local featureDesc = "printsomething"
-        local featureFunc = function( scope ) 
-            print("woo-hoo!")
-            --test( testDesc, testFunc )
-            return( 42 )
-        end
         _:test( "call describe(), returns nil", function ()
-            _:expect( booneUnit:describe( featureDesc, featureFunc ) ).is( nil )
+            _:expect( booneUnit:describe( featureDesc, featureFunc ) ).isnt( nil )
         end )
         
         -- features not empty
@@ -93,23 +121,25 @@ function testBooneUnit()
             _:expect( f[1] ).isnt( nil )
         end )
         
-        _:test( ".currentFeature == .features[1]", function ()
+        _:test( ".currentFeature is nil again", function ()
             local t = booneUnit
-            _:expect( t.currentFeature ).is( t.features[1] )
+            _:expect( t.currentFeature ).is( nil )
         end )
-        
+    end )
+    
+    -- Feature Properties --
+    _:describe( '"booneUnit:define()" results', function()
         -- feature members 
         local featureMembers = { description = "string", 
                                  tests = "table", 
-                                 numTests = "number", 
+                                 featureTests = "function", 
                                  runTests = "function",
                                  before = "function",
                                  after = "function" }
         memberTypeTest( "features[1]", booneUnit.features[1], featureMembers )
         local featureValues = { description = featureDesc, 
-                                tests = {}, 
-                                numTests = 0, 
-                                runTests = featureFunc,
+                                featureTests = featureFunc,
+                                runTests = booneUnit.newFeature.runTests,
                                 before = booneUnit.newFeature.before, 
                                 after = booneUnit.newFeature.after }
         memberValueTest( "features[1]", booneUnit.features[1], featureValues )
@@ -122,7 +152,9 @@ function testBooneUnit()
         -- run feature tests 
         _:test( "run feature tests", function ()
             local target = booneUnit.features[1]
-            _:expect( target.runTests() ).is( nil )
+            _:expect( target.featureTests ).isnt( nil )
+            _:expect( target.runTests ).isnt( nil )
+            _:expect( target:runTests() ).is( nil )
         end )
         --]]
     end )

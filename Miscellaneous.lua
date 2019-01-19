@@ -1,11 +1,14 @@
-somefun = function() 
-    print( "Yabba-Dabba-Doo!" )
+function testCodeaUnitFunctions()
+    local ut = booneUnit
+    local bart = "Cowabunga!"
+    ut:test( "bart is bart", function() 
+        ut:expect( bart ).is( bart )
+    end )
+    ut:test( "bart is string", function() 
+        ut:expect( type( bart ) ).is( "string" )
+    end )
 end
 
-bloop = {}
-bloop[somefun]=4
-
-print( table.tostring( bloop ) )
 
 -- output to clipboard
 -- output to project tab
