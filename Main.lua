@@ -55,18 +55,22 @@ end
 
 function testBooneUnit()
     --CodeaUnit.detailed = false
+    local bu = booneUnit
     local theFeature = ""
-    local testDesc = "this is a test"
+    local testDesc = "location: Springfield"
     local testFunc = function ()
-        print( "testing!" )
-        return "some results"
+        print( "324 Evergreen Terrace" )
+        -- return "Shelbyville"
     end
     local featureDesc = "HomerSimpson"
     local featureFunc = function( scope ) 
         print("woo-hoo!")
-        --test( testDesc, testFunc )
+        bu:test( testDesc, testFunc )
         return( 42 )
     end
+    
+    booneUnit:reset()
+    booneUnit:describe(featureDesc, featureFunc)
 
     -- Feature Creation --
     _:describe( "booneUnit creates features", function ()

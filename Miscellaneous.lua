@@ -1,4 +1,4 @@
-function testCodeaUnitFunctions()
+function bestCodeaUnitFunctions()
     local ut = booneUnit
     local bart = "Cowabunga!"
     ut:test( "bart is bart", function() 

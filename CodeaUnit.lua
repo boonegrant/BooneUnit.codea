@@ -85,7 +85,7 @@ function CodeaUnit:expect(conditional)
             failed()
         end
     end
-
+    
     local is = function(expected)
         self.expected = expected
         notify(conditional == expected)
