@@ -54,10 +54,10 @@ end
 
 -- Feature class --
 booneUnit.newFeature = class()
-function booneUnit.newFeature:init( featureDescription , allTests )
+function booneUnit.newFeature:init( featureDescription , allFeatureTests )
     self.description = featureDescription or ""
     self.tests = {}
-    self.featureTests = allTests or ( function() end )  -- test for value = function?
+    self.featureTests = allFeatureTests or ( function() end )  -- test for value = function?
 end
 function booneUnit.newFeature:runTests()
     print( self:intro() )
@@ -70,6 +70,7 @@ function booneUnit.newFeature:intro()
 end
 function booneUnit.newFeature:results()
     return string.format( "Feature: %s \nResults go here", self.description )
+    -- do some tallying
 end
 function booneUnit.newFeature.before() end
 function booneUnit.newFeature.after() end
@@ -82,6 +83,13 @@ function booneUnit.newTest:init( parent, testDescription, scenario )
     self.test = scenario or ( function() end )
 end
 function booneUnit.newTest:run()
-    self:test()
+    local status, err = pcall(self.test)
+    if err then
+        --self.failures = self.failures + 1
+        print(string.format("%d: %s -- %s \n--FAIL", 69, self.description, err))
+        --store result
+    end
+end
+function booneUnit.newTest:registerResult()
 end
 
