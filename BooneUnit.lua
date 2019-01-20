@@ -1,11 +1,11 @@
-booneUnit = {}
+booneUnit = {resultTypes={"pass", "ignore", "pending", "fail"},
+             errorMsgs={ noCurrentTest = ":expect() statements should be placed inside a :test declaration" }
+            }
 function booneUnit:reset ()
     self.features = {}
     self.currentFeature = nil
     self.currentTest = nil
     self.aHomeForOrphanTests = nil
-    self.bork = 17
-    self.beck = 0.852
 end
 booneUnit:reset()
 
@@ -20,15 +20,21 @@ end
 
 function booneUnit:test( testDescription, scenario )
     print( string.format( "booneUnit.test( %s, %s )", testDescription, scenario ) )
-    thisFeature = self.currentFeature or self:orphanage()
-    thisTest = booneUnit.newTest( thisFeature, testDescription, scenario )
+    local thisFeature = self.currentFeature or self:orphanage()
+    local thisTest = booneUnit.newTest( thisFeature, testDescription, scenario )
     table.insert( thisFeature.tests, thisTest )   
-    self.currentTest = thisTest
     thisFeature:before()
+    self.currentTest = thisTest
     thisTest:run()
+    self.currentTest = nil
     thisFeature:after()
 end
 
+--[[
+function booneUnit:expect( conditional )
+    
+end
+--]]
 function booneUnit:ignore( description, scenario ) 
 end
 
@@ -87,9 +93,70 @@ function booneUnit.newTest:run()
     if err then
         --self.failures = self.failures + 1
         print(string.format("%d: %s -- %s \n--FAIL", 69, self.description, err))
+        self:registerResult( "fail", err )
         --store result
     end
 end
-function booneUnit.newTest:registerResult()
+function booneUnit.newTest:registerResult( outcome, expected )
+    print( string.format( "Result: %s -- %s", outcome, expected ) )
+end
+function booneUnit.newTest:report()
+    
 end
 
+
+function booneUnit:expect( conditional )
+    print( "booneUnit now expecting…" )
+    local thisTest = self.currentTest
+    if thisTest == nil then
+        -- error( self.errorMsgs[ noCurrentTest ] )
+        return nil
+    end
+    
+    local notify = function( result, expectation )
+        if result then
+            thisTest:registerResult( "pass", expectation )
+        else
+            thisTest:registerResult( "fail", expectation )
+        end
+    end
+    
+    local is = function(expected)
+        -- self.expected = expected
+        notify(conditional == expected, expected)
+    end
+
+    local isnt = function(expected)
+        -- self.expected = expected
+        notify( conditional ~= expected, string.format("not %s", expected) )
+    end
+
+    local has = function(expected)
+        -- self.expected = expected
+        local found = false
+        for k,v in pairs(conditional) do
+            if v == expected then
+                found = true
+            end
+        end
+        notify(found, expected)
+    end
+
+    local throws = function(expected)
+        -- self.expected = expected
+        local status, error = pcall(conditional)
+        if not error then
+            conditional = "nothing thrown"
+            notify(false)
+        else
+            notify(string.find(error, expected, 1, true), error)
+        end
+    end
+
+    return {
+        is = is,
+        isnt = isnt,
+        has = has,
+        throws = throws
+    }
+end

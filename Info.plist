@@ -10,6 +10,7 @@
 		<string>BooneUnit</string>
 		<string>Main</string>
 		<string>Miscellaneous</string>
+		<string>booneUnitTests</string>
 	</array>
 	<key>Dependencies</key>
 	<array>
