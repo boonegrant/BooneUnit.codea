@@ -3,15 +3,15 @@
 -- Use this function to perform your initial setup
 function setup()
     afun = function() 
-        print( "Average expectations" )
-        booneUnit:expect( math.pie() ).is( 3 )
+        -- print( "Average expectations" )
+        -- booneUnit:expect( math.pie() ).is( 3 )
     end
     somefun = function() 
-        print( "Yabba-Dabba-Doo!" )
-        booneUnit:test( "Great: 2 + 2 = 4", function()
-            print("Great expectations")
-            booneUnit:expect( 2 + 2 ).is( 4 )
-        end )
+        -- print( "Yabba-Dabba-Doo!" )
+        -- booneUnit:test( "Great: 2 + 2 = 4", function()
+            -- print("Great expectations")
+            -- booneUnit:expect( 2 + 2 ).is( 4 )
+        -- end )
     end
     
     bloop = {}

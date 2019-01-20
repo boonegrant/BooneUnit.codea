@@ -2,28 +2,23 @@
 function testBooneUnit()
     --CodeaUnit.detailed = false
     local bu = booneUnit
-    local theFeature = ""
-    local testDesc = "location: Springfield"
-    local testFunc = function ()
+    -- local theFeature = ""
+    local atestDesc = "location: Springfield"
+    local atestFunc = function ()
         print( "324 Evergreen Terrace" )
-        -- return "Shelbyville"
+        return "Shelbyville"
     end
-    local featureDesc = "HomerSimpson"
-    local featureFunc = function( scope ) 
+    local afeatureDesc = "HomerSimpson"
+    local afeatureFunc = function( scope ) 
         print("woo-hoo!")
         bu:test( testDesc, testFunc )
         return( 42 )
     end
     
     booneUnit:reset()
-    booneUnit:describe(featureDesc, featureFunc)
 
     -- booneUnit is something --
     _:describe( "booneUnit can be and is initialized", function()
-        
-    end )
-    -- Feature Creation --
-    _:describe( "booneUnit creates Features", function ()
         _:test( "booneUnit exists", function ()
             _:expect( booneUnit ).isnt( nil )
         end )
@@ -38,6 +33,13 @@ function testBooneUnit()
             _:expect( booneUnit:reset() ).is( nil )
         end )
         
+        
+    end )
+end
+
+function lestMoonUnit() 
+    -- Feature Creation --
+    _:describe( "booneUnit creates Features", function ()
         --[[
         _:before( function() end )
         
