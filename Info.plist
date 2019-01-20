@@ -8,9 +8,9 @@
 	<array>
 		<string>CodeaUnit</string>
 		<string>BooneUnit</string>
+		<string>booneUnitTests</string>
 		<string>Main</string>
 		<string>Miscellaneous</string>
-		<string>booneUnitTests</string>
 	</array>
 	<key>Dependencies</key>
 	<array>

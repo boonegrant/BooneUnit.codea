@@ -40,6 +40,7 @@ end
 
 function booneUnit:before(setup)
     if self.currentFeature then self.currentFeature.before = setup end
+    -- error message: before and after must be inside a describe: declaration
 end
 function booneUnit:after(teardown)
     if self.currentFeature then self.currentFeature.after = teardown end

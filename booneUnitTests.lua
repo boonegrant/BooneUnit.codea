@@ -23,6 +23,15 @@ function testBooneUnit()
             _:expect( booneUnit ).isnt( nil )
         end )
         
+        -- Public methods list
+        local publicUnitMethods = { describe = "function",
+                                    test = "function",
+                                    reset = "function",
+                                    ignore = "function",
+                                    before = "function",
+                                    after = "function" }
+        memberTypeTest( "public methods: booneUnit", booneUnit, publicUnitMethods )
+        
         -- reset exists
         _:test( "reset exists", function ()
             _:expect( booneUnit.reset ).isnt( nil )
@@ -33,6 +42,16 @@ function testBooneUnit()
             _:expect( booneUnit:reset() ).is( nil )
         end )
         
+        -- booneUnit private member tests
+        local privateUnitMembers = { features = "table", 
+                                     resultTypes = "table",
+                                     errorMsgs = "table",
+                                     currentFeature = "nil", 
+                                     currentTest = "nil", 
+                                     orphanage = "function", 
+                                     aHomeForOrphanTests = "nil" }
+        memberTypeTest( "post-reset booneUnit", booneUnit, privateUnitMembers )
+                                      
         
     end )
 end
