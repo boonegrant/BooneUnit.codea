@@ -42,7 +42,7 @@ function testBooneUnit()
             _:expect( booneUnit:reset() ).is( nil )
         end )
         
-        -- booneUnit private member tests
+        -- booneUnit post-reset tests
         local privateUnitMembers = { features = "table", 
                                      resultTypes = "table",
                                      errorMsgs = "table",
@@ -51,6 +51,20 @@ function testBooneUnit()
                                      orphanage = "function", 
                                      aHomeForOrphanTests = "nil" }
         memberTypeTest( "post-reset booneUnit", booneUnit, privateUnitMembers )
+        -- features is emptyl
+        _:test( "booneUnit.features has 0 length", function ()
+            local f = booneUnit.features
+            _:expect( #f ).is( 0 )
+        end )
+        _:test( "booneUnit.features is empty", function()
+            local f = booneUnit.features
+            local found = false
+            for key, value in pairs( f ) do
+                if key then found = true end
+                if value then found = true end
+            end
+            _:expect( found==false ).is( true )
+        end )
                                       
         
     end )
