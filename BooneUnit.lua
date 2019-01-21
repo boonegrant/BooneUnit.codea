@@ -28,6 +28,7 @@ function booneUnit:test( testDescription, scenario )
     thisTest:run()
     self.currentTest = nil
     thisFeature:after()
+    return thisTest
 end
 
 --[[

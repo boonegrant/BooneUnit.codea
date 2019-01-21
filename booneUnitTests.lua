@@ -18,7 +18,7 @@ function testBooneUnit()
     booneUnit:reset()
 
     -- booneUnit is something --
-    _:describe( "booneUnit can be and is initialized", function()
+    _:describe( "BooneUnit initial state", function()
         _:test( "booneUnit exists", function ()
             _:expect( booneUnit ).isnt( nil )
         end )
@@ -51,7 +51,8 @@ function testBooneUnit()
                                      orphanage = "function", 
                                      aHomeForOrphanTests = "nil" }
         memberTypeTest( "post-reset booneUnit", booneUnit, privateUnitMembers )
-        -- features is emptyl
+        
+        -- features is empty
         _:test( "booneUnit.features has 0 length", function ()
             local f = booneUnit.features
             _:expect( #f ).is( 0 )
@@ -65,8 +66,13 @@ function testBooneUnit()
             end
             _:expect( found==false ).is( true )
         end )
-                                      
-        
+    end )
+    
+    -- booneUnit.test()
+    _:describe( "booneUnit.test() returns a test object", function()
+        _:test( "booneUnit.test() exists", function()
+            _:expect( type( booneUnit.test ) ).is( "function" )
+        end )
     end )
 end
 
