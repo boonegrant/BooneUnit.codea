@@ -1,4 +1,4 @@
-booneUnit = {resultTypes={"pass", "ignore", "pending", "fail"},
+booneUnit = {resultTypes={"pass", "ignore", "pending", "empty test", "fail"},
              errorMsgs={ noCurrentTest = ":expect() statements should be placed inside a :test declaration" }
             }
 function booneUnit:reset ()

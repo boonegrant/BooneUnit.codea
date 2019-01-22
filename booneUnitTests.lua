@@ -31,6 +31,22 @@ function testBooneUnit()
                                     before = "function",
                                     after = "function" }
         memberTypeTest( "public methods: booneUnit", booneUnit, publicUnitMethods )
+        --tableKeyValueTypeTest
+        --tableKeyValueTest
+        
+        -- Result categories 
+        local definedResultTypes = { "pass", "fail", "ignore", "pending", "empty test"}
+        _:test( string.format( "There are %d result categories", #definedResultTypes ), function ()
+            _:expect( #booneUnit.resultTypes ).is( #definedResultTypes )
+        end )
+        -- tableHasValueTest()
+        for i, v in ipairs(definedResultTypes) do
+            _:test( "booneUnit.resultTypes has", function()
+                _:expect( booneUnit.resultTypes ).has( v )
+            end)
+        end
+        
+        
         
         -- reset exists
         _:test( "reset exists", function ()
