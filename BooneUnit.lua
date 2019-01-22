@@ -139,6 +139,7 @@ function booneUnit.newTest:init( parent, testDescription, scenario )
     self.feature = parent
     self.description = testDescription or ""
     self.test = scenario or ( function() end )
+    self.results = {}
 end
 function booneUnit.newTest:run()
     local status, err = pcall(self.test)
@@ -153,9 +154,7 @@ function booneUnit.newTest:registerResult( outcome, expected )
     print( string.format( "Result: %s -- %s", outcome, expected ) )
 end
 function booneUnit.newTest:report()
-    
 end
 function booneUnit.newTest:passed()
-    
 end
 

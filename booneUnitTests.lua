@@ -46,8 +46,6 @@ function testBooneUnit()
             end)
         end
         
-        
-        
         -- reset exists
         _:test( "reset exists", function ()
             _:expect( booneUnit.reset ).isnt( nil )
@@ -103,7 +101,9 @@ function testBooneUnit()
         local testDesc = "Gingerbread Man"
         local emptyTestFunc = function() end 
         local testTable = booneUnit:test( testDesc, emptyTestFunc )
-        local testTableProperties = {passed="function"}
+        local testTableProperties = { passed = "function",
+                                      report = "function",
+                                      results = "table" }
         memberTypeTest("booneUnit:test produces table", testTable, testTableProperties )
     end )
 end
