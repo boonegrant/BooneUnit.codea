@@ -83,13 +83,12 @@ function testBooneUnit()
         _:test( "booneUnit:test() without arguments returns a table", function()
             _:expect( type( booneUnit:test() ) ).is( "table" )
         end )
-        _:test( "booneUnit:test() returns a table", function()
-            local testDesc = "Gingerbread Man"
-            local emptyTestFunc = function() end 
-            _:expect( type( booneUnit:test( testDesc, emptyTestFunc ) ) ).is( "table" )
-        end )
-        
-        
+        -- properties of that table
+        local testDesc = "Gingerbread Man"
+        local emptyTestFunc = function() end 
+        local testTable = booneUnit:test( testDesc, emptyTestFunc )
+        local testTableProperties = {passed="function"}
+        memberTypeTest("booneUnit:test produces table", testTable, testTableProperties )
     end )
 end
 

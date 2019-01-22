@@ -31,11 +31,6 @@ function booneUnit:test( testDescription, scenario )
     return thisTest
 end
 
---[[
-function booneUnit:expect( conditional )
-    
-end
---]]
 function booneUnit:ignore( description, scenario ) 
 end
 
@@ -105,7 +100,9 @@ end
 function booneUnit.newTest:report()
     
 end
-
+function booneUnit.newTest:passed()
+    
+end
 
 function booneUnit:expect( conditional )
     print( "booneUnit now expecting…" )
