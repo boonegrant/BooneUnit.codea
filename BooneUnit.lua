@@ -1,5 +1,5 @@
 booneUnit = {resultTypes={"pass", "ignore", "pending", "empty test", "fail"},
-             errorMsgs={ noCurrentTest = 'booneUnit-"expect()" statements should be placed inside a "test" declaration' }
+             errorMsgs={ expectWithoutTest = 'booneUnit-"expect()" statements should be placed inside a "test" declaration' }
             }
 function booneUnit:reset ()
     self.features = {}
@@ -19,7 +19,7 @@ function booneUnit:describe( featureDescription, featureTests )
 end
 
 function booneUnit:test( testDescription, scenario )
-    print( string.format( "booneUnit.test( %s, %s )", testDescription, scenario ) )
+    print( string.format( "Dwezil-booneUnit.test( %s, %s )", testDescription, scenario ) )
     local thisFeature = self.currentFeature or self:orphanage()
     local thisTest = booneUnit.newTest( thisFeature, testDescription, scenario )
     table.insert( thisFeature.tests, thisTest )   
@@ -35,13 +35,13 @@ function booneUnit:ignore( description, scenario )
 end
 
 function booneUnit:orphanage()      -- create a home for tests outside of a :define() call
-    print( "Oh you poor lost test!" )
+    print( "Dwezil- Oh you poor lost test!" )
     if ( self.aHomeForOrphanTests == nil ) then
         self.aHomeForOrphanTests = self.newFeature( "Undefined", function() end )
         table.insert( self.features, self.aHomeForOrphanTests )   
-        print( "I have made a home for you" )
+        print( "Dwezil- I have made a home for you" )
     end
-    print( string.format( "This is your home now: %s", self.aHomeForOrphanTests ) )
+    print( string.format( "Dwezil- This is your home now: %s", self.aHomeForOrphanTests ) )
     return self.aHomeForOrphanTests
 end
 
@@ -54,10 +54,10 @@ function booneUnit:after(teardown)
 end
 
 function booneUnit:expect( conditional )
-    print( "booneUnit now expecting…" )
+    print( "Dwezil now expecting…" )
     local thisTest = self.currentTest
     if thisTest == nil then
-        error( self.errorMsgs.noCurrentTest )
+        error( self.errorMsgs.expectWithoutTest )
         return nil
     end
     
@@ -100,7 +100,8 @@ function booneUnit:expect( conditional )
             notify(string.find(error, expected, 1, true), error)
         end
     end
-
+    
+    print( "Dwezil set expectations" )
     return {
         is = is,
         isnt = isnt,
@@ -118,10 +119,10 @@ function booneUnit.newFeature:init( featureDescription , allFeatureTests )
     self.featureTests = allFeatureTests or ( function() end )  -- test for value = function?
 end
 function booneUnit.newFeature:runTests()
-    print( self:intro() )
+    print( string.format( "Dwezil-%s", self:intro() ) )
     self.tests = {}
     self.featureTests()
-    print( self:results() )
+    print( string.format( "Dwezil-%s", self:results() ) )
 end
 function booneUnit.newFeature:intro()
     return string.format( "Feature: %s \ntests:", self.description )
@@ -145,13 +146,12 @@ function booneUnit.newTest:run()
     local status, err = pcall(self.test)
     if err then
         --self.failures = self.failures + 1
-        print(string.format("%d: %s -- %s \n--FAIL", 69, self.description, err))
         self:registerResult( "fail", err )
         --store result
     end
 end
 function booneUnit.newTest:registerResult( outcome, expected )
-    print( string.format( "Result: %s -- %s", outcome, expected ) )
+    print( string.format( "Dwezil-Result: %s -- %s", outcome, expected ) )
 end
 function booneUnit.newTest:report()
 end

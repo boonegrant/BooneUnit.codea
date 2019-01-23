@@ -120,15 +120,24 @@ function testBooneUnitExpect()
     booneUnit:reset()
     _:describe( "booneUnit:expect() function", function()
         _:test( "expect() throws error if not inside a test", function()
-            _:expect( function() booneUnit:expect() end ).throws( booneUnit.errorMsgs.noCurrentTest )
+            _:expect( function() booneUnit:expect() end ).throws( booneUnit.errorMsgs.expectWithoutTest )
+        end )
+        _:test( "expect() returns a table", function()
+            booneUnit:reset()
+            local expectation 
+            booneUnit:test("foo Expectations", function() 
+                expectation = booneUnit:expect( "foo" )
+            end )
+            _:expect( type( expectation ) ).is( "table" )
         end )
     end )
+    
 end
 
 function lestMoonUnit() 
     -- Feature Creation --
     _:describe( "booneUnit creates Features", function ()
-        --[[
+        
         _:before( function() end )
         
         -- booneUnit member test 
@@ -142,7 +151,7 @@ function lestMoonUnit()
                               beck = "number" }
         memberTypeTest( "booneUnit", booneUnit, unitMembers )
         
-        ---[[ features is empty
+        -- features is empty
         _:test( "booneUnit.features is empty", function ()
             local f = booneUnit.features
             _:expect( f[1] ).is( nil )
