@@ -160,6 +160,33 @@ function testBooneUnitExpect()
             end )
         end
     end )
+
+    _:describe( 'booneUnit:expect( "a" ).is( "b" ) returns false ', function()
+        local inequalities = {{ true, false },
+                              { true, "true"}, 
+                              {"false", false },
+                              {"foo", "bar"},
+                              {"24", 24 },
+                              { 3.0, math.pi },
+                              { {}, {"a","b","c"} },
+                              { {}, {} },
+                              { math.cos, math.sin},
+                              { function() end, function() end },
+                              { vec2(5,2), vec2(5.2,2.5) } }
+        for i, v in ipairs( inequalities ) do
+            local testDesc = string.format('booneUnit:expect(%s).is(%s) returns false', v[1], v[2] )
+            _:test( testDesc, function()
+                booneUnit:reset()
+                local expectation 
+                local dweezilTestDesc = string.format( "Equality-- %s:%s == %s:%s", 
+                                        type(v[1]), v[1], type(v[2]), v[2] )
+                booneUnit:test( dweezilTestDesc, function() 
+                    expectation = booneUnit:expect( v[1] )
+                end )
+                _:expect( expectation.is( v[2] ) ).is( false ) 
+            end )
+        end
+    end )
     
 end
 
