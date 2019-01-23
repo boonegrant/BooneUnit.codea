@@ -1,6 +1,6 @@
 
 function bestBooneUnit()
-    --CodeaUnit.detailed = false
+    CodeaUnit.detailed = false
     local bu = booneUnit
     -- local theFeature = ""
     local atestDesc = "location: Springfield"
@@ -118,7 +118,7 @@ end
 
 function testBooneUnitExpect()
     booneUnit:reset()
-    _:describe( "booneUnit:expect() function", function()
+    _:describe( "Function booneUnit:expect() takes an argument and returns a set of functions which evaluate that argument.", function()
         _:test( "expect() throws error if not inside a test", function()
             _:expect( function() booneUnit:expect() end ).throws( booneUnit.errorMsgs.expectWithoutTest )
         end )
@@ -145,23 +145,46 @@ function testBooneUnitExpect()
         end
     end )
     _:describe( 'booneUnit:expect( var ).is( var ) returns true', function()
-        local vars = {true, false, "foo", "bar", "24", 24, -0.3269, math.pi, {}, {"a","b","c"}, 
-                      function()end, math.sin, vec2(5,2), color(43)  }
-        for i, v in ipairs( vars ) do
-            local testDesc = string.format('booneUnit:expect(%s).is(%s) returns true', vars[i], v )
+        local aVar = "bar"
+        local emptyTable = {}
+        local aTable = {"a","b","c"}
+        local sameTable = aTable
+        local aFunction = function(num) return num * num end
+        local otherFunc = math.sin
+        local equalities = {{ true, true },
+                            { false, false },
+                            { nil, nil },
+                            {"foo", "foo"},
+                            {"bar", "b".."ar"},
+                            { aVar, "bar" },
+                            {"24", string.format("%d", 24) },
+                            { 24, 24 },
+                            { -0.3269, -00.32690 },
+                            { 4*2, 8 },
+                            { emptyTable, emptyTable },
+                            { aTable, sameTable },
+                            { aFunction, aFunction },
+                            { 4 * 4, aFunction( 4 ) },
+                            { math.sin, otherFunc },
+                            { math.sin(math.pi), otherFunc(math.pi) },
+                            { vec2(5,2), vec2(5,2)},
+                            { color(43)  , color(43,43,43)  } }
+        for i, v in ipairs( equalities ) do
+            local testDesc = string.format('booneUnit:expect(%s).is(%s) returns true', v[1], v[2] )
             _:test( testDesc, function()
                 booneUnit:reset()
                 local expectation 
-                local dweezilTestDesc = string.format( "Equality Expectation (%s): %s == %s", type(v), v, v )
+                local dweezilTestDesc = string.format( "Equality-- %s:%s == %s:%s", 
+                                        type(v[1]), v[1], type(v[2]), v[2] )
                 booneUnit:test( dweezilTestDesc, function() 
-                    expectation = booneUnit:expect( vars[i] )
+                    expectation = booneUnit:expect( v[1] )
                 end )
-                _:expect( expectation.is( v ) ).is( true ) 
+                _:expect( expectation.is( v[2] ) ).is( true ) 
             end )
         end
     end )
 
-    _:describe( 'booneUnit:expect( "a" ).is( "b" ) returns false ', function()
+    _:describe( 'booneUnit:expect( "a" ).is( "b" ) returns false', function()
         local inequalities = {{ true, false },
                               { true, "true"}, 
                               {"false", false },
@@ -172,7 +195,7 @@ function testBooneUnitExpect()
                               { {}, {} },
                               { math.cos, math.sin},
                               { function() end, function() end },
-                              { vec2(5,2), vec2(5.2,2.5) } }
+                              { vec2(5,2), vec2(5.2,2.5) }}
         for i, v in ipairs( inequalities ) do
             local testDesc = string.format('booneUnit:expect(%s).is(%s) returns false', v[1], v[2] )
             _:test( testDesc, function()
@@ -190,7 +213,7 @@ function testBooneUnitExpect()
     
 end
 
-function lestMoonUnit() 
+function bestMoonUnit() 
     -- Feature Creation --
     _:describe( "booneUnit creates Features", function ()
         
