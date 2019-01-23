@@ -35,13 +35,13 @@ function booneUnit:ignore( description, scenario )
 end
 
 function booneUnit:orphanage()      -- create a home for tests outside of a :define() call
-    print( "Dwezil- Oh you poor lost test!" )
+    -- print( "Dwezil- Oh you poor lost test!" )
     if ( self.aHomeForOrphanTests == nil ) then
         self.aHomeForOrphanTests = self.newFeature( "Undefined", function() end )
         table.insert( self.features, self.aHomeForOrphanTests )   
-        print( "Dwezil- I have made a home for you" )
+        -- print( "Dwezil- I have made a home for you" )
     end
-    print( string.format( "Dwezil- This is your home now: %s", self.aHomeForOrphanTests ) )
+    -- print( string.format( "Dwezil- This is your home now: %s", self.aHomeForOrphanTests ) )
     return self.aHomeForOrphanTests
 end
 
@@ -72,11 +72,13 @@ function booneUnit:expect( conditional )
     local is = function(expected)
         -- self.expected = expected
         notify(conditional == expected, expected)
+        return(conditional == expected)
     end
 
     local isnt = function(expected)
         -- self.expected = expected
         notify( conditional ~= expected, string.format("not %s", expected) )
+        return( conditional ~= expected )
     end
 
     local has = function(expected)
@@ -88,6 +90,7 @@ function booneUnit:expect( conditional )
             end
         end
         notify(found, expected)
+        return found
     end
 
     local throws = function(expected)
@@ -96,6 +99,7 @@ function booneUnit:expect( conditional )
         if not error then
             conditional = "nothing thrown"
             notify(false)
+            return false
         else
             notify(string.find(error, expected, 1, true), error)
         end

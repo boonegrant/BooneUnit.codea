@@ -130,6 +130,34 @@ function testBooneUnitExpect()
             end )
             _:expect( type( expectation ) ).is( "table" )
         end )
+        -- booneUnit:expect() properties
+        do
+            booneUnit:reset()
+            local expectationContains = { is = "function", 
+                                          isnt = "function", 
+                                          has = "function", 
+                                          throws = "function" }
+            local expectation
+            booneUnit:test("foo Expectations", function() 
+                expectation = booneUnit:expect( "foo" )
+            end )
+            memberTypeTest( 'booneUnit:expect("foo")', expectation, expectationContains )
+        end
+    end )
+    _:describe( 'booneUnit:expect( var ).is( var ) returns true', function()
+        local vars = {"foo", "bar", "24", 24, -0.3269, math.pi, {}, {"a","b","c"}, function()end, math.sin, vec2(5,2)}
+        for i, v in ipairs( vars ) do
+            local testDesc = string.format('booneUnit:expect(%s).is(%s) returns true', vars[i], v )
+            _:test( testDesc, function()
+                booneUnit:reset()
+                local expectation 
+                local dweezilTestDesc = string.format( "Equality Expectation (%s): %s == %s", type(v), v, v )
+                booneUnit:test( dweezilTestDesc, function() 
+                    expectation = booneUnit:expect( vars[i] )
+                end )
+                _:expect( expectation.is( v ) ).is( true ) 
+            end )
+        end
     end )
     
 end
