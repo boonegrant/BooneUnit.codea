@@ -1,5 +1,5 @@
 
-function testBooneUnit()
+function bestBooneUnit()
     --CodeaUnit.detailed = false
     local bu = booneUnit
     -- local theFeature = ""
@@ -19,6 +19,7 @@ function testBooneUnit()
 
     -- booneUnit is something --
     _:describe( "BooneUnit initial state", function()
+        
         _:test( "booneUnit exists", function ()
             _:expect( booneUnit ).isnt( nil )
         end )
@@ -105,6 +106,22 @@ function testBooneUnit()
                                       report = "function",
                                       results = "table" }
         memberTypeTest("booneUnit:test produces table", testTable, testTableProperties )
+        
+        -- length of table "results"
+        _:test( "length of table results is 0 with empty test", function()
+            local testTable = booneUnit:test( testDesc, emptyTestFunc )
+            _:expect( #testTable.results ).is( 0 )
+        end )
+        
+    end )
+end
+
+function testBooneUnitExpect()
+    booneUnit:reset()
+    _:describe( "booneUnit:expect() function", function()
+        _:test( "expect() throws error if not inside a test", function()
+            _:expect( function() booneUnit:expect() end ).throws( booneUnit.errorMsgs.noCurrentTest )
+        end )
     end )
 end
 

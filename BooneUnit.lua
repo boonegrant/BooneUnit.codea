@@ -1,5 +1,5 @@
 booneUnit = {resultTypes={"pass", "ignore", "pending", "empty test", "fail"},
-             errorMsgs={ noCurrentTest = ":expect() statements should be placed inside a :test declaration" }
+             errorMsgs={ noCurrentTest = 'booneUnit-"expect()" statements should be placed inside a "test" declaration' }
             }
 function booneUnit:reset ()
     self.features = {}
@@ -57,7 +57,7 @@ function booneUnit:expect( conditional )
     print( "booneUnit now expecting…" )
     local thisTest = self.currentTest
     if thisTest == nil then
-        -- error( self.errorMsgs[ noCurrentTest ] )
+        error( self.errorMsgs.noCurrentTest )
         return nil
     end
     
