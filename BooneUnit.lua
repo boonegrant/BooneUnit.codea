@@ -54,7 +54,6 @@ function booneUnit:after(teardown)
 end
 
 function booneUnit:expect( conditional )
-    print( "Dwezil now expecting…" )
     local thisTest = self.currentTest
     if thisTest == nil then
         error( self.errorMsgs.expectWithoutTest )
@@ -105,7 +104,6 @@ function booneUnit:expect( conditional )
         end
     end
     
-    print( "Dwezil set expectations" )
     return {
         is = is,
         isnt = isnt,
