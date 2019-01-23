@@ -145,7 +145,8 @@ function testBooneUnitExpect()
         end
     end )
     _:describe( 'booneUnit:expect( var ).is( var ) returns true', function()
-        local vars = {"foo", "bar", "24", 24, -0.3269, math.pi, {}, {"a","b","c"}, function()end, math.sin, vec2(5,2)}
+        local vars = {true, false, "foo", "bar", "24", 24, -0.3269, math.pi, {}, {"a","b","c"}, 
+                      function()end, math.sin, vec2(5,2), color(43)  }
         for i, v in ipairs( vars ) do
             local testDesc = string.format('booneUnit:expect(%s).is(%s) returns true', vars[i], v )
             _:test( testDesc, function()
