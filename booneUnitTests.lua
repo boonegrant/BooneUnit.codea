@@ -368,19 +368,22 @@ function testBooneUnitTest()
             local testTable = booneUnit:test( testDesc, emptyTestFunc )
             _:expect( #testTable.results ).is( 0 )
         end )
-        
+    end)
         --test registerResult(result, actual, expected)
-        _:test( "test:registerResult() appends a table to test.results", function()
-            local testDesc = "Stinky-Cheese Man"
-            local emptyTestFunc = function() end 
-            local testTable = booneUnit:test( testDesc, emptyTestFunc )
-            testTable:registerResult( true, "foo", "bar" )
-            --appends entry to table test.results
-            _:expect( #testTable.results ).is( 1 )
-        end )
-            
-        
-        
+    _:describe( "test:registerResult() appends a table to test.results", function()
+        for i = 0, 5 do
+            thisTestDesc = string.format( "call test.registerResult() %d times, results length is %d", i, i )
+            _:test( thisTestDesc, function() 
+                local aTestDesc = "Stinky-Cheese Man"
+                local anEmptyTestFunc = function() end 
+                local testTable = booneUnit:test( aTestDesc, anEmptyTestFunc )
+                for j = 1, i do
+                    testTable:registerResult( true, "foo", "bar" )
+                    --appends entry to table test.results
+                end
+                _:expect( #testTable.results ).is( i )
+            end )
+        end
     end )
     
 end
