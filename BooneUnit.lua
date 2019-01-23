@@ -101,6 +101,7 @@ function booneUnit:expect( conditional )
             return false
         else
             notify(string.find(error, expected, 1, true), error)
+            -- return error string
         end
     end
     
@@ -152,7 +153,8 @@ function booneUnit.newTest:run()
         --store result
     end
 end
-function booneUnit.newTest:registerResult( outcome, expected )
+function booneUnit.newTest:registerResult( outcome, expected, actual )
+    table.insert( self.results, { outcome, expected, actual } )
     print( string.format( "Dwezil-Result: %s -- %s", outcome, expected ) )
 end
 function booneUnit.newTest:report()

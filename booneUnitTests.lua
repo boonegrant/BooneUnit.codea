@@ -370,7 +370,16 @@ function testBooneUnitTest()
         end )
         
         --test registerResult(result, actual, expected)
-        --appends entry to table test.results
+        _:test( "test:registerResult() appends a table to test.results", function()
+            local testDesc = "Stinky-Cheese Man"
+            local emptyTestFunc = function() end 
+            local testTable = booneUnit:test( testDesc, emptyTestFunc )
+            testTable:registerResult( true, "foo", "bar" )
+            --appends entry to table test.results
+            _:expect( #testTable.results ).is( 1 )
+        end )
+            
+        
         
     end )
     
