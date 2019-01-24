@@ -369,7 +369,7 @@ function testBooneUnitTest()
             _:expect( #testTable.results ).is( 0 )
         end )
     end)
-    --test registerResult(result, actual, expected)
+    --test.registerResult() appends table
     _:describe( "test:registerResult() appends a table to test.results", function()
         for i = 0, 5 do
             thisTestDesc = string.format( "call test.registerResult() %d times, results length is %d", i, i )
@@ -386,7 +386,7 @@ function testBooneUnitTest()
         end
     end )
     
-    --test registerResult(result, actual, expected)
+    --test.registerResult(result, actual, expected) stores data
     _:describe( "test:registerResult(outcome, expected, actual) stores data in test.results", function()
         for i = 1, 5 do
             thisTestDesc = string.format( 'registerResult(true, "foo", n^2); result[n] matches; n=%d', i )
@@ -403,5 +403,23 @@ function testBooneUnitTest()
             end )
         end
     end )
+    
+    -- booneUnit:expect().is() also appends a table to aTest.results
+    _:describe( "booneUnit:expect().is() also appends a table to aTest.results", function()
+        for i = 0, 5 do
+            thisTestDesc = string.format( "call expect.is() %d times, results length is %d", i, i )
+            _:test( thisTestDesc, function() 
+                local aTestDesc = string.format( "%d expectations", i )
+                local testTable = booneUnit:test( aTestDesc, function()
+                    for j = 1, i do
+                        booneUnit:expect( j*j ).is( j*j )
+                    end
+                end )
+                _:expect( #testTable.results ).is( i )
+            end )
+        end
+    end )
+    
+    
     
 end
