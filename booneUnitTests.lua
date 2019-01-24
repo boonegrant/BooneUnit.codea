@@ -437,6 +437,23 @@ function testBooneUnitTest()
         end
     end )
     
+    -- booneUnit:expect().isnt() stores data in [test].results
+    _:describe( "booneUnit:expect().isnt() stores data in [test].results", function()
+        for i = 1, 3 do
+            thisTestDesc = string.format( "call expect(n).is(n) %d times, results[%d] contains n", i, i )
+            _:test( thisTestDesc, function() 
+                local aTestDesc = string.format( "%d expectations", i )
+                local testTable = booneUnit:test( aTestDesc, function()
+                    for j = 1, i do
+                        booneUnit:expect( j*j ).isnt( j*j )
+                    end
+                end )
+                target = testTable.results[ #testTable.results ]
+                _:expect( target[1] ).is( "fail" )
+            end )
+        end
+    end )
+    
     
     
 end
