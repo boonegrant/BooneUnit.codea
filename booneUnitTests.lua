@@ -328,7 +328,8 @@ function testBooneUnitExpect()
         end
     end )
     
-    _:describe( "booneUnit:expect( table ).has( value )", function()
+    _:describe( "booneUnit:expect( table ).has( value ) returns true when"..
+                " the table has that value stored under any key", function()
         local aVar = "bar"
         local emptyTable = {}
         local alphaTable = {"a","b","c"}
@@ -337,16 +338,16 @@ function testBooneUnitExpect()
         local otherFunc = math.sin
         local aVector = vec2(5,2)
         local aColor = color(43)
-        local aTable = { true, false, "foo", "24", 24, 
+        local aTable = { true, false, "foo", aVar, "24", 24, 
                          emptyTable, alphaTable, aFunction, otherFunc,
-                         aFunction(math.sin(16)), 0.3296, math.pi, 
+                         aFunction(otherFunc(16)), 0.3296, math.pi, 
                          aVector }
                          -- userdata types throw error when compared against diff userdata type
                          -- aColor }
-        local bTable = { true, false, "foo", "24", 24, 
-                         emptyTable, sameTable, aFunction, otherFunc,
+        local bTable = { true, false, "foo", "bar", "24", 24, 
+                         emptyTable, sameTable, aFunction, math.sin,
                          aFunction(math.sin(16)), 00.329600, math.pi, 
-                         aVector}
+                         vec2(5,2)}
                          -- userdata types throw error when compared against diff userdata type
                          -- aColor }
         for i, v in ipairs( bTable ) do
@@ -359,6 +360,43 @@ function testBooneUnitExpect()
                     expectation = booneUnit:expect( aTable )
                 end )
                 _:expect( expectation.has( v ) ).is( true ) 
+            end )
+        end
+    end )
+    
+    _:describe( "booneUnit:expect( table ).has( value ) returns false when"..
+                " the table does not have that value stored under any key", function()
+        local aVar = "bar"
+        local baz = nil
+        local emptyTable = {}
+        local alphaTable = {"a","b","c"}
+        local sameTable = alphaTable
+        local aFunction = function(num) return num * num end
+        local otherFunc = math.sin
+        local aVector = vec2(5,2)
+        local aColor = color(43)
+        local aTable = { true, "false", "foo", aVar, baz, 24, 
+                         emptyTable, alphaTable, aFunction, otherFunc,
+                         aFunction(otherFunc(16)), 0.3296, math.pi, 
+                         aVector }
+                         -- userdata types throw error when compared against diff userdata type
+                         -- aColor }
+        local bTable = { "true", false, "Foo", "bear", "baz", "24",  
+                         {}, {"a","b","c"}, function(n)return n*n;end, math.cos,
+                         aFunction(otherFunc(15.99)), -0.3296, 3.1415, 
+                         vec2(5,3) }
+                         -- userdata types throw error when compared against diff userdata type
+                         -- aColor }
+        for i, v in ipairs( bTable ) do
+            local testDesc = string.format('booneUnit:expect(table).has(%s)', v )
+            _:test( testDesc, function()
+                booneUnit:reset()
+                local expectation 
+                local dweezilTestDesc = string.format( "table has value %s:%s ", type(v), v )
+                booneUnit:test( dweezilTestDesc, function() 
+                    expectation = booneUnit:expect( aTable )
+                end )
+                _:expect( expectation.has( v ) ).is( false ) 
             end )
         end
     end )
