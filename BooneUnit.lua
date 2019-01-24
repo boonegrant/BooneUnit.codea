@@ -19,7 +19,7 @@ function booneUnit:describe( featureDescription, featureTests )
 end
 
 function booneUnit:test( testDescription, scenario )
-    print( string.format( "Dwezil-booneUnit.test( %s, %s )", testDescription, scenario ) )
+    print( string.format( "Dwezil-booneUnit.test( %s)", testDescription ) )
     local thisFeature = self.currentFeature or self:orphanage()
     local thisTest = booneUnit.newTest( thisFeature, testDescription, scenario )
     table.insert( thisFeature.tests, thisTest )   
@@ -83,12 +83,15 @@ function booneUnit:expect( conditional )
     local has = function(expected)
         -- self.expected = expected
         local found = false
+        local actual
         for k,v in pairs(conditional) do
             if v == expected then
                 found = true
+                actual = string.format('target[ %s ] is %s', k, v )
             end
         end
-        notify(found, expected)
+        thisTest:registerResult( found, actual, expected )
+        --notify(found, expected)
         return found
     end
 
@@ -101,7 +104,7 @@ function booneUnit:expect( conditional )
             return false
         else
             notify(string.find(error, expected, 1, true), error)
-            -- return error string
+            return true
         end
     end
     

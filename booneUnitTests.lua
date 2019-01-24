@@ -165,9 +165,10 @@ function bestMoonUnitFeature()
     end )
 end
     
-function bestBooneUnitExpect()
+function testBooneUnitExpect()
     booneUnit:reset()
-    _:describe( "Function booneUnit:expect() takes an argument and returns a set of functions which evaluate that argument.", function()
+    _:describe( "Function booneUnit:expect() takes an argument and returns" ..
+                " a set of functions which evaluate that argument.", function()
         _:test( "expect() throws error if not inside a test", function()
             _:expect( function() booneUnit:expect() end ).throws( booneUnit.errorMsgs.expectWithoutTest )
         end )
@@ -328,11 +329,43 @@ function bestBooneUnitExpect()
     end )
     
     _:describe( "booneUnit:expect( table ).has( value )", function()
+        local aVar = "bar"
+        local emptyTable = {}
+        local alphaTable = {"a","b","c"}
+        local sameTable = alphaTable
+        local aFunction = function(num) return num * num end
+        local otherFunc = math.sin
+        local aVector = vec2(5,2)
+        local aColor = color(43)
+        local aTable = { true, false, "foo", "24", 24, 
+                         emptyTable, alphaTable, aFunction, otherFunc,
+                         aFunction(math.sin(16)), 0.3296, math.pi, 
+                         aVector }
+                         -- userdata types throw error when compared against diff userdata type
+                         -- aColor }
+        local bTable = { true, false, "foo", "24", 24, 
+                         emptyTable, sameTable, aFunction, otherFunc,
+                         aFunction(math.sin(16)), 00.329600, math.pi, 
+                         aVector}
+                         -- userdata types throw error when compared against diff userdata type
+                         -- aColor }
+        for i, v in ipairs( bTable ) do
+            local testDesc = string.format('booneUnit:expect(table).has(%s)', v )
+            _:test( testDesc, function()
+                booneUnit:reset()
+                local expectation 
+                local dweezilTestDesc = string.format( "table has value %s:%s ", type(v), v )
+                booneUnit:test( dweezilTestDesc, function() 
+                    expectation = booneUnit:expect( aTable )
+                end )
+                _:expect( expectation.has( v ) ).is( true ) 
+            end )
+        end
     end )
     
 end
 
-function testBooneUnitTest()
+function bestBooneUnitTest()
     -- booneUnit.test()
     _:describe( "booneUnit.test() returns a test object", function()
         _:test( "booneUnit.test() exists", function()
