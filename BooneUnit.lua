@@ -62,9 +62,9 @@ function booneUnit:expect( conditional )
     
     local notify = function( result, expectation )
         if result then
-            thisTest:registerResult( "pass", expectation )
+            thisTest:registerResult( "pass", conditional, expectation )
         else
-            thisTest:registerResult( "fail", expectation )
+            thisTest:registerResult( "fail", conditional, expectation )
         end
     end
     
@@ -153,7 +153,7 @@ function booneUnit.newTest:run()
         --store result
     end
 end
-function booneUnit.newTest:registerResult( outcome, expected, actual )
+function booneUnit.newTest:registerResult( outcome, actual, expected )
     table.insert( self.results, { outcome, expected, actual } )
     print( string.format( "Dwezil-Result: %s -- actual: %s expected: %s", outcome, actual, expected ) )
 end

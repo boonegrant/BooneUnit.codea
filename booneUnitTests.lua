@@ -407,7 +407,7 @@ function testBooneUnitTest()
     -- booneUnit:expect().is() also appends a table to aTest.results
     _:describe( "booneUnit:expect().is() also appends a table to aTest.results", function()
         for i = 0, 5 do
-            thisTestDesc = string.format( "call expect.is() %d times, results length is %d", i, i )
+            thisTestDesc = string.format( "call expect().is() %d times, results length is %d", i, i )
             _:test( thisTestDesc, function() 
                 local aTestDesc = string.format( "%d expectations", i )
                 local testTable = booneUnit:test( aTestDesc, function()
@@ -416,6 +416,23 @@ function testBooneUnitTest()
                     end
                 end )
                 _:expect( #testTable.results ).is( i )
+            end )
+        end
+    end )
+    
+    -- booneUnit:expect().is() stores data in [test].results
+    _:describe( "booneUnit:expect().is() stores data in [test].results", function()
+        for i = 1, 5 do
+            thisTestDesc = string.format( "call expect(n).is(n) %d times, results[%d] contains n", i, i )
+            _:test( thisTestDesc, function() 
+                local aTestDesc = string.format( "%d expectations", i )
+                local testTable = booneUnit:test( aTestDesc, function()
+                    for j = 1, i do
+                        booneUnit:expect( j*j ).is( j*j )
+                    end
+                end )
+                target = testTable.results[ #testTable.results ]
+                _:expect( target[3] ).is( i*i )
             end )
         end
     end )
