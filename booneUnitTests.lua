@@ -546,4 +546,15 @@ function testBooneUnitTest()
         end
     end )
 
+    -- booneUnit:test():passed() 
+    --      returns true if all results are true and there is at least one result. 
+    _:describe( "booneUnit:test():passed()\nReturns true if all results are true"..
+                " and there is at least one result.", function()
+        _:test( "passed() returns false if there were no results", function() 
+            booneUnit:reset()
+            local testTable = booneUnit:test( "an empty test", function()end )
+            _:expect( testTable:passed() ).is( false )
+        end )
+    end )
+    
 end

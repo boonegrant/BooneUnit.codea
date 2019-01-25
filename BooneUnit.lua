@@ -163,5 +163,6 @@ end
 function booneUnit.newTest:report()
 end
 function booneUnit.newTest:passed()
+    return false
 end
 
