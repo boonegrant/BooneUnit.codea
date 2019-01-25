@@ -9,12 +9,13 @@ function CodeaUnit:describe(feature, allTests)
     self._before = function() end
     self._after = function() end
 
-    print(string.format("Feature: %s", feature))
+    print(string.format("****************\n\nFeature: %s", feature))
 
     allTests()
 
     local passed = self.tests - self.failures - self.ignored - self.pending
-    local summary = string.format("%s:\n%d Passed, %d Ignored, %d Pending, %d Failed", 
+    local summary = string.format("%s:\n%d Passed, %d Ignored, %d Pending, %d Failed"..
+                                  "\n\n****************\n****************", 
                                   feature, passed, self.ignored, self.pending, self.failures)
     print(summary)
 end

@@ -165,7 +165,7 @@ function bestMoonUnitFeature()
     end )
 end
     
-function testBooneUnitExpect()
+function bestBooneUnitExpect()
     booneUnit:reset()
     _:describe( "Function booneUnit:expect() takes an argument and returns" ..
                 " a set of functions which evaluate that argument.", function()
@@ -403,7 +403,7 @@ function testBooneUnitExpect()
     
 end
 
-function bestBooneUnitTest()
+function testBooneUnitTest()
     -- booneUnit.test()
     _:describe( "booneUnit.test() returns a test object", function()
         _:test( "booneUnit.test() exists", function()
@@ -511,7 +511,7 @@ function bestBooneUnitTest()
     -- booneUnit:expect().isnt() stores data in [test].results
     _:describe( "booneUnit:expect().isnt() stores data in [test].results", function()
         for i = 1, 3 do
-            thisTestDesc = string.format( "call expect(n).is(n) %d times, results[%d] contains n", i, i )
+            thisTestDesc = string.format( "call expect(n).isnt(n) %d times, results[%d] contains n", i, i )
             _:test( thisTestDesc, function() 
                 local aTestDesc = string.format( "%d expectations", i )
                 local testTable = booneUnit:test( aTestDesc, function()
@@ -525,6 +525,25 @@ function bestBooneUnitTest()
         end
     end )
     
-    
-    
+    -- booneUnit:expect().has() stores data in [test].results
+    _:describe( "booneUnit:expect().has() stores data in [test].results", function()
+        local vipData = { lat = 834.5677, long = true }
+        local aTable = { "foo", "bar", other = "baz", diameter = math.pi, vip = vipData, vec3(24,7,365.25) }
+        local bTable = { "foo", "Bar", vipData, math.pi } 
+        for i, v in ipairs( bTable ) do
+            thisTestDesc = string.format( "call expect( table ).has( value ) %d times," ..
+                                          " results[%d] contains value %s", i, i, v )
+            _:test( thisTestDesc, function() 
+                local aTestDesc = string.format( "%d expectations", i )
+                 testTable = booneUnit:test( aTestDesc, function()
+                    for j = 1, i do
+                        booneUnit:expect( aTable ).has( bTable[ j ] )
+                    end
+                end )
+                target = testTable.results[ #testTable.results ]
+                _:expect( target[3] ).is( v )
+            end )
+        end
+    end )
+
 end
