@@ -555,6 +555,15 @@ function testBooneUnitTest()
             local testTable = booneUnit:test( "an empty test", function()end )
             _:expect( testTable:passed() ).is( false )
         end )
+        _:test( "passed returns true if there is one true result", function()
+            local testTable = booneUnit:test( "one true result", function()
+                booneUnit:expect(true).is(true)
+            end )
+            _:expect( testTable:passed() ).is( true )
+            
+        end)
     end )
+    
+    
     
 end

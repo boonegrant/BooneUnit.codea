@@ -158,11 +158,13 @@ function booneUnit.newTest:run()
 end
 function booneUnit.newTest:registerResult( outcome, actual, expected )
     table.insert( self.results, { outcome, actual, expected } )
-    print( string.format( "Dwezil-Result: %s -- actual: %s expected: %s", outcome, actual, expected ) )
+    print( string.format( "actual: %s \nexpected: %s \nDwezil-Result: %s ", actual, expected, outcome ) )
 end
 function booneUnit.newTest:report()
 end
 function booneUnit.newTest:passed()
-    return false
+    local testPassed = #self.results > 0
+    
+    return testPassed
 end
 
