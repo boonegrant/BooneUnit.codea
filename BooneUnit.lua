@@ -157,15 +157,15 @@ function booneUnit.newTest:run()
     end
 end
 function booneUnit.newTest:registerResult( outcome, actual, expected )
-    table.insert( self.results, { outcome, actual, expected } )
+    table.insert( self.results, { outcome = outcome, actual = actual, expected = expected} )
     print( string.format( "  actual: %s \nexpected: %s \nDwezil-Result: %s ", actual, expected, outcome ) )
 end
 function booneUnit.newTest:report()
 end
 function booneUnit.newTest:passed()
-    local testPassed = #self.results > 0
+    local testPassed = #self.results > 0  -- at least one result recorded
     for i, v in ipairs( self.results ) do
-        if v[1] ~= true then return false end
+        if v.outcome ~= true then return false end
     end
     return testPassed
 end

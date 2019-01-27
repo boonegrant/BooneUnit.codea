@@ -9,7 +9,7 @@ function CodeaUnit:describe(feature, allTests)
     self._before = function() end
     self._after = function() end
 
-    print(string.format("****************\n\nFeature: %s", feature))
+    print(string.format("\n\n\n****************\n\nFeature: %s", feature))
 
     allTests()
 

@@ -470,7 +470,7 @@ function testBooneUnitTest()
                     --appends entry to table test.results
                 end
                 local target = testTable.results[#testTable.results]
-                _:expect( target[3] ).is( i*i )
+                _:expect( target.expected ).is( i*i )
             end )
         end
     end )
@@ -503,7 +503,7 @@ function testBooneUnitTest()
                     end
                 end )
                 target = testTable.results[ #testTable.results ]
-                _:expect( target[3] ).is( i*i )
+                _:expect( target.actual ).is( i*i )
             end )
         end
     end )
@@ -520,7 +520,7 @@ function testBooneUnitTest()
                     end
                 end )
                 target = testTable.results[ #testTable.results ]
-                _:expect( target[1] ).is( false )
+                _:expect( target.outcome ).is( false )
             end )
         end
     end )
@@ -541,7 +541,7 @@ function testBooneUnitTest()
                     end
                 end )
                 target = testTable.results[ #testTable.results ]
-                _:expect( target[3] ).is( v )
+                _:expect( target.expected ).is( v )
             end )
         end
     end )
