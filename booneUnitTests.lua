@@ -520,7 +520,7 @@ function testBooneUnitTest()
                     end
                 end )
                 target = testTable.results[ #testTable.results ]
-                _:expect( target[1] ).is( "fail" )
+                _:expect( target[1] ).is( false )
             end )
         end
     end )
@@ -560,8 +560,21 @@ function testBooneUnitTest()
                 booneUnit:expect(true).is(true)
             end )
             _:expect( testTable:passed() ).is( true )
-            
         end)
+        _:test( "passed returns true if there are two true results", function()
+            local testTable = booneUnit:test( "two true results", function()
+                booneUnit:expect(true).is(true)
+                booneUnit:expect(false).is(false)
+            end )
+            _:expect( testTable:passed() ).is( true )
+        end)
+        _:test( "passed returns false if there is one false result", function()
+            local testTable = booneUnit:test( "one false result", function()
+                booneUnit:expect(true).is(false)
+            end )
+            _:expect( testTable:passed() ).is( false )
+        end)
+        
     end )
     
     

@@ -62,9 +62,9 @@ function booneUnit:expect( conditional )
     
     local notify = function( result, expectation )
         if result then
-            thisTest:registerResult( "pass", conditional, expectation )
+            thisTest:registerResult( true, conditional, expectation )
         else
-            thisTest:registerResult( "fail", conditional, expectation )
+            thisTest:registerResult( false, conditional, expectation )
         end
     end
     
@@ -158,13 +158,15 @@ function booneUnit.newTest:run()
 end
 function booneUnit.newTest:registerResult( outcome, actual, expected )
     table.insert( self.results, { outcome, actual, expected } )
-    print( string.format( "actual: %s \nexpected: %s \nDwezil-Result: %s ", actual, expected, outcome ) )
+    print( string.format( "  actual: %s \nexpected: %s \nDwezil-Result: %s ", actual, expected, outcome ) )
 end
 function booneUnit.newTest:report()
 end
 function booneUnit.newTest:passed()
     local testPassed = #self.results > 0
-    
+    for i, v in ipairs( self.results ) do
+        if v[1] ~= true then return false end
+    end
     return testPassed
 end
 
