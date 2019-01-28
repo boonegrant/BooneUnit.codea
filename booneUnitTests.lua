@@ -642,6 +642,13 @@ function testBooneUnitIgnore()
                                           registerResult = "function" }
             memberTypeTest("booneUnit:ignore produces object", testTable, testTableProperties )
         end
+        _:test( "booneUnit:ignore():passed() returns false", function() 
+            booneUnit:reset()
+            local testTable = booneUnit:ignore( "one true result", function()
+                booneUnit:expect(true).is(true)                
+            end )
+            _:expect( testTable:passed() ).is( false )
+        end )
     end )
 end
 
