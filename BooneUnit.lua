@@ -15,6 +15,7 @@ function booneUnit:describe( featureDescription, featureTests )
     self.currentFeature = thisFeature
     thisFeature:runTests()
     self.currentFeature = nil
+    -- print( thisFeature:report( self.detailed ) )
     return thisFeature
 end
 
@@ -28,10 +29,17 @@ function booneUnit:test( testDescription, scenario )
     thisTest:run()
     self.currentTest = nil
     thisFeature:after()
+    -- thisTest:report( self.detailed )
     return thisTest
 end
 
-function booneUnit:ignore( description, scenario ) 
+function booneUnit:ignore( description, scenario )
+    print( string.format( "Dwezil-booneUnit.ignore( %s)", testDescription ) )
+    local thisFeature = self.currentFeature or self:orphanage()
+    local thisTest = booneUnit.newTest( thisFeature, testDescription )
+    table.insert( thisFeature.tests, thisTest )   
+    thisTest:registerResult("ignore") 
+    return thisTest
 end
 
 function booneUnit:orphanage()      -- create a home for tests outside of a :define() call
@@ -133,6 +141,7 @@ end
 function booneUnit.newFeature:intro()
     return string.format( "Feature: %s \ntests:", self.description )
 end
+-- [feature]:results( detailed )
 function booneUnit.newFeature:results()
     return string.format( "Feature: %s \nResults go here", self.description )
     -- do some tallying
@@ -152,16 +161,20 @@ function booneUnit.newTest:run()
     local status, err = pcall(self.test)
     if err then
         --self.failures = self.failures + 1
-        self:registerResult( "fail", err )
+        self:registerResult( false, err )
         --store result
     end
 end
+
 function booneUnit.newTest:registerResult( outcome, actual, expected )
     table.insert( self.results, { outcome = outcome, actual = actual, expected = expected} )
     print( string.format( "  actual: %s \nexpected: %s \nDwezil-Result: %s ", actual, expected, outcome ) )
 end
 function booneUnit.newTest:report()
 end
+
+-- [test]:passed() - returns true if there is at least one result 
+--                   recorded and all results are successful
 function booneUnit.newTest:passed()
     local testPassed = #self.results > 0  -- at least one result recorded
     for i, v in ipairs( self.results ) do

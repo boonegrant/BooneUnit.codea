@@ -13,9 +13,7 @@
 		<string>Miscellaneous</string>
 	</array>
 	<key>Dependencies</key>
-	<array>
-		<string>Documents:table-tostring</string>
-	</array>
+	<array/>
 	<key>Description</key>
 	<string>No description available</string>
 </dict>

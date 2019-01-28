@@ -85,7 +85,7 @@ function bestBooneUnit()
     
 end
 
-function bestMoonUnitFeature() 
+function lestMoonUnitFeature() 
     -- Feature Creation --
     _:describe( "booneUnit creates Features", function ()
         
@@ -97,9 +97,7 @@ function bestMoonUnitFeature()
                               currentTest = "nil", 
                               describe = "function",
                               test = "function",
-                              reset = "function",
-                              bork = "number",
-                              beck = "number" }
+                              reset = "function"}
         memberTypeTest( "booneUnit", booneUnit, unitMembers )
         
         -- features is empty
@@ -268,24 +266,26 @@ function bestBooneUnitExpect()
         local sameTable = aTable
         local aFunction = function(num) return num * num end
         local otherFunc = math.sin
-        local equalities = {{ true, true },
-                            { false, false },
-                            { nil, nil },
-                            {"foo", "foo"},
-                            {"bar", "b".."ar"},
-                            { aVar, "bar" },
-                            {"24", string.format("%d", 24) },
-                            { 24, 24 },
-                            { -0.3269, -00.32690 },
-                            { 4*2, 8 },
-                            { emptyTable, emptyTable },
-                            { aTable, sameTable },
-                            { aFunction, aFunction },
-                            { 4 * 4, aFunction( 4 ) },
-                            { math.sin, otherFunc },
-                            { math.sin(math.pi), otherFunc(math.pi) },
-                            { vec2(5,2), vec2(5,2)},
-                            { color(43)  , color(43,43,43)  } }
+        local equalities = {
+            { true, true },
+            { false, false },
+            { nil, nil },
+            {"foo", "foo"},
+            {"bar", "b".."ar"},
+            { aVar, "bar" },
+            {"24", string.format("%d", 24) },
+            { 24, 24 },
+            { -0.3269, -00.32690 },
+            { 4*2, 8 },
+            { emptyTable, emptyTable },
+            { aTable, sameTable },
+            { aFunction, aFunction },
+            { 4 * 4, aFunction( 4 ) },
+            { math.sin, otherFunc },
+            { math.sin(math.pi), otherFunc(math.pi) },
+            { vec2(5,2), vec2(5,2)},
+            { color(43)  , color(43,43,43)  } 
+        }
         for i, v in ipairs( equalities ) do
             local testDesc = string.format('booneUnit:expect(%s).is(%s) returns true', v[1], v[2] )
             _:test( testDesc, function()
@@ -419,6 +419,13 @@ function testBooneUnitTest()
         _:test( "booneUnit:test() without arguments returns a table", function()
             _:expect( type( booneUnit:test() ) ).is( "table" )
         end )
+        -- test() returns a table of class NewTable
+        _:test( "booneUnit:test() returns a table of class NewTable", function()
+            local testDesc = "Gingerbread Man"
+            local emptyTestFunc = function() end 
+            local testReturn = booneUnit:test( testDesc, emptyTestFunc )
+            _:expect( testReturn:is_a( booneUnit.newTest ) ).is( true )
+        end )
         -- properties of that table
         do
             local testDesc = "Gingerbread Man"
@@ -548,8 +555,8 @@ function testBooneUnitTest()
 
     -- booneUnit:test():passed() 
     --      returns true if all results are true and there is at least one result. 
-    _:describe( "booneUnit:test():passed()\nReturns true if all results are true"..
-                " and there is at least one result.", function()
+    _:describe( "booneUnit:test():passed()\nReturns true if there is at least one result,"..
+                " and all results are true", function()
         _:test( "passed() returns false if there were no results", function() 
             booneUnit:reset()
             local testTable = booneUnit:test( "an empty test", function()end )
@@ -598,7 +605,24 @@ function testBooneUnitTest()
         end)
         
     end )
+end
+
+function testBooneUnitIgnore()    
+    -- Testing booneUnit.ignore()
+    _:describe( "booneUnit.ignore() stores a result but does not run a test", function()
+        _:test( "booneUnit.ignore is a function", function()        
+            _:expect( type( booneUnit.ignore ) ).is( "function" )
+        end )
+        -- test() returns a table
+        _:test( "booneUnit:test( description_string, function ) returns a table", function()
+            local testDesc = "Gingerbread Man"
+            local emptyTestFunc = function() end 
+            _:expect( type( booneUnit:ignore( testDesc, emptyTestFunc ) ) ).is( "table" )
+        end )
+    end )
     
-    
+end
+
+function testBooneUnitDelay()
     
 end
