@@ -82,10 +82,17 @@ function booneUnit:expect( conditional )
         local found = false
         local actual
         for k,v in pairs(conditional) do
-            if v == expected then
-                found = true
-                actual = string.format('target[ %s ] is %s', k, v )
+            -- make sure they are not different userdata types; "==" will throw error
+            if type( v ) ~= "userdata" 
+                or type( expected ) ~= "userdata" 
+                or  getmetatable( v ) == getmetatable( expected )
+            then  -- test for equality
+                if v == expected then
+                    found = true
+                    actual = string.format('target[ %s ] is %s', k, v )
+                end
             end
+             
         end
         --notify(found, expected)
         thisTest:registerResult( found, actual, expected )

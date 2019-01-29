@@ -328,7 +328,7 @@ function testBooneUnitExpect()
             end )
         end
     end )
-    
+    CodeaUnit.detailed = true
     _:describe( "booneUnit:expect( table ).has( value ) returns true when"..
                 " the table has that value stored under any key", function()
         local aVar = "bar"
@@ -342,15 +342,11 @@ function testBooneUnitExpect()
         local aTable = { true, false, "foo", aVar, "24", 24, 
                          emptyTable, alphaTable, aFunction, otherFunc,
                          aFunction(otherFunc(16)), 0.3296, math.pi, 
-                         aVector }
-                         -- userdata types throw error when compared against diff userdata type
-                         -- aColor }
+                         aVector, aColor }
         local bTable = { true, false, "foo", "bar", "24", 24, 
                          emptyTable, sameTable, aFunction, math.sin,
                          aFunction(math.sin(16)), 00.329600, math.pi, 
-                         vec2(5,2)}
-                         -- userdata types throw error when compared against diff userdata type
-                         -- aColor }
+                         vec2(5,2), aColor }
         for i, v in ipairs( bTable ) do
             local testDesc = string.format('booneUnit:expect(table).has(%s)', v )
             _:test( testDesc, function()
@@ -379,15 +375,11 @@ function testBooneUnitExpect()
         local aTable = { true, "false", "foo", aVar, baz, 24, 
                          emptyTable, alphaTable, aFunction, otherFunc,
                          aFunction(otherFunc(16)), 0.3296, math.pi, 
-                         aVector }
-                         -- userdata types throw error when compared against diff userdata type
-                         -- aColor }
+                         aVector, color(86)  }
         local bTable = { "true", false, "Foo", "bear", "baz", "24",  
                          {}, {"a","b","c"}, function(n)return n*n;end, math.cos,
                          aFunction(otherFunc(15.99)), -0.3296, 3.1415, 
-                         vec2(5,3) }
-                         -- userdata types throw error when compared against diff userdata type
-                         -- aColor }
+                         vec2(5,3), aColor }
         for i, v in ipairs( bTable ) do
             local testDesc = string.format('booneUnit:expect(table).has(%s)', v )
             _:test( testDesc, function()
@@ -660,7 +652,8 @@ function testBooneUnitTest()
     
     _.detailed = true
     -- booneUnit:test():status() 
-    --      returns true if all results are true and there is at least one result. 
+    --      Returns a string describing the aggregate result status
+    --      ( Empty | Ignored ) > Failed > Passed
     _:describe( 'booneUnit:test():status()\nReturns a string describing the aggregate result status', function()
         _:test( 'status() returns "empty" if there were no results', function() 
             booneUnit:reset()
@@ -714,6 +707,6 @@ end
 
 function testBooneUnitDelay()
     _:test( "born to fail", function()
-        -- _:expect( true ).is( false )
+        --_:expect( true ).is( false )
     end )
 end
