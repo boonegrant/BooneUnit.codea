@@ -44,6 +44,8 @@ function CodeaUnit:test(description, scenario)
     local status, err = pcall(scenario)
     if err then
         self.failures = self.failures + 1
+        self.totalFailed = self.totalFailed + 1
+        self.status = string.format( " %d FAILED ", self.totalFailed )
         print(string.format("%d: %s -- %s \n--FAIL", self.tests, self.description, err))
     end
     self._after()
@@ -57,6 +59,8 @@ function CodeaUnit:delay( numSeconds, scenario )
         local status, err = pcall(scenario)
         if err then
             self.failures = self.failures + 1
+            self.totalFailed = self.totalFailed + 1
+            self.status = string.format( " %d FAILED ", self.totalFailed )
             print(string.format("%d: %s -- %s \n--FAIL", testNum, description, err))
         end
     end )
@@ -74,10 +78,11 @@ function CodeaUnit:expect(conditional)
 
     local failed = function()
         self.failures = self.failures + 1
+        self.totalFailed = self.totalFailed + 1
+        self.status = string.format( " %d FAILED ", self.totalFailed )
         local actual = tostring(conditional)
         local expected = tostring(self.expected)
         print(string.format("%s -- Actual: %s, Expected: %s \n-- FAIL", message, actual, expected))
-        CodeaUnit.status = "FAILED"
     end
 
     local notify = function(result)
@@ -129,7 +134,8 @@ function CodeaUnit:expect(conditional)
 end
 
 CodeaUnit.execute = function()
-    CodeaUnit.status = "Passed"
+    CodeaUnit.status = "All Passed"
+    CodeaUnit.totalFailed = 0
     for i,v in pairs(listProjectTabs()) do
         local source = readProjectTab(v)
         for match in string.gmatch(source, "function%s-(test.-%(%))") do

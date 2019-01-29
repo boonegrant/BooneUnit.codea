@@ -1,4 +1,4 @@
-booneUnit = {resultTypes={"pass", "ignore", "pending", "empty test", "fail"},
+booneUnit = {resultTypes={"pass", "ignore", "pending", "empty", "fail"},
              errorMsgs={ expectWithoutTest = 'booneUnit-"expect()" statements should be placed inside a "test" declaration' }
             }
 function booneUnit:reset ()
@@ -37,7 +37,7 @@ function booneUnit:ignore( testDescription, scenario )
     print( string.format( "Dwezil-booneUnit.ignore( %s)", testDescription ) )
     local thisFeature = self.currentFeature or self:orphanage()
     local thisTest = booneUnit.newTest( thisFeature, testDescription )
-    thisTest:registerResult("ignored") 
+    thisTest:registerResult("ignore") 
     table.insert( thisFeature.tests, thisTest )   
     return thisTest
 end
@@ -183,20 +183,25 @@ end
 
 function booneUnit.newTest:status()
     if #self.results == 0 then
-        return "Empty test"
+        return "empty"
     end
     local isPending = false
+    local isPassing = true
     for i, v in ipairs( self.results ) do
-        if v.outcome == "ignored" then 
+        if v.outcome == "ignore" then 
             return v.outcome
         elseif v.outcome == false then 
-            return "Failed"
-        elseif v.outcome == "Pending" then 
+            return "fail"
+        elseif v.outcome == "pending" then 
             isPending = true
+        elseif v.outcome ~= true then
+            isPassing = false
+            isOther = v.outcome
         end
     end
-    if isPending then return "Pending" end
-    return "Passed"
+    if isPending then return "pending" end
+    if isPassing then return "pass" end
+    return isOther
 end
 
 function booneUnit.newTest:report()
