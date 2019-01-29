@@ -665,13 +665,13 @@ function testBooneUnitTest()
             local testTable = booneUnit:test( "an empty test", function()end )
             _:expect( testTable:status() ).is( "empty" )
         end )
-        _:test( "passed() returns true if there is one true result", function()
+        _:test( "status() returns 'pass' if there is one true result", function()
             local testTable = booneUnit:test( "one true result", function()
                 booneUnit:expect(true).is(true)
             end )
             _:expect( testTable:status() ).is( "pass" )
         end)
-        _:test( "passed() returns true if there are two true results", function()
+        _:test( "status() returns 'pass' if there are two true results", function()
             local testTable = booneUnit:test( "two true results", function()
                 booneUnit:expect(true).is(true)
                 booneUnit:expect(false).is(false)
@@ -679,7 +679,7 @@ function testBooneUnitTest()
             _:expect( testTable:status() ).is( "pass" )
         end)
         
-        _:test( "passed() returns true if there are ten true results", function()
+        _:test( "status() returns 'pass' if there are ten true results", function()
             local testTable = booneUnit:test( "ten true results", function()
                 for i = 1, 5 do
                     booneUnit:expect(true).is(true)
@@ -689,15 +689,15 @@ function testBooneUnitTest()
             _:expect( testTable:status() ).is( "pass" )
         end)
         
-        --[[ 
-        _:test( "passed() returns false if there is one false result", function()
+         
+        _:test( "status() returns 'fail' if there is one false result", function()
             local testTable = booneUnit:test( "one false result", function()
                 booneUnit:expect(true).is(false)
             end )
-            _:expect( testTable:status() ).is( "boing" )
+            _:expect( testTable:status() ).is( "fail" )
         end)
         
-        _:test( "passed() returns false if there are ten true results and one false one", function()
+        _:test( "status() returns 'fail' if there are ten true results and one false one", function()
             local testTable = booneUnit:test( "ten true results, one false", function()
                 for i = 1, 5 do
                     booneUnit:expect(true).is(true)
@@ -705,9 +705,9 @@ function testBooneUnitTest()
                 end
                 booneUnit:expect(false).is(true)
             end )
-            _:expect( testTable:status() ).is( "bnoing" )
+            _:expect( testTable:status() ).is( "fail" )
         end)
-        --]]
+        
     end )
 end
 
