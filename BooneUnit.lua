@@ -33,12 +33,12 @@ function booneUnit:test( testDescription, scenario )
     return thisTest
 end
 
-function booneUnit:ignore( description, scenario )
+function booneUnit:ignore( testDescription, scenario )
     print( string.format( "Dwezil-booneUnit.ignore( %s)", testDescription ) )
     local thisFeature = self.currentFeature or self:orphanage()
     local thisTest = booneUnit.newTest( thisFeature, testDescription )
+    thisTest:registerResult("ignored") 
     table.insert( thisFeature.tests, thisTest )   
-    thisTest:registerResult("ignore") 
     return thisTest
 end
 
@@ -181,5 +181,9 @@ function booneUnit.newTest:passed()
         if v.outcome ~= true then return false end
     end
     return testPassed
+end
+
+function booneUnit.newTest:status()
+    return "ignored"
 end
 
