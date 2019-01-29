@@ -185,7 +185,18 @@ function booneUnit.newTest:status()
     if #self.results == 0 then
         return "Empty test"
     end
-    return "ignored"
+    local isPending = false
+    for i, v in ipairs( self.results ) do
+        if v.outcome == "ignored" then 
+            return v.outcome
+        elseif v.outcome == false then 
+            return "Failed"
+        elseif v.outcome == "Pending" then 
+            isPending = true
+        end
+    end
+    if isPending then return "Pending" end
+    return "Passed"
 end
 
 function booneUnit.newTest:report()
