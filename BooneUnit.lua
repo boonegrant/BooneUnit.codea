@@ -1,6 +1,9 @@
-booneUnit = {resultTypes={"pass", "ignore", "pending", "empty", "fail"},
-             errorMsgs={ expectWithoutTest = 'booneUnit-"expect()" statements should be placed inside a "test" declaration' }
-            }
+booneUnit = {resultTypes={"pass", "ignore", "pending", "empty", "fail"} }
+booneUnit.errorMsgs = { 
+    expectWithoutTest = 'booneUnit-"expect()" statements should be placed inside a "test()" declaration'
+    --, delayWithoutTest =  'booneUnit-"delay()" statements should be placed inside a "test()" declaration'
+    --, testInsideTest = 'booneUnit-a "test()" declaration cannot be made inside another "test()" declaration'
+    }
 function booneUnit:reset ()
     self.features = {}
     self.currentFeature = nil
@@ -12,6 +15,7 @@ booneUnit:reset()
 function booneUnit:describe( featureDescription, featureTests )
     local thisFeature = self.newFeature( featureDescription, featureTests )
     table.insert( self.features, thisFeature )   
+    -- print( thisFeature:intro() )
     self.currentFeature = thisFeature
     thisFeature:runTests()
     self.currentFeature = nil
@@ -47,17 +51,6 @@ function booneUnit:ignore( testDescription, scenario )
     return thisTest
 end
 
-function booneUnit:orphanage()      -- create a home for tests outside of a :define() call
-    -- print( "Dwezil- Oh you poor lost test!" )
-    if ( self.aHomeForOrphanTests == nil ) then
-        self.aHomeForOrphanTests = self.newFeature( "Undefined", function() end )
-        table.insert( self.features, self.aHomeForOrphanTests )   
-        -- print( "Dwezil- I have made a home for you" )
-    end
-    -- print( string.format( "Dwezil- This is your home now: %s", self.aHomeForOrphanTests ) )
-    return self.aHomeForOrphanTests
-end
-
 function booneUnit:before(setup)
     if self.currentFeature then self.currentFeature.before = setup end
     -- error message: before and after must be inside a describe: declaration
@@ -72,29 +65,20 @@ function booneUnit:expect( conditional )
         error( self.errorMsgs.expectWithoutTest )
         return nil
     end
-    
-    local notify = function( result, expectation )
-        if result then
-            thisTest:registerResult( true, conditional, expectation )
-        else
-            thisTest:registerResult( false, conditional, expectation )
-        end
-    end
-    
+        
     local is = function(expected)
-        -- self.expected = expected
-        notify(conditional == expected, expected)
+        -- notify(conditional == expected, expected)
+        thisTest:registerResult( conditional == expected, conditional, expected )
         return(conditional == expected)
     end
 
     local isnt = function(expected)
-        -- self.expected = expected
-        notify( conditional ~= expected, string.format("not %s", expected) )
+        -- notify( conditional ~= expected, string.format("not %s", expected) )
+        thisTest:registerResult( conditional ~= expected, conditional, string.format("not %s", expected) )
         return( conditional ~= expected )
     end
 
     local has = function(expected)
-        -- self.expected = expected
         local found = false
         local actual
         for k,v in pairs(conditional) do
@@ -103,20 +87,21 @@ function booneUnit:expect( conditional )
                 actual = string.format('target[ %s ] is %s', k, v )
             end
         end
-        thisTest:registerResult( found, actual, expected )
         --notify(found, expected)
+        thisTest:registerResult( found, actual, expected )
         return found
     end
 
     local throws = function(expected)
-        -- self.expected = expected
         local status, error = pcall(conditional)
-        if not error then
-            conditional = "nothing thrown"
-            notify(false)
+        if not error then  -- what happens if "conditional" returns something?
+            -- conditional = "nothing thrown"
+            -- notify(false)
+            thisTest:registerResult( false, "Nothing thrown", expected )
             return false
         else
-            notify(string.find(error, expected, 1, true), error)
+            --notify(string.find(error, expected, 1, true), error)
+            thisTest:registerResult( string.find(error, expected, 1, true), error, expected )
             return true
         end
     end
@@ -127,6 +112,17 @@ function booneUnit:expect( conditional )
         has = has,
         throws = throws
     }
+end
+
+function booneUnit:orphanage()  -- create a home for tests not placed inside a :describe() declaration
+    -- print( "Dwezil- Oh you poor lost test!" )
+    if ( self.aHomeForOrphanTests == nil ) then
+        self.aHomeForOrphanTests = self.newFeature( "Not Specified", function() end )
+        table.insert( self.features, self.aHomeForOrphanTests )   
+        -- print( "Dwezil- I have made a home for you" )
+    end
+    -- print( string.format( "Dwezil- This is your home now: %s", self.aHomeForOrphanTests ) )
+    return self.aHomeForOrphanTests
 end
 
 
@@ -157,17 +153,15 @@ function booneUnit.newFeature.after() end
 -- Test class --
 booneUnit.newTest = class()
 function booneUnit.newTest:init( parent, testDescription, scenario )
-    self.feature = parent
+    self.feature = parent  -- not sure I need this,
     self.description = testDescription or ""
     self.test = scenario or ( function() end )
     self.results = {}
 end
 function booneUnit.newTest:run()
-    local status, err = pcall(self.test)
-    if err then
-        --self.failures = self.failures + 1
-        self:registerResult( false, err )
-        --store result
+    local status, error = pcall(self.test)
+    if error then
+        self:registerResult( false, "error", error )
     end
 end
 
@@ -195,7 +189,7 @@ function booneUnit.newTest:status()
     for i, v in ipairs( self.results ) do
         if v.outcome == "ignore" then 
             return v.outcome
-        elseif v.outcome == false then 
+        elseif not v.outcome then 
             return "fail"
         elseif v.outcome == "pending" then 
             isPending = true
@@ -209,5 +203,5 @@ function booneUnit.newTest:status()
     return isOther
 end
 
-function booneUnit.newTest:report()
+function booneUnit.newTest:report( detailed )
 end
