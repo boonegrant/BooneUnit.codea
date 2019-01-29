@@ -328,7 +328,7 @@ function testBooneUnitExpect()
             end )
         end
     end )
-    CodeaUnit.detailed = true
+    
     _:describe( "booneUnit:expect( table ).has( value ) returns true when"..
                 " the table has that value stored under any key", function()
         local aVar = "bar"
@@ -394,9 +394,29 @@ function testBooneUnitExpect()
         end
     end )
     
+    booneUnit.silent = false
+    CodeaUnit.detailed = true
+    _:describe( 'booneUnit:expect( function ).throws( string ) returns true when'..
+                ' that function throws an error with "string"', function()
+        _:test( 'booneUnit:expect().throws() returns false if no error is thrown', function()
+            local expectation 
+            booneUnit:test( "an empty test", function()
+                expectation = booneUnit:expect( function()end )
+            end )
+            _:expect( expectation.throws() ).is( false )
+        end )
+    end )
+     
+    
 end
 
-function testBooneUnitIgnore()    
+
+
+---------------------------
+
+
+
+function estBooneUnitIgnore()    
     -- Testing booneUnit.ignore()
     _:describe( "booneUnit.ignore() stores a result but does not run a test", function()
         _:test( "booneUnit.ignore is a function", function()        
@@ -448,7 +468,7 @@ function testBooneUnitIgnore()
     end )
 end
 
-function testBooneUnitTest()
+function estBooneUnitTest()
     -- booneUnit.test()
     _:describe( "booneUnit.test() returns a test object", function()
         _:test( "booneUnit.test() exists", function()
