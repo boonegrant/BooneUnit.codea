@@ -77,6 +77,7 @@ function CodeaUnit:expect(conditional)
         local actual = tostring(conditional)
         local expected = tostring(self.expected)
         print(string.format("%s -- Actual: %s, Expected: %s \n-- FAIL", message, actual, expected))
+        CodeaUnit.status = "FAILED"
     end
 
     local notify = function(result)
@@ -128,12 +129,14 @@ function CodeaUnit:expect(conditional)
 end
 
 CodeaUnit.execute = function()
+    CodeaUnit.status = "Passed"
     for i,v in pairs(listProjectTabs()) do
         local source = readProjectTab(v)
         for match in string.gmatch(source, "function%s-(test.-%(%))") do
             loadstring(match)()
         end
     end
+    print( string.format("\n\n------%s------\n", CodeaUnit.status ) )
 end
 
 CodeaUnit.detailed = true

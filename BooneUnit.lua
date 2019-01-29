@@ -170,8 +170,6 @@ function booneUnit.newTest:registerResult( outcome, actual, expected )
     table.insert( self.results, { outcome = outcome, actual = actual, expected = expected} )
     print( string.format( "  actual: %s \nexpected: %s \nDwezil-Result: %s ", actual, expected, outcome ) )
 end
-function booneUnit.newTest:report()
-end
 
 -- [test]:passed() - returns true if there is at least one result 
 --                   recorded and all results are successful
@@ -184,6 +182,11 @@ function booneUnit.newTest:passed()
 end
 
 function booneUnit.newTest:status()
+    if #self.results == 0 then
+        return "Empty test"
+    end
     return "ignored"
 end
 
+function booneUnit.newTest:report()
+end
