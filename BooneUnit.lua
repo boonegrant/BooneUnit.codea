@@ -20,7 +20,6 @@ function booneUnit:describe( featureDescription, featureTests )
 end
 
 function booneUnit:test( testDescription, scenario )
-    print( string.format( "Dwezil-booneUnit.test( %s)", testDescription ) )
     local thisFeature = self.currentFeature or self:orphanage()
     local thisTest = booneUnit.newTest( thisFeature, testDescription, scenario )
     table.insert( thisFeature.tests, thisTest )   
@@ -29,16 +28,22 @@ function booneUnit:test( testDescription, scenario )
     thisTest:run()
     self.currentTest = nil
     thisFeature:after()
-    -- thisTest:report( self.detailed )
+    if not self.silent then
+        print( string.format( "Dwezil:test( %s)\n" ..
+            "   ( %s )", thisTest.description, thisTest:status() ) )
+        -- thisTest:report( self.detailed )
+    end
     return thisTest
 end
 
 function booneUnit:ignore( testDescription, scenario )
-    print( string.format( "Dwezil-booneUnit.ignore( %s)", testDescription ) )
     local thisFeature = self.currentFeature or self:orphanage()
     local thisTest = booneUnit.newTest( thisFeature, testDescription )
     thisTest:registerResult("ignore") 
     table.insert( thisFeature.tests, thisTest )   
+    if not self.silent then
+        print( string.format( "Dwezil:ignore( %s)", testDescription ) )
+    end
     return thisTest
 end
 
@@ -168,7 +173,7 @@ end
 
 function booneUnit.newTest:registerResult( outcome, actual, expected )
     table.insert( self.results, { outcome = outcome, actual = actual, expected = expected} )
-    print( string.format( "  actual: %s \nexpected: %s \nDwezil-Result: %s ", actual, expected, outcome ) )
+    -- print( string.format( "  actual: %s \nexpected: %s \nDwezil-Result: %s ", actual, expected, outcome ) )
 end
 
 -- [test]:passed() - returns true if there is at least one result 

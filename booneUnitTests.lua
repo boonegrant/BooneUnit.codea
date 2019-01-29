@@ -1,6 +1,7 @@
 
-function bestBooneUnit()
+function testBooneUnit()
     CodeaUnit.detailed = false
+    booneUnit.silent = true
     local bu = booneUnit
     -- local theFeature = ""
     local atestDesc = "location: Springfield"
@@ -36,7 +37,7 @@ function bestBooneUnit()
         --tableKeyValueTest
         
         -- Result categories 
-        local definedResultTypes = { "pass", "fail", "ignore", "pending", "empty test"}
+        local definedResultTypes = { "pass", "fail", "ignore", "pending", "empty"}
         _:test( string.format( "There are %d result categories", #definedResultTypes ), function ()
             _:expect( #booneUnit.resultTypes ).is( #definedResultTypes )
         end )
@@ -85,7 +86,7 @@ function bestBooneUnit()
     
 end
 
-function lestMoonUnitFeature() 
+function bestMoonUnitFeature() 
     -- Feature Creation --
     _:describe( "booneUnit creates Features", function ()
         
@@ -163,7 +164,7 @@ function lestMoonUnitFeature()
     end )
 end
     
-function bestBooneUnitExpect()
+function testBooneUnitExpect()
     booneUnit:reset()
     _:describe( "Function booneUnit:expect() takes an argument and returns" ..
                 " a set of functions which evaluate that argument.", function()
@@ -656,7 +657,8 @@ function testBooneUnitTest()
         end)
         
     end )
-
+    
+    _.detailed = true
     -- booneUnit:test():status() 
     --      returns true if all results are true and there is at least one result. 
     _:describe( 'booneUnit:test():status()\nReturns a string describing the aggregate result status', function()
@@ -689,7 +691,6 @@ function testBooneUnitTest()
             _:expect( testTable:status() ).is( "pass" )
         end)
         
-         
         _:test( "status() returns 'fail' if there is one false result", function()
             local testTable = booneUnit:test( "one false result", function()
                 booneUnit:expect(true).is(false)
@@ -707,7 +708,7 @@ function testBooneUnitTest()
             end )
             _:expect( testTable:status() ).is( "fail" )
         end)
-        
+
     end )
 end
 

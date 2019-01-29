@@ -45,7 +45,7 @@ function CodeaUnit:test(description, scenario)
     if err then
         self.failures = self.failures + 1
         self.totalFailed = self.totalFailed + 1
-        self.status = string.format( " %d FAILED ", self.totalFailed )
+        self.status = string.format( "%d FAILED", self.totalFailed )
         print(string.format("%d: %s -- %s \n--FAIL", self.tests, self.description, err))
     end
     self._after()
@@ -60,7 +60,7 @@ function CodeaUnit:delay( numSeconds, scenario )
         if err then
             self.failures = self.failures + 1
             self.totalFailed = self.totalFailed + 1
-            self.status = string.format( " %d FAILED ", self.totalFailed )
+            self.status = string.format( "%d FAILED", self.totalFailed )
             print(string.format("%d: %s -- %s \n--FAIL", testNum, description, err))
         end
     end )
@@ -79,7 +79,7 @@ function CodeaUnit:expect(conditional)
     local failed = function()
         self.failures = self.failures + 1
         self.totalFailed = self.totalFailed + 1
-        self.status = string.format( " %d FAILED ", self.totalFailed )
+        self.status = string.format( "%d FAILED", self.totalFailed )
         local actual = tostring(conditional)
         local expected = tostring(self.expected)
         print(string.format("%s -- Actual: %s, Expected: %s \n-- FAIL", message, actual, expected))
@@ -142,7 +142,7 @@ CodeaUnit.execute = function()
             loadstring(match)()
         end
     end
-    print( string.format("\n\n------%s------\n", CodeaUnit.status ) )
+    print( string.format("\n\n------- %s -------\n", CodeaUnit.status ) )
 end
 
 CodeaUnit.detailed = true
