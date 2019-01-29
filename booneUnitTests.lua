@@ -403,6 +403,58 @@ function bestBooneUnitExpect()
     
 end
 
+function bestBooneUnitIgnore()    
+    -- Testing booneUnit.ignore()
+    _:describe( "booneUnit.ignore() stores a result but does not run a test", function()
+        _:test( "booneUnit.ignore is a function", function()        
+            _:expect( type( booneUnit.ignore ) ).is( "function" )
+        end )
+        -- test() returns a table
+        _:test( "booneUnit:ignore( description_string, function ) returns a table", function()
+            local testDesc = "Gingerbread Man"
+            local emptyTestFunc = function() end 
+            _:expect( type( booneUnit:ignore( testDesc, emptyTestFunc ) ) ).is( "table" )
+        end )
+        -- test() without arguments returns a table
+        _:test( "booneUnit:ignore() without arguments returns a table", function()
+            _:expect( type( booneUnit:ignore() ) ).is( "table" )
+        end )
+        -- test() returns a table of class NewTable
+        _:test( "booneUnit:ignore() returns a table of class NewTable", function()
+            local testDesc = "Gingerbread Man"
+            local emptyTestFunc = function() end 
+            local testReturn = booneUnit:ignore( testDesc, emptyTestFunc )
+            _:expect( testReturn:is_a( booneUnit.newTest ) ).is( true )
+        end )
+        -- properties of that table
+        do
+            local testDesc = "Gingerbread Man"
+            local emptyTestFunc = function() end 
+            local testTable = booneUnit:ignore( testDesc, emptyTestFunc )
+            local testTableProperties = { passed = "function",
+                                          report = "function",
+                                          results = "table",
+                                          description = "string",
+                                          registerResult = "function" }
+            memberTypeTest("booneUnit:ignore produces object", testTable, testTableProperties )
+        end
+        _:test( "booneUnit:ignore():passed() returns false", function() 
+            booneUnit:reset()
+            local testTable = booneUnit:ignore( "one true result", function()
+                booneUnit:expect(true).is(true)
+            end )
+            _:expect( testTable:passed() ).is( false )
+        end )
+        _:test( 'booneUnit:ignore():status() returns "ignored"', function() 
+            booneUnit:reset()
+            local testTable = booneUnit:ignore( "one true result", function()
+                booneUnit:expect(true).is(true)
+            end )
+            _:expect( testTable:status() ).is( "ignored" )
+        end )
+    end )
+end
+
 function testBooneUnitTest()
     -- booneUnit.test()
     _:describe( "booneUnit.test() returns a test object", function()
@@ -457,7 +509,6 @@ function testBooneUnitTest()
                 local testTable = booneUnit:test( aTestDesc, anEmptyTestFunc )
                 for j = 1, i do
                     testTable:registerResult( true, "foo", "bar" )
-                    --appends entry to table test.results
                 end
                 _:expect( #testTable.results ).is( i )
             end )
@@ -604,58 +655,6 @@ function testBooneUnitTest()
             _:expect( testTable:passed() ).is( false )
         end)
         
-    end )
-end
-
-function testBooneUnitIgnore()    
-    -- Testing booneUnit.ignore()
-    _:describe( "booneUnit.ignore() stores a result but does not run a test", function()
-        _:test( "booneUnit.ignore is a function", function()        
-            _:expect( type( booneUnit.ignore ) ).is( "function" )
-        end )
-        -- test() returns a table
-        _:test( "booneUnit:ignore( description_string, function ) returns a table", function()
-            local testDesc = "Gingerbread Man"
-            local emptyTestFunc = function() end 
-            _:expect( type( booneUnit:ignore( testDesc, emptyTestFunc ) ) ).is( "table" )
-        end )
-        -- test() without arguments returns a table
-        _:test( "booneUnit:ignore() without arguments returns a table", function()
-            _:expect( type( booneUnit:ignore() ) ).is( "table" )
-        end )
-        -- test() returns a table of class NewTable
-        _:test( "booneUnit:ignore() returns a table of class NewTable", function()
-            local testDesc = "Gingerbread Man"
-            local emptyTestFunc = function() end 
-            local testReturn = booneUnit:ignore( testDesc, emptyTestFunc )
-            _:expect( testReturn:is_a( booneUnit.newTest ) ).is( true )
-        end )
-        -- properties of that table
-        do
-            local testDesc = "Gingerbread Man"
-            local emptyTestFunc = function() end 
-            local testTable = booneUnit:ignore( testDesc, emptyTestFunc )
-            local testTableProperties = { passed = "function",
-                                          report = "function",
-                                          results = "table",
-                                          description = "string",
-                                          registerResult = "function" }
-            memberTypeTest("booneUnit:ignore produces object", testTable, testTableProperties )
-        end
-        _:test( "booneUnit:ignore():passed() returns false", function() 
-            booneUnit:reset()
-            local testTable = booneUnit:ignore( "one true result", function()
-                booneUnit:expect(true).is(true)
-            end )
-            _:expect( testTable:passed() ).is( false )
-        end )
-        _:test( 'booneUnit:ignore():status() returns "ignored"', function() 
-            booneUnit:reset()
-            local testTable = booneUnit:ignore( "one true result", function()
-                booneUnit:expect(true).is(true)
-            end )
-            _:expect( testTable:status() ).is( "ignored" )
-        end )
     end )
 end
 
