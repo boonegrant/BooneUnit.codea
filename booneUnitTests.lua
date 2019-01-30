@@ -400,7 +400,7 @@ function testBooneUnitExpect()
                 ' that function throws an error containing <string>,'..
                 ' otherwise it returns false', function()
         
-        _:test( 'expect().throws( "" ) returns true if any error is thrown', function()
+        _:test( 'expect().throws( "" ) returns true if any error string is thrown', function()
             local expectation 
             booneUnit:test( "a foo test", function()
                 expectation = booneUnit:expect( function()
@@ -410,7 +410,7 @@ function testBooneUnitExpect()
             _:expect( expectation.throws( "" ) ).is( true )
         end )
         
-        _:test( 'expect().throws( "" ) returns true if any error is thrown', function()
+        _:test( 'expect().throws( "" ) returns true if any error string is thrown', function()
             local expectation 
             booneUnit:test( "a bar exam", function()
                 expectation = booneUnit:expect( function()
@@ -418,6 +418,16 @@ function testBooneUnitExpect()
                 end )
             end )
             _:expect( expectation.throws( "" ) ).is( true )
+        end )
+        
+        _:test( 'expect().throws( "" ) returns false if an error table is thrown', function()
+            local expectation 
+            booneUnit:test( "throws table", function()
+                expectation = booneUnit:expect( function()
+                    error( { catchphrase = "Foo-yah!" } )
+                end )
+            end )
+            _:expect( expectation.throws( "" ) ).is( false )
         end )
         
         _:test( 'expect().throws() returns false if no error is thrown', function()

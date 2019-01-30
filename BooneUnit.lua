@@ -1,7 +1,7 @@
 booneUnit = {resultTypes={"pass", "ignore", "pending", "empty", "fail"} }
 booneUnit.errorMsgs = { 
     expectWithoutTest = 'booneUnit - "expect()" statements should be placed inside a "test()" declaration',
-    throwsArgIsNotFunction = 'booneUnit - ":throws( arg )" ; arg must be a function'
+    throwsArgIsNotFunction = 'booneUnit - ":expect( arg ).throws()" ; arg must be a function'
     --, delayWithoutTest =  'booneUnit-"delay()" statements should be placed inside a "test()" declaration'
     --, testInsideTest = 'booneUnit-a "test()" declaration cannot be made inside another "test()" declaration'
     }
@@ -101,25 +101,38 @@ function booneUnit:expect( conditional )
     end
 
     local throws = function(expected)
-        local thrower = conditional 
-        if type( thrower ) ~= "function" then
+        if type( conditional ) ~= "function" then 
+            -- expect( conditional ) : conditional is not function
             thisTest:registerResult( 
                 false, 
                 string.format( 'arg is "%s", not "function"', type( conditional )),
                 booneUnit.errorMsgs.throwsArgIsNotFunction 
             )
             return false
-        end
-        local ok, error = pcall( thrower )
-        if ok then  -- what happens if "conditional" returns something?
-            -- conditional = "nothing thrown"
-            -- notify(false)
-            thisTest:registerResult( false, "Nothing thrown", expected )
-            return false
-        else
-            --notify(string.find(error, expected, 1, true), error)
-            thisTest:registerResult( string.find(error, expected, 1, true), error, expected )
-            return true
+        else 
+            -- conditional is a function
+            local ok, error = pcall( conditional )
+            if ok then 
+                -- no error thrown
+                thisTest:registerResult( false, "Nothing thrown", expected )
+                return false
+            else 
+                -- some error was thrown 
+                local foundExpectedError 
+                if expected == nil then 
+                    -- any error is good enough
+                    foundExpectedError = true
+                elseif type( expected ) == "string" and type( error ) == "string" then  
+                    -- search for expected substring
+                    foundExpectedError = ( string.find(error, expected, 1, true) ~= nil )
+                else 
+                    -- not nil, not a string: test for equality
+                    foundExpectedError = ( expected == error ) 
+                end
+                -- register and return findings
+                thisTest:registerResult( foundExpectedError, error, expected )
+                return foundExpectedError
+            end
         end
     end
     
