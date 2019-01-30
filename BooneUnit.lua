@@ -1,6 +1,7 @@
 booneUnit = {resultTypes={"pass", "ignore", "pending", "empty", "fail"} }
 booneUnit.errorMsgs = { 
-    expectWithoutTest = 'booneUnit-"expect()" statements should be placed inside a "test()" declaration'
+    expectWithoutTest = 'booneUnit - "expect()" statements should be placed inside a "test()" declaration',
+    throwsArgIsNotFunction = 'booneUnit - ":throws( arg )" ; arg must be a function'
     --, delayWithoutTest =  'booneUnit-"delay()" statements should be placed inside a "test()" declaration'
     --, testInsideTest = 'booneUnit-a "test()" declaration cannot be made inside another "test()" declaration'
     }
@@ -21,6 +22,14 @@ function booneUnit:describe( featureDescription, featureTests )
     self.currentFeature = nil
     -- print( thisFeature:report( self.detailed ) )
     return thisFeature
+end
+
+function booneUnit:before(setup)
+    if self.currentFeature then self.currentFeature.before = setup end
+    -- error message: before and after must be inside a describe: declaration
+end
+function booneUnit:after(teardown)
+    if self.currentFeature then self.currentFeature.after = teardown end
 end
 
 function booneUnit:test( testDescription, scenario )
@@ -49,14 +58,6 @@ function booneUnit:ignore( testDescription, scenario )
         print( string.format( "Dwezil:ignore( %s)", testDescription ) )
     end
     return thisTest
-end
-
-function booneUnit:before(setup)
-    if self.currentFeature then self.currentFeature.before = setup end
-    -- error message: before and after must be inside a describe: declaration
-end
-function booneUnit:after(teardown)
-    if self.currentFeature then self.currentFeature.after = teardown end
 end
 
 function booneUnit:expect( conditional )
@@ -100,8 +101,17 @@ function booneUnit:expect( conditional )
     end
 
     local throws = function(expected)
-        local status, error = pcall(conditional)
-        if not error then  -- what happens if "conditional" returns something?
+        local thrower = conditional 
+        if type( thrower ) ~= "function" then
+            thisTest:registerResult( 
+                false, 
+                string.format( 'arg is "%s", not "function"', type( conditional )),
+                booneUnit.errorMsgs.throwsArgIsNotFunction 
+            )
+            return false
+        end
+        local ok, error = pcall( thrower )
+        if ok then  -- what happens if "conditional" returns something?
             -- conditional = "nothing thrown"
             -- notify(false)
             thisTest:registerResult( false, "Nothing thrown", expected )

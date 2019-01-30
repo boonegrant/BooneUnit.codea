@@ -398,16 +398,23 @@ function testBooneUnitExpect()
     CodeaUnit.detailed = true
     _:describe( 'booneUnit:expect( function ).throws( string ) returns true when'..
                 ' that function throws an error with "string"', function()
-        _:test( 'booneUnit:expect().throws() returns false if no error is thrown', function()
+        _:test( 'expect().throws() returns false if no error is thrown', function()
             local expectation 
             booneUnit:test( "an empty test", function()
                 expectation = booneUnit:expect( function()end )
             end )
             _:expect( expectation.throws() ).is( false )
         end )
-    end )
-     
-    
+        
+        _:test( 'expect( func ).throws() returns false if no function is evaluated', function()
+            local expectation 
+            booneUnit:test( "an empty test", function()
+                expectation = booneUnit:expect( "string" )
+            end )
+            _:expect( expectation.throws(  ) ).is( false )
+        end )
+        
+    end )    
 end
 
 
