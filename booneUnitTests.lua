@@ -396,22 +396,44 @@ function testBooneUnitExpect()
     
     booneUnit.silent = false
     CodeaUnit.detailed = true
-    _:describe( 'booneUnit:expect( function ).throws( string ) returns true when'..
-                ' that function throws an error with "string"', function()
+    _:describe( 'booneUnit:expect( function ).throws( <string> ) returns true when'..
+                ' that function throws an error containing <string>,'..
+                ' otherwise it returns false', function()
+        
+        _:test( 'expect().throws( "" ) returns true if any error is thrown', function()
+            local expectation 
+            booneUnit:test( "a foo test", function()
+                expectation = booneUnit:expect( function()
+                    error( "foo error" )
+                end )
+            end )
+            _:expect( expectation.throws( "" ) ).is( true )
+        end )
+        
+        _:test( 'expect().throws( "" ) returns true if any error is thrown', function()
+            local expectation 
+            booneUnit:test( "a bar exam", function()
+                expectation = booneUnit:expect( function()
+                    error( "bar mistake" )
+                end )
+            end )
+            _:expect( expectation.throws( "" ) ).is( true )
+        end )
+        
         _:test( 'expect().throws() returns false if no error is thrown', function()
             local expectation 
-            booneUnit:test( "an empty test", function()
+            booneUnit:test( "an empty function", function()
                 expectation = booneUnit:expect( function()end )
             end )
-            _:expect( expectation.throws() ).is( false )
+            _:expect( expectation.throws("") ).is( false )
         end )
         
         _:test( 'expect( func ).throws() returns false if no function is evaluated', function()
             local expectation 
-            booneUnit:test( "an empty test", function()
-                expectation = booneUnit:expect( "string" )
+            booneUnit:test( "a nil test", function()
+                expectation = booneUnit:expect( nil )
             end )
-            _:expect( expectation.throws(  ) ).is( false )
+            _:expect( expectation.throws("") ).is( false )
         end )
         
     end )    
