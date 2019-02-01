@@ -1,4 +1,3 @@
-
 function testBooneUnit()
     CodeaUnit.detailed = false
     booneUnit.silent = true
@@ -396,20 +395,97 @@ function testBooneUnitExpect()
     
     booneUnit.silent = false
     CodeaUnit.detailed = true
-    _:describe( 'booneUnit:expect( function ).throws( <string> ) returns true when'..
-                ' that function throws an error containing <string>,'..
-                ' otherwise it returns false', function()
+    _:describe( 'booneUnit:expect( <function> ).throws( <something> ) executes the function'..
+        ' given to expect() and returns true if it throws an error containing <error>'..
+        ' ( usually a string )', function()
         
-        _:test( 'expect().throws( "" ) returns true if any error string is thrown', function()
+        local barStrings = { "bar", "Barbara", "foobar" }
+        local barlessValues = { "Bar", "Foo", "Hannah-Barbera", "b ar", "", 7, {}, function()end }
+        local errorToFind = { "", "foo", "bar"}
+        
+        -- produces failed result if expect( arg ); arg is not a function.
+        _:test( 'expect( func ).throws() returns false if no function is evaluated', function()
             local expectation 
-            booneUnit:test( "a foo test", function()
-                expectation = booneUnit:expect( function()
-                    error( "foo error" )
-                end )
+            local throwTest = booneUnit:test( "a nil expectation", function()
+                expectation = booneUnit:expect( nil )
             end )
-            _:expect( expectation.throws( "" ) ).is( true )
+            _:expect( expectation.throws() ).is( false )
+            _:expect( throwTest:passed() ).is( false )
         end )
         
+        -- produces failed result if function does not throw error
+        _:test( 'expect().throws() returns false if no error is thrown', function()
+            local expectation 
+            booneUnit:test( "an empty function", function()
+                expectation = booneUnit:expect( function()end )
+            end )
+            _:expect( expectation.throws("") ).is( false )
+        end )
+    end )
+    
+    -- produces passing result if throw() has no argument and any error is thrown
+    _:describe( 'booneUnit:expect( <function> ).throws( nil ) returns true for any error\n', function()
+        local thingsToThrow = { "", "a foo test", "a bar exam", 7, math.pi, {"table"}, function() end }        
+            for i, v in ipairs( thingsToThrow ) do
+            _:test( string.format( 'expect( <function> ).throws() \ncatches: %s', v ), function()
+                local expectation 
+                booneUnit:test( string.format("throw and catch: %s", v ), function()
+                    expectation = booneUnit:expect( function()
+                        error( v )
+                    end )
+                end )
+                _:expect( expectation.throws() ).is( true )
+            end )
+        end
+        _:test( 'expect( <function> ).throws( nil ) \ncatches: nil', function()
+            local expectation 
+            booneUnit:test( 'throw and catch: nil', function()
+                expectation = booneUnit:expect( function()
+                    error( nil )
+                end )
+            end )
+            _:expect( expectation.throws( ) ).is( true )
+        end )
+    end )
+        
+    _:describe( 'booneUnit:expect(<func>).throws( "" ) returns true if any error string is thrown', function()
+        local stringsToThrow = { "", "a foo test", "a bar exam", "error", "booneUniterrorMsgsexpectWithoutTest" }        
+        for i, v in ipairs( stringsToThrow ) do
+            _:test( string.format( 'expect( <function throws "%s"> ).throws("") \ncatches: "%s"', v, v ), function()
+                local expectation 
+                booneUnit:test( string.format('throw and catch: "%s"', v ), function()
+                    expectation = booneUnit:expect( function()
+                        error( v )
+                    end )
+                end )
+                _:expect( expectation.throws( "" ) ).is( true )
+            end )
+        end
+        local notStringsToThrow = { {}, 7, function()end, vec2(4,5) }
+        for i, v in ipairs( notStringsToThrow ) do
+            _:test( string.format( 'expect( <function throws %s> ).throws("")'..
+            ' \ndoes not catch: "%s"', type(v), v ), function()
+                local expectation 
+                booneUnit:test( string.format('throw and catch: "%s"', v ), function()
+                    expectation = booneUnit:expect( function()
+                        error( v )
+                    end )
+                end )
+                _:expect( expectation.throws( "" ) ).is( false )
+            end )
+        end
+        _:test( 'expect( <function throws nil> ).throws("") \ncatches: nil', function()
+            local expectation 
+            booneUnit:test( 'throw and catch: nil', function()
+                expectation = booneUnit:expect( function()
+                    error( nil )
+                end )
+            end )
+            _:expect( expectation.throws( "" ) ).is( false )
+        end )
+    end )
+    
+    _:describe( "", function()
         _:test( 'expect().throws( "" ) returns true if any error string is thrown', function()
             local expectation 
             booneUnit:test( "a bar exam", function()
@@ -428,22 +504,6 @@ function testBooneUnitExpect()
                 end )
             end )
             _:expect( expectation.throws( "" ) ).is( false )
-        end )
-        
-        _:test( 'expect().throws() returns false if no error is thrown', function()
-            local expectation 
-            booneUnit:test( "an empty function", function()
-                expectation = booneUnit:expect( function()end )
-            end )
-            _:expect( expectation.throws("") ).is( false )
-        end )
-        
-        _:test( 'expect( func ).throws() returns false if no function is evaluated', function()
-            local expectation 
-            booneUnit:test( "a nil test", function()
-                expectation = booneUnit:expect( nil )
-            end )
-            _:expect( expectation.throws("") ).is( false )
         end )
         
     end )    
