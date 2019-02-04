@@ -393,15 +393,9 @@ function testBooneUnitExpect()
         end
     end )
     
-    booneUnit.silent = false
-    CodeaUnit.detailed = true
     _:describe( 'booneUnit:expect( <function> ).throws( <something> ) executes the function'..
         ' given to expect() and returns true if it throws an error containing <error>'..
         ' ( usually a string )', function()
-        
-        local barStrings = { "bar", "Barbara", "foobar" }
-        local errorToFind = { "", "foo", "bar"}
-        
         -- produces failed result if expect( arg ); arg is not a function.
         _:test( 'expect( func ).throws() returns false if no function is evaluated', function()
             local expectation 
@@ -486,7 +480,6 @@ function testBooneUnitExpect()
     
     _:describe( 'booneUnit:expect(<func>).throws( <string> ) returns true'..
         ' only if <string> is found in the error', function()
-        
         local barStrings = { "bar", "Barbara", "foobar" }
         for i, v in ipairs( barStrings ) do
             _:test( string.format( 'expect( <function throws "%s"> ).throws("bar") \ncatches: "%s"', v, v ), function()
@@ -514,12 +507,6 @@ function testBooneUnitExpect()
         
     end )
 end
-
-
-
----------------------------
-
-
 
 function estBooneUnitIgnore()    
     -- Testing booneUnit.ignore()
@@ -831,7 +818,10 @@ function estBooneUnitTest()
 end
 
 function testBooneUnitDelay()
-    _:test( "born to fail", function()
-        --_:expect( true ).is( false )
+    _:describe( 'booneUnit:delay() evaluates an the conclusion to a test'..
+        ' after a certain amount of time has passed', function()
+        _:test( "booneUnit:delay() is a function", function()
+            _:expect( type( booneUnit.delay ) ).is( "function" )
+        end )
     end )
 end

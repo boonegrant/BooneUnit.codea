@@ -32,6 +32,17 @@ function booneUnit:after(teardown)
     if self.currentFeature then self.currentFeature.after = teardown end
 end
 
+function booneUnit:ignore( testDescription, scenario )
+    local thisFeature = self.currentFeature or self:orphanage()
+    local thisTest = booneUnit.newTest( thisFeature, testDescription )
+    thisTest:registerResult("ignore") 
+    table.insert( thisFeature.tests, thisTest )   
+    if not self.silent then
+        print( string.format( "Dwezil:ignore( %s)", testDescription ) )
+    end
+    return thisTest
+end
+
 function booneUnit:test( testDescription, scenario )
     local thisFeature = self.currentFeature or self:orphanage()
     local thisTest = booneUnit.newTest( thisFeature, testDescription, scenario )
@@ -49,15 +60,8 @@ function booneUnit:test( testDescription, scenario )
     return thisTest
 end
 
-function booneUnit:ignore( testDescription, scenario )
-    local thisFeature = self.currentFeature or self:orphanage()
-    local thisTest = booneUnit.newTest( thisFeature, testDescription )
-    thisTest:registerResult("ignore") 
-    table.insert( thisFeature.tests, thisTest )   
-    if not self.silent then
-        print( string.format( "Dwezil:ignore( %s)", testDescription ) )
-    end
-    return thisTest
+function booneUnit:delay()
+    
 end
 
 function booneUnit:expect( conditional )
