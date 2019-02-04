@@ -400,7 +400,6 @@ function testBooneUnitExpect()
         ' ( usually a string )', function()
         
         local barStrings = { "bar", "Barbara", "foobar" }
-        local barlessValues = { "Bar", "Foo", "Hannah-Barbera", "b ar", "", 7, {}, function()end }
         local errorToFind = { "", "foo", "bar"}
         
         -- produces failed result if expect( arg ); arg is not a function.
@@ -485,28 +484,35 @@ function testBooneUnitExpect()
         end )
     end )
     
-    _:describe( "", function()
-        _:test( 'expect().throws( "" ) returns true if any error string is thrown', function()
-            local expectation 
-            booneUnit:test( "a bar exam", function()
-                expectation = booneUnit:expect( function()
-                    error( "bar mistake" )
-                end )
-            end )
-            _:expect( expectation.throws( "" ) ).is( true )
-        end )
+    _:describe( 'booneUnit:expect(<func>).throws( <string> ) returns true'..
+        ' only if <string> is found in the error', function()
         
-        _:test( 'expect().throws( "" ) returns false if an error table is thrown', function()
-            local expectation 
-            booneUnit:test( "throws table", function()
-                expectation = booneUnit:expect( function()
-                    error( { catchphrase = "Foo-yah!" } )
+        local barStrings = { "bar", "Barbara", "foobar" }
+        for i, v in ipairs( barStrings ) do
+            _:test( string.format( 'expect( <function throws "%s"> ).throws("bar") \ncatches: "%s"', v, v ), function()
+                local expectation 
+                booneUnit:test( 'catch: "bar"', function()
+                    expectation = booneUnit:expect( function()
+                        error( v )
+                    end )
                 end )
+                _:expect( expectation.throws( "bar" ) ).is( true )
             end )
-            _:expect( expectation.throws( "" ) ).is( false )
-        end )
+        end
+        local barlessValues = { "Bar", "Foo", "Hannah-Barbera", "b ar", "", 7, {}, function()end }
+        for i, v in ipairs( barlessValues ) do
+            _:test( string.format( 'expect( <function throws "%s"> ).throws("bar") \n not caught', v ), function()
+                local expectation 
+                booneUnit:test( 'catch: "bar"', function()
+                    expectation = booneUnit:expect( function()
+                        error( v )
+                    end )
+                end )
+                _:expect( expectation.throws( "bar" ) ).is( false )
+            end )
+        end
         
-    end )    
+    end )
 end
 
 
