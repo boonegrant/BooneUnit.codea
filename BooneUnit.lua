@@ -60,8 +60,10 @@ function booneUnit:test( testDescription, scenario )
     return thisTest
 end
 
-function booneUnit:delay()
-    
+function booneUnit:delay() 
+end
+
+function booneUnit:continue()
 end
 
 function booneUnit:expect( conditional )

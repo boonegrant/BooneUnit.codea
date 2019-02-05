@@ -823,5 +823,8 @@ function testBooneUnitDelay()
         _:test( "booneUnit:delay() is a function", function()
             _:expect( type( booneUnit.delay ) ).is( "function" )
         end )
+        _:test( "booneUnit:continue() is a function", function()
+            _:expect( type( booneUnit.continue ) ).is( "function" )
+        end )
     end )
 end
