@@ -820,11 +820,15 @@ end
 function testBooneUnitDelay()
     _:describe( 'booneUnit:delay() evaluates an the conclusion to a test'..
         ' after a certain amount of time has passed', function()
+        booneUnit:reset()
         _:test( "booneUnit:delay() is a function", function()
             _:expect( type( booneUnit.delay ) ).is( "function" )
         end )
         _:test( "booneUnit:continue() is a function", function()
             _:expect( type( booneUnit.continue ) ).is( "function" )
+        end )
+        _:test( "booneUnit:delay() throws error if not inside a test", function()
+            _:expect( function() booneUnit:delay() end ).throws( booneUnit.errorMsgs.delayWithoutTest )
         end )
     end )
 end

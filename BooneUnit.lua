@@ -1,8 +1,8 @@
 booneUnit = {resultTypes={"pass", "ignore", "pending", "empty", "fail"} }
 booneUnit.errorMsgs = { 
     expectWithoutTest = 'booneUnit - "expect()" statements should be placed inside a "test()" declaration',
+    delayWithoutTest =  'booneUnit - "delay()" statements should be placed inside a "test()" declaration',
     throwsArgIsNotFunction = 'booneUnit - ":expect( arg ).throws()" ; arg must be a function'
-    --, delayWithoutTest =  'booneUnit-"delay()" statements should be placed inside a "test()" declaration'
     --, testInsideTest = 'booneUnit-a "test()" declaration cannot be made inside another "test()" declaration'
     }
 function booneUnit:reset ()
@@ -60,7 +60,12 @@ function booneUnit:test( testDescription, scenario )
     return thisTest
 end
 
-function booneUnit:delay() 
+function booneUnit:delay()
+    local thisTest = self.currentTest
+    if thisTest == nil then
+        error( self.errorMsgs.delayWithoutTest, 2 )
+        return nil
+    end
 end
 
 function booneUnit:continue()
@@ -69,7 +74,7 @@ end
 function booneUnit:expect( conditional )
     local thisTest = self.currentTest
     if thisTest == nil then
-        error( self.errorMsgs.expectWithoutTest )
+        error( self.errorMsgs.expectWithoutTest, 2 )
         return nil
     end
         
