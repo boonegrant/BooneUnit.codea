@@ -49,7 +49,7 @@ function booneUnit:test( testDescription, scenario )
     table.insert( thisFeature.tests, thisTest )   
     thisFeature:before()
     self.currentTest = thisTest
-    thisTest:run()
+    thisTest:run( scenario )
     self.currentTest = nil
     thisFeature:after()
     if not self.silent then
@@ -60,15 +60,19 @@ function booneUnit:test( testDescription, scenario )
     return thisTest
 end
 
-function booneUnit:delay()
+function booneUnit:delay( scenario )
     local thisTest = self.currentTest
     if thisTest == nil then
         error( self.errorMsgs.delayWithoutTest, 2 )
         return nil
     end
+    booneUnit:continue( thisTest, scenario )
 end
 
-function booneUnit:continue()
+function booneUnit:continue( thisTest, scenario )
+    self.currentTest = thisTest
+    thisTest:run( scenario )
+    self.currentTest = nil
 end
 
 function booneUnit:expect( conditional )
@@ -199,8 +203,8 @@ function booneUnit.newTest:init( parent, testDescription, scenario )
     self.test = scenario or ( function() end )
     self.results = {}
 end
-function booneUnit.newTest:run()
-    local status, error = pcall(self.test)
+function booneUnit.newTest:run( scenario )
+    local status, error = pcall( scenario or function() end )
     if error then
         self:registerResult( false, "error", error )
     end
@@ -208,7 +212,7 @@ end
 
 function booneUnit.newTest:registerResult( outcome, actual, expected )
     table.insert( self.results, { outcome = outcome, actual = actual, expected = expected} )
-    -- print( string.format( "  actual: %s \nexpected: %s \nDwezil-Result: %s ", actual, expected, outcome ) )
+    print( string.format( "  actual: %s \nexpected: %s \nDwezil-Result: %s ", actual, expected, outcome ) )
 end
 
 -- [test]:passed() - returns true if there is at least one result 

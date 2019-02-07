@@ -818,7 +818,10 @@ function estBooneUnitTest()
 end
 
 function testBooneUnitDelay()
-    _:describe( 'booneUnit:delay() evaluates an the conclusion to a test'..
+    CodeaUnit.detailed = true
+    booneUnit.detailed = true
+    booneUnit.silent = false
+    _:describe( 'booneUnit:delay() evaluates the conclusion to a test'..
         ' after a certain amount of time has passed', function()
         booneUnit:reset()
         _:test( "booneUnit:delay() is a function", function()
@@ -830,5 +833,18 @@ function testBooneUnitDelay()
         _:test( "booneUnit:delay() throws error if not inside a test", function()
             _:expect( function() booneUnit:delay() end ).throws( booneUnit.errorMsgs.delayWithoutTest )
         end )
+        ---[[
+        _:test( "booneUnit:continue() runs the function passed in booneUnit.delay", function()
+            local thisHasRun = false
+            booneUnit:test( "do a delay", function()
+                print( "getting ready" )
+                booneUnit:delay( function() 
+                    thisHasRun = true
+                end )
+                print( "did it work?" )
+            end )
+            _:expect( thisHasRun ).is( true )
+        end )
+        --]]
     end )
 end
