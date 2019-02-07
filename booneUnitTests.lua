@@ -762,7 +762,6 @@ function estBooneUnitTest()
         
     end )
     
-    _.detailed = true
     -- booneUnit:test():status() 
     --      Returns a string describing the aggregate result status
     --      ( Empty | Ignored ) > Failed > Passed
@@ -832,6 +831,15 @@ function testBooneUnitDelay()
         end )
         _:test( "booneUnit:delay() throws error if not inside a test", function()
             _:expect( function() booneUnit:delay() end ).throws( booneUnit.errorMsgs.delayWithoutTest )
+        end )
+        _:test( "booneUnit:delay() sets test status to pending", function()
+            local thisHasRun = false
+            local testTable = booneUnit:test( "do a delay", function()
+                booneUnit:delay( function() 
+                    thisHasRun = true
+                end )
+            end )
+            _:expect( testTable:status() ).is( "pending" )
         end )
         ---[[
         _:test( "booneUnit:continue() runs the function passed in booneUnit.delay", function()

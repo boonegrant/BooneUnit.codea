@@ -66,6 +66,7 @@ function booneUnit:delay( scenario )
         error( self.errorMsgs.delayWithoutTest, 2 )
         return nil
     end
+    thisTest:registerResult( "pending" ) -- next add tween id
     booneUnit:continue( thisTest, scenario )
 end
 
