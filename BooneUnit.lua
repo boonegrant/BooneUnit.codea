@@ -161,9 +161,10 @@ function booneUnit:expect( conditional )
 end
 
 function booneUnit:orphanage()  -- create a home for tests not placed inside a :describe() declaration
+    -- this is so they can be grouped and tabulated together 
     -- print( "Dwezil- Oh you poor lost test!" )
-    if ( self.aHomeForOrphanTests == nil ) then
-        self.aHomeForOrphanTests = self.newFeature( "Not Specified", function() end )
+    if ( self.aHomeForOrphanTests == nil ) then  -- or aHomeForOrphanTests ~= self.features[#self.features]
+        self.aHomeForOrphanTests = self.newFeature( "No Description", function() end )
         table.insert( self.features, self.aHomeForOrphanTests )   
         -- print( "Dwezil- I have made a home for you" )
     end
@@ -193,8 +194,8 @@ function booneUnit.newFeature:results()
     return string.format( "Feature: %s \nResults go here", self.description )
     -- do some tallying
 end
-function booneUnit.newFeature.before() end
-function booneUnit.newFeature.after() end
+function booneUnit.newFeature.before() end -- default empty function
+function booneUnit.newFeature.after() end  -- default empty functionq
 
 -- Test class --
 booneUnit.newTest = class()
