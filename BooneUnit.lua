@@ -53,8 +53,8 @@ function booneUnit:test( testDescription, scenario )
     self.currentTest = nil
     thisFeature:after()
     if not self.silent then
-        print( string.format( "Dwezil:test( %s)\n" ..
-            "   ( %s )", thisTest.description, thisTest:status() ) )
+        print( string.format( "Dwezil:test( %s )\n" ..
+            "   [ %s ]", thisTest.description, thisTest:status() ) )
         -- thisTest:report( self.detailed )
     end
     return thisTest
@@ -67,13 +67,15 @@ function booneUnit:delay( scenario )
         return nil
     end
     thisTest:registerResult( "pending" ) -- next add tween id
-    booneUnit:continue( thisTest, scenario )
+    local pendingIndex = #thisTest.results
+    self:continue( thisTest, pendingIndex, scenario )
 end
 
-function booneUnit:continue( thisTest, scenario )
+function booneUnit:continue( thisTest, pendingIndex, scenario )
     self.currentTest = thisTest
     thisTest:run( scenario )
     self.currentTest = nil
+    table.remove( thisTest.results, pendingIndex )
 end
 
 function booneUnit:expect( conditional )
@@ -215,6 +217,7 @@ end
 function booneUnit.newTest:registerResult( outcome, actual, expected )
     table.insert( self.results, { outcome = outcome, actual = actual, expected = expected} )
     print( string.format( "  actual: %s \nexpected: %s \nDwezil-Result: %s ", actual, expected, outcome ) )
+    return #self.results
 end
 
 -- [test]:passed() - returns true if there is at least one result 

@@ -142,9 +142,12 @@ CodeaUnit.execute = function()
             loadstring(match)()
         end
     end
-    print( string.format("\n\n------- %s -------\n", CodeaUnit.status ) )
+    CodeaUnit.summarize()
 end
 
+CodeaUnit.summarize = function()
+        print( string.format("\n\n------- %s -------\n", CodeaUnit.status ) )
+end
 CodeaUnit.detailed = true
 
 --_ = CodeaUnit()

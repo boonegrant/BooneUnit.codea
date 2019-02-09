@@ -833,25 +833,42 @@ function testBooneUnitDelay()
             _:expect( function() booneUnit:delay() end ).throws( booneUnit.errorMsgs.delayWithoutTest )
         end )
         _:test( "booneUnit:delay() sets test status to pending", function()
-            local thisHasRun = false
+            local doneDelayStuff = false
+
             local testTable = booneUnit:test( "do a delay", function()
                 booneUnit:delay( function() 
-                    thisHasRun = true
+                    doneDelayStuff = true
+
+                    _:expect( booneUnit.currentTest:status() ).is( "pending" )
                 end )
             end )
-            _:expect( testTable:status() ).is( "pending" )
+        end )
+        _:test( "booneUnit:continue() removes pending status ", function()
+            local doneDelayStuff = false
+
+            local testTable
+            local testTable = booneUnit:test( "do a delay", function()
+                booneUnit:delay( function() 
+                    doneDelayStuff = true
+
+                end )
+            end )
+            _:expect( testTable:status() ).isnt( "pending" )
         end )
         ---[[
         _:test( "booneUnit:continue() runs the function passed in booneUnit.delay", function()
-            local thisHasRun = false
+            local doneDelayStuff = false
+
             booneUnit:test( "do a delay", function()
                 print( "getting ready" )
                 booneUnit:delay( function() 
-                    thisHasRun = true
+                    doneDelayStuff = true
+
                 end )
                 print( "did it work?" )
             end )
-            _:expect( thisHasRun ).is( true )
+            _:expect( doneDelayStuff ).is( true )
+
         end )
         --]]
     end )
