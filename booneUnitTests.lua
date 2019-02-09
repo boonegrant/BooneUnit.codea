@@ -1,7 +1,6 @@
 function testBooneUnit()
     CodeaUnit.detailed = false
     booneUnit.silent = true
-    local bu = booneUnit
     -- local theFeature = ""
     local atestDesc = "location: Springfield"
     local atestFunc = function ()
@@ -836,7 +835,7 @@ function testBooneUnitDelay()
             local doneDelayStuff = false
 
             local testTable = booneUnit:test( "do a delay", function()
-                booneUnit:delay( function() 
+                booneUnit:delay( 0.01, function() 
                     doneDelayStuff = true
 
                     _:expect( booneUnit.currentTest:status() ).is( "pending" )
@@ -848,12 +847,14 @@ function testBooneUnitDelay()
 
             local testTable
             local testTable = booneUnit:test( "do a delay", function()
-                booneUnit:delay( function() 
+                booneUnit:delay( 0.01, function() 
                     doneDelayStuff = true
 
                 end )
             end )
-            _:expect( testTable:status() ).isnt( "pending" )
+            tween.delay( 0.2, function()
+                _:expect( testTable:status() ).isnt( "pending" )
+            end )
         end )
         ---[[
         _:test( "booneUnit:continue() runs the function passed in booneUnit.delay", function()
@@ -861,15 +862,19 @@ function testBooneUnitDelay()
 
             booneUnit:test( "do a delay", function()
                 print( "getting ready" )
-                booneUnit:delay( function() 
+                booneUnit:delay( 0.001, function() 
                     doneDelayStuff = true
-
                 end )
                 print( "did it work?" )
             end )
-            _:expect( doneDelayStuff ).is( true )
+            tween.delay( 0.5, function() 
+                _:expect( doneDelayStuff ).is( true )
+            end )
 
         end )
         --]]
+    end )
+    tween.delay( 1, function()
+        _:summarize()
     end )
 end

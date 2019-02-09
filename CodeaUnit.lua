@@ -133,6 +133,10 @@ function CodeaUnit:expect(conditional)
     }
 end
 
+function CodeaUnit:summarize()
+        print( string.format("\n\n------- %s -------\n", CodeaUnit.status ) )
+end
+
 CodeaUnit.execute = function()
     CodeaUnit.status = "All Passed"
     CodeaUnit.totalFailed = 0
@@ -145,9 +149,6 @@ CodeaUnit.execute = function()
     CodeaUnit.summarize()
 end
 
-CodeaUnit.summarize = function()
-        print( string.format("\n\n------- %s -------\n", CodeaUnit.status ) )
-end
 CodeaUnit.detailed = true
 
 --_ = CodeaUnit()

@@ -60,7 +60,7 @@ function booneUnit:test( testDescription, scenario )
     return thisTest
 end
 
-function booneUnit:delay( scenario )
+function booneUnit:delay( numSeconds, scenario )
     local thisTest = self.currentTest
     if thisTest == nil then
         error( self.errorMsgs.delayWithoutTest, 2 )
@@ -68,7 +68,9 @@ function booneUnit:delay( scenario )
     end
     thisTest:registerResult( "pending" ) -- next add tween id
     local pendingIndex = #thisTest.results
-    self:continue( thisTest, pendingIndex, scenario )
+    tween.delay( numSeconds, function ()
+        self:continue( thisTest, pendingIndex, scenario )
+    end )
 end
 
 function booneUnit:continue( thisTest, pendingIndex, scenario )
