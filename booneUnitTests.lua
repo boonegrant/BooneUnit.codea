@@ -833,23 +833,18 @@ function testBooneUnitDelay()
         end )
         _:test( "booneUnit:delay() sets test status to pending", function()
             local doneDelayStuff = false
-
             local testTable = booneUnit:test( "do a delay", function()
                 booneUnit:delay( 0.01, function() 
                     doneDelayStuff = true
-
                     _:expect( booneUnit.currentTest:status() ).is( "pending" )
                 end )
             end )
         end )
         _:test( "booneUnit:continue() removes pending status ", function()
             local doneDelayStuff = false
-
-            local testTable
             local testTable = booneUnit:test( "do a delay", function()
                 booneUnit:delay( 0.01, function() 
                     doneDelayStuff = true
-
                 end )
             end )
             tween.delay( 0.2, function()
@@ -859,7 +854,6 @@ function testBooneUnitDelay()
         ---[[
         _:test( "booneUnit:continue() runs the function passed in booneUnit.delay", function()
             local doneDelayStuff = false
-
             booneUnit:test( "do a delay", function()
                 print( "getting ready" )
                 booneUnit:delay( 0.001, function() 
