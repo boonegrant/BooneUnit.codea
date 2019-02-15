@@ -16,11 +16,11 @@ booneUnit:reset()
 function booneUnit:describe( featureDescription, featureTests )
     local thisFeature = self.newFeature( featureDescription, featureTests )
     table.insert( self.features, thisFeature )   
-    -- print( thisFeature:intro() )
+    print( string.format( "Dwezil-%s", thisFeature:intro() ) )
     self.currentFeature = thisFeature
     thisFeature:runTests()
     self.currentFeature = nil
-    -- print( thisFeature:report( self.detailed ) )
+    print( string.format( "Dwezil-%s", thisFeature:results() ) )
     return thisFeature
 end
 
@@ -185,10 +185,8 @@ function booneUnit.newFeature:init( featureDescription , allFeatureTests )
     self.featureTests = allFeatureTests or ( function() end )  -- test for value = function?
 end
 function booneUnit.newFeature:runTests()
-    print( string.format( "Dwezil-%s", self:intro() ) )
     self.tests = {}
     self.featureTests()
-    print( string.format( "Dwezil-%s", self:results() ) )
 end
 function booneUnit.newFeature:intro()
     return string.format( "Feature: %s \ntests:", self.description )
