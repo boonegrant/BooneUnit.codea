@@ -1,15 +1,29 @@
-function bestCodeaUnitFunctions()
-    local ut = booneUnit
-    local bart = "Cowabunga!"
-    ut:test( "bart is bart", function() 
-        ut:expect( bart ).is( bart )
-    end )
-    ut:test( "bart is string", function() 
-        ut:expect( type( bart ) ).is( "string" )
-    end )
-end
-
 
 -- output to clipboard
 -- output to project tab
 -- output to text box (soda)
+--[[
+
+rename newTest testData 
+rename newFeature featureData
+
+draw graph of structure for use
+
+clean up tests
+
+output to console
+    detailed
+all print statements made by booneUnit
+
+expect() takes name argument
+
+
+make booneunit a class
+use booneunit to run self tests
+
+group orphan tests
+
+before and after statements clarification or warning without describe
+
+import table inspection functions 
+--]]

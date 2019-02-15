@@ -39,18 +39,3 @@ function draw()
     -- Do your drawing here
     
 end
-
-function memberTypeTest( targetDescription, target, targetMembersAndTypes )
-    for key, value in pairs( targetMembersAndTypes ) do
-        _:test( string.format( 'Type test: %s contains %s "%s"',targetDescription, value, key ), function ()
-            _:expect( type( target[ key ] ) ).is( value )
-        end )
-    end
-end
-function memberValueTest( targetDescription, target, targetMembersAndValues )
-    for key, value in pairs( targetMembersAndValues ) do
-        _:test( string.format( 'Value test: %s["%s"] is "%s"',targetDescription, key, value ), function ()
-            _:expect( target[ key ] ).is( value )
-        end )
-    end
-end
