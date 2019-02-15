@@ -80,7 +80,7 @@ function booneUnit:continue( thisTest, pendingIndex, scenario )
     table.remove( thisTest.results, pendingIndex )
 end
 
-function booneUnit:expect( conditional )
+function booneUnit:expect( conditional ) -- TODO: add name arg
     local thisTest = self.currentTest
     if thisTest == nil then
         error( self.errorMsgs.expectWithoutTest, 2 )
@@ -122,8 +122,8 @@ function booneUnit:expect( conditional )
 
     local throws = function(expected)
         if type( conditional ) ~= "function" then 
-            -- expect( conditional ) : conditional is not function
-            thisTest:registerResult( 
+            -- usage check : conditional is not function
+            thisTest:registerResult( -- TODO: should throw error
                 false, 
                 string.format( 'arg is "%s", not "function"', type( conditional )),
                 booneUnit.errorMsgs.throwsArgIsNotFunction 
@@ -233,19 +233,24 @@ function booneUnit.newTest:passed()
 end
 
 function booneUnit.newTest:status()
-    if #self.results == 0 then
+    if #self.results == 0 then -- no results registered
+        -- test is empty
         return "empty"
     end
     local isPending = false
     local isPassing = true
     for i, v in ipairs( self.results ) do
         if v.outcome == "ignore" then 
-            return v.outcome
-        elseif not v.outcome then 
+            -- test ignored
+            return "ignore"
+        elseif not v.outcome then -- nil or false
+            -- test failed
             return "fail"
         elseif v.outcome == "pending" then 
+            -- a result still pending
             isPending = true
-        elseif v.outcome ~= true then
+        elseif v.outcome ~= true then -- some other value
+            -- a result is not pass, fail, pending, or ignored
             isPassing = false
             isOther = v.outcome
         end

@@ -25,9 +25,10 @@ function testBooneUnit()
         
         -- Public methods list
         local publicUnitMethods = { describe = "function",
-                                    test = "function",
                                     reset = "function",
                                     ignore = "function",
+                                    test = "function",
+                                    delay = "function",
                                     before = "function",
                                     after = "function" }
         memberTypeTest( "public methods: booneUnit", booneUnit, publicUnitMethods )
@@ -63,6 +64,7 @@ function testBooneUnit()
                                      currentFeature = "nil", 
                                      currentTest = "nil", 
                                      orphanage = "function", 
+                                     continue = "function", 
                                      aHomeForOrphanTests = "nil" }
         memberTypeTest( "post-reset booneUnit", booneUnit, privateUnitMembers )
         
@@ -354,7 +356,7 @@ function testBooneUnitExpect()
                 booneUnit:test( dweezilTestDesc, function() 
                     expectation = booneUnit:expect( aTable )
                 end )
-                _:expect( expectation.has( v ) ).is( true ) 
+                _:expect( expectation.has( v ) ).is( true ) -- does this need to be moved out like this?
             end )
         end
     end )
@@ -843,7 +845,7 @@ function testBooneUnitDelay()
         _:test( "booneUnit:continue() removes pending status ", function()
             local doneDelayStuff = false
             local testTable = booneUnit:test( "do a delay", function()
-                booneUnit:delay( 0.01, function() 
+                booneUnit:delay( 0.001, function() 
                     doneDelayStuff = true
                 end )
             end )
@@ -864,11 +866,31 @@ function testBooneUnitDelay()
             tween.delay( 0.5, function() 
                 _:expect( doneDelayStuff ).is( true )
             end )
-
+        end )
+        _:test( "booneUnit:expect() statements inside booneUnit:delay()"..
+            " will register results in appropriate test", function()
+            local doneDelayStuff = false
+            local test1 = booneUnit:test( "do a delay", function()
+                booneUnit:delay( 0.8, function()
+                    print("ok, back to work")
+                    local thing = 5
+                    booneUnit:expect( thing ).is(5)
+                    doneDelayStuff = true
+                end )
+                print( "that's it for now" )
+            end )
+            local test2 = booneUnit:test( "empty test", function()end )
+            tween.delay( 1, function()
+                print( string.format( 'test1 status: %s', test1:status() ) )
+                print( string.format( 'test2 status: %s', test2:status() ) )
+                _:expect( test1:status() ).is( "pass" )
+            end )
         end )
         --]]
     end )
-    tween.delay( 1, function()
+    tween.delay( 2, function()
         _:summarize()
     end )
 end
+
+-- test output and report functions
