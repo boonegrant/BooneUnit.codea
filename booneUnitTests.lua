@@ -892,23 +892,27 @@ function testMoonUnitFeature()
         end )
     end )
     -- Feature Properties --
-    --[[
     _:describe( '"booneUnit:describe()" returns a table, and stores that table', function()
         -- feature members 
+        booneUnit:reset()
+        local someFeatureData = booneUnit:describe( aFeatureDesc, aFeatureFunc )
         local featureMembers = { description = "string", 
                                  tests = "table", 
                                  featureTests = "function", 
                                  runTests = "function",
                                  before = "function",
                                  after = "function" }
-        memberTypeTest( "features[1]", booneUnit.features[1], featureMembers )
+        memberTypeTest( "someFeatureData", someFeatureData, featureMembers )
+        
         local featureValues = { description = aFeatureDesc, 
                                 featureTests = aFeatureFunc,
                                 runTests = booneUnit.newFeature.runTests,
                                 before = booneUnit.newFeature.before, 
                                 after = booneUnit.newFeature.after }
+        
+        memberValueTest( "someFeatureData", someFeatureData, featureValues )
+        
     end )
-    --]]
 end
 
 -- test output and report functions
