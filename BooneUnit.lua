@@ -24,9 +24,9 @@ function booneUnit:describe( featureDescription, featureTests )
     self.currentFeature = thisFeature
     thisFeature:runTests()
     self.currentFeature = nil
-    -- Announce results
+    -- Announce summary of results
     if not self.silent then
-        print( string.format( "Dwezil-%s", thisFeature:results() ) )
+        print( string.format( "Dwezil-%s", thisFeature:summary() ) )
     end
     return thisFeature
 end
@@ -42,10 +42,11 @@ end
 function booneUnit:ignore( testDescription, scenario )
     local thisFeature = self.currentFeature or self:orphanage()
     local thisTest = booneUnit.newTest( thisFeature, testDescription )
-    thisTest:registerResult("ignore") 
     table.insert( thisFeature.tests, thisTest )   
+    thisTest:registerResult("ignore") 
     if not self.silent then
         print( string.format( "Dwezil:ignore( %s)", testDescription ) )
+        -- thisTest:report( self.detailed )
     end
     return thisTest
 end
@@ -198,9 +199,9 @@ end
 function booneUnit.newFeature:intro()
     return string.format( "Feature: %s \ntests:", self.description )
 end
--- [feature]:results( detailed )
-function booneUnit.newFeature:results()
-    return string.format( "Feature: %s \nResults go here", self.description )
+-- [feature]:summary( detailed )
+function booneUnit.newFeature:summary()
+    return string.format( "Feature: %s \nSummary goes here", self.description )
     -- do some tallying
 end
 function booneUnit.newFeature.before() end -- default empty function

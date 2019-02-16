@@ -900,6 +900,8 @@ function testMoonUnitFeature()
                                  tests = "table", 
                                  featureTests = "function", 
                                  runTests = "function",
+                                 intro = "function",
+                                 summary = "function",
                                  before = "function",
                                  after = "function" }
         memberTypeTest( "someFeatureData", someFeatureData, featureMembers )
