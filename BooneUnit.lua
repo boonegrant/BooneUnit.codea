@@ -16,11 +16,18 @@ booneUnit:reset()
 function booneUnit:describe( featureDescription, featureTests )
     local thisFeature = self.newFeature( featureDescription, featureTests )
     table.insert( self.features, thisFeature )   
-    print( string.format( "Dwezil-%s", thisFeature:intro() ) )
+    -- Announce feature
+    if not self.silent then
+        print( string.format( "Dwezil-%s", thisFeature:intro() ) )
+    end
+    -- Run tests
     self.currentFeature = thisFeature
     thisFeature:runTests()
     self.currentFeature = nil
-    print( string.format( "Dwezil-%s", thisFeature:results() ) )
+    -- Announce results
+    if not self.silent then
+        print( string.format( "Dwezil-%s", thisFeature:results() ) )
+    end
     return thisFeature
 end
 

@@ -6,11 +6,11 @@
 	<string>Unknown</string>
 	<key>Buffer Order</key>
 	<array>
+		<string>Miscellaneous</string>
 		<string>CodeaUnit</string>
 		<string>BooneUnit</string>
 		<string>booneUnitTests</string>
 		<string>Main</string>
-		<string>Miscellaneous</string>
 	</array>
 	<key>Dependencies</key>
 	<array/>
