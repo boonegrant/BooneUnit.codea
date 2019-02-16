@@ -468,7 +468,8 @@ function estBooneUnitIgnore()
             local testDesc = "Gingerbread Man"
             local emptyTestFunc = function() end 
             local testReturn = booneUnit:ignore( testDesc, emptyTestFunc )
-            _:expect( testReturn:is_a( booneUnit.newTest ) ).is( true )
+            _:expect( testReturn:is_a( booneUnit.TestInfo ) ).is( true )
+
         end )
         -- properties of that table
         do
@@ -520,7 +521,8 @@ function estBooneUnitTest()
             local testDesc = "Gingerbread Man"
             local emptyTestFunc = function() end 
             local testReturn = booneUnit:test( testDesc, emptyTestFunc )
-            _:expect( testReturn:is_a( booneUnit.newTest ) ).is( true )
+            _:expect( testReturn:is_a( booneUnit.TestInfo ) ).is( true )
+
         end )
         -- properties of that table
         do
@@ -755,7 +757,7 @@ function estBooneUnitTest()
     end )
 end
 
-function bestBooneUnitDelay()
+function testBooneUnitDelay()
     CodeaUnit.detailed = false
     booneUnit.silent = true
     _:describe( 'booneUnit:delay() evaluates the conclusion to a test'..
@@ -847,7 +849,7 @@ function testMoonUnitFeature()
         booneUnit:test( testDesc, testFunc )
         return( 42 )
     end        
-    _:describe( "booneUnit:describe() creates newFeature table", function ()
+    _:describe( "booneUnit:describe() creates FeatureInfo table", function ()
         -- features is empty
         _:test( "after reset, booneUnit.features is empty", function ()
             booneUnit:reset()
@@ -891,7 +893,7 @@ function testMoonUnitFeature()
         end )
     end )
     -- Feature Properties --
-    _:describe( '"booneUnit:describe()" returns a table, and stores that table', function()
+    _:describe( '"booneUnit:describe()" returns a FeatureInfo table, and stores that table', function()
         -- feature members 
         booneUnit:reset()
         local someFeatureData = booneUnit:describe( aFeatureDesc, aFeatureFunc )
@@ -904,10 +906,10 @@ function testMoonUnitFeature()
         memberTypeTest( "someFeatureData", someFeatureData, featureMembers )
         
         local featureValues = { description = aFeatureDesc, 
-                                intro = booneUnit.newFeature.intro, 
-                                summary = booneUnit.newFeature.summary, 
-                                before = booneUnit.newFeature.before, 
-                                after = booneUnit.newFeature.after }
+                                intro = booneUnit.FeatureInfo.intro, 
+                                summary = booneUnit.FeatureInfo.summary, 
+                                before = booneUnit.FeatureInfo.before, 
+                                after = booneUnit.FeatureInfo.after }
         
         memberValueTest( "someFeatureData", someFeatureData, featureValues )
         

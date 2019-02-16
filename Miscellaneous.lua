@@ -4,10 +4,8 @@
 -- output to text box (soda)
 --[[
 
-rename newTest testData 
-rename newFeature featureData
 
-draw graph of structure for use
+draw graph of structure for own use
 
 clean up tests
 

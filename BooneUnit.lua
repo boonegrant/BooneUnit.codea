@@ -14,7 +14,7 @@ end
 booneUnit:reset()
 
 function booneUnit:describe( featureDescription, featureTests )
-    local thisFeature = self.newFeature( featureDescription )
+    local thisFeature = self.FeatureInfo( featureDescription )
     table.insert( self.features, thisFeature )   
     -- Announce feature
     if not self.silent then
@@ -42,7 +42,8 @@ end
 
 function booneUnit:ignore( testDescription, scenario )
     local thisFeature = self.currentFeature or self:orphanage()
-    local thisTest = booneUnit.newTest( thisFeature, testDescription )
+    local thisTest = booneUnit.TestInfo( thisFeature, testDescription )
+
     table.insert( thisFeature.tests, thisTest )   
     thisTest:registerResult("ignore") 
     if not self.silent then
@@ -54,7 +55,8 @@ end
 
 function booneUnit:test( testDescription, scenario )
     local thisFeature = self.currentFeature or self:orphanage()
-    local thisTest = booneUnit.newTest( thisFeature, testDescription, scenario )
+    local thisTest = booneUnit.TestInfo( thisFeature, testDescription, scenario )
+
     table.insert( thisFeature.tests, thisTest )   
     thisFeature:before()
     self.currentTest = thisTest
@@ -177,7 +179,7 @@ function booneUnit:orphanage()  -- create a home for tests not placed inside a :
     -- this is so they can be grouped and tabulated together 
     -- print( "Dwezil- Oh you poor lost test!" )
     if ( self.aHomeForOrphanTests == nil ) then  -- or aHomeForOrphanTests ~= self.features[#self.features]
-        self.aHomeForOrphanTests = self.newFeature( "No Description" )
+        self.aHomeForOrphanTests = self.FeatureInfo( "No Description" )
         table.insert( self.features, self.aHomeForOrphanTests )   
         -- print( "Dwezil- I have made a home for you" )
     end
@@ -187,38 +189,42 @@ end
 
 
 -- Feature class --
-booneUnit.newFeature = class()
-function booneUnit.newFeature:init( featureDescription, allFeatureTests )
+booneUnit.FeatureInfo = class()
+function booneUnit.FeatureInfo:init( featureDescription, allFeatureTests )
     self.description = featureDescription or ""
     self.tests = {}
 end
-function booneUnit.newFeature:intro()
+function booneUnit.FeatureInfo:intro()
     return string.format( "Feature: %s \ntests:", self.description )
 end
 -- [feature]:summary( detailed )
-function booneUnit.newFeature:summary()
+function booneUnit.FeatureInfo:summary()
     return string.format( "Feature: %s \nSummary goes here", self.description )
     -- do some tallying
 end
-function booneUnit.newFeature.before() end -- default empty function
-function booneUnit.newFeature.after() end  -- default empty function
+function booneUnit.FeatureInfo.before() end -- default empty function
+function booneUnit.FeatureInfo.after() end  -- default empty function
 
 -- Test class --
-booneUnit.newTest = class()
-function booneUnit.newTest:init( parent, testDescription, scenario )
+booneUnit.TestInfo = class()
+
+function booneUnit.TestInfo:init( parent, testDescription, scenario )
+
     self.feature = parent  -- not sure I need this,
     self.description = testDescription or ""
     self.test = scenario or ( function() end )
     self.results = {}
 end
-function booneUnit.newTest:run( scenario )
+function booneUnit.TestInfo:run( scenario )
+
     local status, error = pcall( scenario or function() end )
     if error then
         self:registerResult( false, "error", error )
     end
 end
 
-function booneUnit.newTest:registerResult( outcome, actual, expected )
+function booneUnit.TestInfo:registerResult( outcome, actual, expected )
+
     table.insert( self.results, { outcome = outcome, actual = actual, expected = expected} )
     print( string.format( "  actual: %s \nexpected: %s \nDwezil-Result: %s ", actual, expected, outcome ) )
     return #self.results
@@ -226,7 +232,8 @@ end
 
 -- [test]:passed() - returns true if there is at least one result 
 --                   recorded and all results are successful
-function booneUnit.newTest:passed()
+function booneUnit.TestInfo:passed()
+
     local testPassed = #self.results > 0  -- at least one result recorded
     for i, v in ipairs( self.results ) do
         if v.outcome ~= true then return false end
@@ -234,7 +241,8 @@ function booneUnit.newTest:passed()
     return testPassed
 end
 
-function booneUnit.newTest:status()
+function booneUnit.TestInfo:status()
+
     if #self.results == 0 then -- no results registered
         -- test is empty
         return "empty"
@@ -262,5 +270,6 @@ function booneUnit.newTest:status()
     return isOther
 end
 
-function booneUnit.newTest:report( detailed )
+function booneUnit.TestInfo:report( detailed )
+
 end
