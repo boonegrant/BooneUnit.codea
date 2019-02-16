@@ -886,9 +886,8 @@ function testMoonUnitFeature()
             _:expect( booneUnit.features[2] ).is( anotherFeatureData )
         end )
         
-        _:test( ".currentFeature is nil again", function ()
-            local t = booneUnit
-            _:expect( t.currentFeature ).is( nil )
+        _:test( "booneUnit.currentFeature is nil again", function ()
+            _:expect( booneUnit.currentFeature ).is( nil )
         end )
     end )
     -- Feature Properties --
@@ -898,8 +897,6 @@ function testMoonUnitFeature()
         local someFeatureData = booneUnit:describe( aFeatureDesc, aFeatureFunc )
         local featureMembers = { description = "string", 
                                  tests = "table", 
-                                 featureTests = "function", 
-                                 runTests = "function",
                                  intro = "function",
                                  summary = "function",
                                  before = "function",
@@ -907,8 +904,6 @@ function testMoonUnitFeature()
         memberTypeTest( "someFeatureData", someFeatureData, featureMembers )
         
         local featureValues = { description = aFeatureDesc, 
-                                featureTests = aFeatureFunc,
-                                runTests = booneUnit.newFeature.runTests,
                                 intro = booneUnit.newFeature.intro, 
                                 summary = booneUnit.newFeature.summary, 
                                 before = booneUnit.newFeature.before, 

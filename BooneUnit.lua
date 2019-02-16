@@ -14,7 +14,7 @@ end
 booneUnit:reset()
 
 function booneUnit:describe( featureDescription, featureTests )
-    local thisFeature = self.newFeature( featureDescription, featureTests )
+    local thisFeature = self.newFeature( featureDescription )
     table.insert( self.features, thisFeature )   
     -- Announce feature
     if not self.silent then
@@ -22,7 +22,8 @@ function booneUnit:describe( featureDescription, featureTests )
     end
     -- Run tests
     self.currentFeature = thisFeature
-    thisFeature:runTests()
+    local runTests = featureTests or function() end
+    runTests()
     self.currentFeature = nil
     -- Announce summary of results
     if not self.silent then
@@ -176,7 +177,7 @@ function booneUnit:orphanage()  -- create a home for tests not placed inside a :
     -- this is so they can be grouped and tabulated together 
     -- print( "Dwezil- Oh you poor lost test!" )
     if ( self.aHomeForOrphanTests == nil ) then  -- or aHomeForOrphanTests ~= self.features[#self.features]
-        self.aHomeForOrphanTests = self.newFeature( "No Description", function() end )
+        self.aHomeForOrphanTests = self.newFeature( "No Description" )
         table.insert( self.features, self.aHomeForOrphanTests )   
         -- print( "Dwezil- I have made a home for you" )
     end
@@ -187,14 +188,9 @@ end
 
 -- Feature class --
 booneUnit.newFeature = class()
-function booneUnit.newFeature:init( featureDescription , allFeatureTests )
+function booneUnit.newFeature:init( featureDescription, allFeatureTests )
     self.description = featureDescription or ""
     self.tests = {}
-    self.featureTests = allFeatureTests or ( function() end )  -- test for value = function?
-end
-function booneUnit.newFeature:runTests()
-    self.tests = {}
-    self.featureTests()
 end
 function booneUnit.newFeature:intro()
     return string.format( "Feature: %s \ntests:", self.description )
@@ -205,7 +201,7 @@ function booneUnit.newFeature:summary()
     -- do some tallying
 end
 function booneUnit.newFeature.before() end -- default empty function
-function booneUnit.newFeature.after() end  -- default empty functionq
+function booneUnit.newFeature.after() end  -- default empty function
 
 -- Test class --
 booneUnit.newTest = class()
