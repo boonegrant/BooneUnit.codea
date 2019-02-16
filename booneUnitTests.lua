@@ -909,6 +909,8 @@ function testMoonUnitFeature()
         local featureValues = { description = aFeatureDesc, 
                                 featureTests = aFeatureFunc,
                                 runTests = booneUnit.newFeature.runTests,
+                                intro = booneUnit.newFeature.intro, 
+                                summary = booneUnit.newFeature.summary, 
                                 before = booneUnit.newFeature.before, 
                                 after = booneUnit.newFeature.after }
         
