@@ -836,18 +836,18 @@ function testMoonUnitFeature()
     CodeaUnit.detailed = true
     booneUnit.silent = false
     booneUnit:reset()
+    local atestDesc = "location: Springfield"
+    local atestFunc = function ()
+        print( "324 Evergreen Terrace" )
+        return "Shelbyville"
+    end
+    local aFeatureDesc = "HomerSimpson"
+    local aFeatureFunc = function() 
+        print("woo-hoo!")
+        booneUnit:test( testDesc, testFunc )
+        return( 42 )
+    end        
     _:describe( "booneUnit:describe() creates newFeature table", function ()
-        local atestDesc = "location: Springfield"
-        local atestFunc = function ()
-            print( "324 Evergreen Terrace" )
-            return "Shelbyville"
-        end
-        local afeatureDesc = "HomerSimpson"
-        local afeatureFunc = function() 
-            print("woo-hoo!")
-            booneUnit:test( testDesc, testFunc )
-            return( 42 )
-        end        
         -- features is empty
         _:test( "after reset, booneUnit.features is empty", function ()
             booneUnit:reset()
@@ -867,10 +867,23 @@ function testMoonUnitFeature()
         end )
         
         -- features not empty
-        _:test( "booneUnit.features not empty", function ()
-            local f = booneUnit.features
-            _:expect( #f ).is( 1 )
-            _:expect( f[1] ).isnt( nil )
+        _:test( "The table returned by describe() is stored in booneUnit.features ", function ()
+            booneUnit:reset()
+            local myFeatureData = booneUnit:describe( "Empty Feature", function() end )
+            _:expect( #booneUnit.features ).is( 1 )
+            _:expect( booneUnit.features[1] ).isnt( nil )
+            _:expect( booneUnit.features[1] ).is( myFeatureData )
+        end )
+        
+        -- features not empty
+        _:test( "The table returned by describe() is stored in booneUnit.features ", function ()
+            booneUnit:reset()
+            local someFeatureData = booneUnit:describe( aFeatureDesc, aFeatureFunc )
+            local anotherFeatureData = booneUnit:describe( aFeatureDesc, aFeatureFunc )
+            _:expect( someFeatureData ).isnt( anotherFeatureData )
+            _:expect( #booneUnit.features ).is( 2 )
+            _:expect( booneUnit.features[1] ).is( someFeatureData )
+            _:expect( booneUnit.features[2] ).is( anotherFeatureData )
         end )
         
         _:test( ".currentFeature is nil again", function ()
@@ -879,9 +892,9 @@ function testMoonUnitFeature()
         end )
     end )
     -- Feature Properties --
-    _:describe( '"booneUnit:feature()" properties', function()
+    --[[
+    _:describe( '"booneUnit:describe()" returns a table, and stores that table', function()
         -- feature members 
-        ---[[
         local featureMembers = { description = "string", 
                                  tests = "table", 
                                  featureTests = "function", 
@@ -889,29 +902,13 @@ function testMoonUnitFeature()
                                  before = "function",
                                  after = "function" }
         memberTypeTest( "features[1]", booneUnit.features[1], featureMembers )
-        ---[[
-        local featureValues = { description = featureDesc, 
-                                featureTests = featureFunc,
+        local featureValues = { description = aFeatureDesc, 
+                                featureTests = aFeatureFunc,
                                 runTests = booneUnit.newFeature.runTests,
                                 before = booneUnit.newFeature.before, 
                                 after = booneUnit.newFeature.after }
-        memberValueTest( "features[1]", booneUnit.features[1], featureValues )
-        --[[
-        -- feature description 
-        _:test( "feature description matches argument", function ()
-            local target = booneUnit.features[1]
-            _:expect( target.description ).is( featureDesc )
-        end )
-        
-        -- run feature tests 
-        _:test( "run feature tests", function ()
-            local target = booneUnit.features[1]
-            _:expect( target.featureTests ).isnt( nil )
-            _:expect( target.runTests ).isnt( nil )
-            _:expect( target:runTests() ).is( nil )
-        end )
-        --]]
     end )
+    --]]
 end
 
 -- test output and report functions
