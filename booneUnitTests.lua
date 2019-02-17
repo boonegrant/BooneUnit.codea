@@ -757,7 +757,7 @@ function estBooneUnitTest()
     end )
 end
 
-function testBooneUnitDelay()
+function bestBooneUnitDelay()
     CodeaUnit.detailed = false
     booneUnit.silent = true
     _:describe( 'booneUnit:delay() evaluates the conclusion to a test'..
@@ -900,19 +900,27 @@ function testMoonUnitFeature()
         local featureMembers = { description = "string", 
                                  tests = "table", 
                                  intro = "function",
-                                 summary = "function",
+                                 tally = "function",
+                                 report = "function",
                                  before = "function",
                                  after = "function" }
         memberTypeTest( "someFeatureData", someFeatureData, featureMembers )
         
         local featureValues = { description = aFeatureDesc, 
                                 intro = booneUnit.FeatureInfo.intro, 
-                                summary = booneUnit.FeatureInfo.summary, 
+                                tally = booneUnit.FeatureInfo.tally, 
+                                report = booneUnit.FeatureInfo.report, 
                                 before = booneUnit.FeatureInfo.before, 
                                 after = booneUnit.FeatureInfo.after }
         
         memberValueTest( "someFeatureData", someFeatureData, featureValues )
         
+    end )
+    _:describe( '"FeatureInfo:report()" returns a summary of the tests performed as a string', function()
+        _:test( "FeatureInfo:report() exists", function() 
+            booneUnit:reset()
+            booneUnit:describe()
+        end )
     end )
 end
 

@@ -27,7 +27,8 @@ function booneUnit:describe( featureDescription, featureTests )
     self.currentFeature = nil
     -- Announce summary of results
     if not self.silent then
-        print( string.format( "Dwezil-%s", thisFeature:summary() ) )
+        print( string.format( "Dwezil-%s", thisFeature:report() ) )
+
     end
     return thisFeature
 end
@@ -197,26 +198,27 @@ end
 function booneUnit.FeatureInfo:intro()
     return string.format( "Feature: %s \ntests:", self.description )
 end
--- [feature]:summary( detailed )
-function booneUnit.FeatureInfo:summary()
-    return string.format( "Feature: %s \nSummary goes here", self.description )
+-- [feature]:report( detailed )
+function booneUnit.FeatureInfo:report()
+    return string.format( "Feature: %s \nreport goes here", self.description )
     -- do some tallying
+end
+function booneUnit.FeatureInfo:tally()
+    local theTally = {}
+    
 end
 function booneUnit.FeatureInfo.before() end -- default empty function
 function booneUnit.FeatureInfo.after() end  -- default empty function
 
 -- Test class --
 booneUnit.TestInfo = class()
-
 function booneUnit.TestInfo:init( parent, testDescription, scenario )
-
     self.feature = parent  -- not sure I need this,
     self.description = testDescription or ""
     self.test = scenario or ( function() end )
     self.results = {}
 end
 function booneUnit.TestInfo:run( scenario )
-
     local status, error = pcall( scenario or function() end )
     if error then
         self:registerResult( false, "error", error )
@@ -224,7 +226,6 @@ function booneUnit.TestInfo:run( scenario )
 end
 
 function booneUnit.TestInfo:registerResult( outcome, actual, expected )
-
     table.insert( self.results, { outcome = outcome, actual = actual, expected = expected} )
     print( string.format( "  actual: %s \nexpected: %s \nDwezil-Result: %s ", actual, expected, outcome ) )
     return #self.results
@@ -233,7 +234,6 @@ end
 -- [test]:passed() - returns true if there is at least one result 
 --                   recorded and all results are successful
 function booneUnit.TestInfo:passed()
-
     local testPassed = #self.results > 0  -- at least one result recorded
     for i, v in ipairs( self.results ) do
         if v.outcome ~= true then return false end
@@ -242,7 +242,6 @@ function booneUnit.TestInfo:passed()
 end
 
 function booneUnit.TestInfo:status()
-
     if #self.results == 0 then -- no results registered
         -- test is empty
         return "empty"
