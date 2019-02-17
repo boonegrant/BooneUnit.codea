@@ -205,7 +205,7 @@ function booneUnit.FeatureInfo:report()
 end
 function booneUnit.FeatureInfo:tally()
     local theTally = {}
-    
+    return theTally
 end
 function booneUnit.FeatureInfo.before() end -- default empty function
 function booneUnit.FeatureInfo.after() end  -- default empty function

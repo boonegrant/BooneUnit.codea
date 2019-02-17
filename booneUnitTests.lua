@@ -916,12 +916,18 @@ function testMoonUnitFeature()
         memberValueTest( "someFeatureData", someFeatureData, featureValues )
         
     end )
-    _:describe( '"FeatureInfo:report()" returns a summary of the tests performed as a string', function()
-        _:test( "FeatureInfo:report() exists", function() 
+    ---[[
+    _:describe( '"FeatureInfo:tally()" returns a table summarizing the outcomes of the tests in the feature', function()
+        local emptyFunc = function() end
+        _:test( "FeatureInfo:tally() returns a table", function() 
             booneUnit:reset()
-            booneUnit:describe()
+            local thisFeature = booneUnit:describe( "An Example for Tallying", function() 
+                booneUnit:test()
+            end )
+            _:expect( type( thisFeature.tally() ) ).is( "table" )
         end )
     end )
+    --]]
 end
 
 -- test output and report functions
