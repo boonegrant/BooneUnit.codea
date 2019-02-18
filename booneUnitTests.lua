@@ -998,7 +998,7 @@ function testMoonUnitFeature()
             _:test( string.format( 'report string contains %s number: %d',
                 key, value ), function()
                 print( featureReport )
-                --_:expect( string.find( featureReport, "7" ) ).isnt( nil )
+                _:expect( string.find( featureReport, value ) ).isnt( nil )
             end )
         end
     end )

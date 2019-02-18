@@ -202,12 +202,17 @@ end
 -- [feature]:report( detailed )
 function booneUnit.FeatureInfo:report()
     local theTally = self:tally()
-    local theReport = string.format( "Feature: %s \n%d tests", self.description, theTally.total )
+    local reportCategories = {}
     for i, v in ipairs( booneUnit.resultTypes ) do
-        
+        local cat = string.format( "%d %s", theTally[v] or 0, v )
+        table.insert( reportCategories, cat )
+        print( cat )
     end
-    return theReport
-    -- do some tallying
+    return string.format( "Feature: %s \n%d tests\n%s", 
+                                     self.description, 
+                                     theTally.total,
+                                     table.concat( reportCategories, "\n" ) 
+                                    )
 end
 function booneUnit.FeatureInfo:tally()
     local theTally = { total = #self.tests }
