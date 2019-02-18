@@ -201,7 +201,12 @@ function booneUnit.FeatureInfo:intro()
 end
 -- [feature]:report( detailed )
 function booneUnit.FeatureInfo:report()
-    return string.format( "Feature: %s \nreport goes here", self.description )
+    local theTally = self:tally()
+    local theReport = string.format( "Feature: %s \n%d tests", self.description, theTally.total )
+    for i, v in ipairs( booneUnit.resultTypes ) do
+        
+    end
+    return theReport
     -- do some tallying
 end
 function booneUnit.FeatureInfo:tally()
