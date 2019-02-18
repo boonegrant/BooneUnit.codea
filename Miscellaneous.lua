@@ -25,3 +25,6 @@ before and after statements clarification or warning without describe
 
 import table inspection functions 
 --]]
+
+
+--    resultGroups = { pass = "passed", ignore = "ignored", pending = "pending", fail = "failed "}

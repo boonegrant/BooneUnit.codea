@@ -1,4 +1,5 @@
-booneUnit = {resultTypes={"pass", "ignore", "pending", "empty", "fail"} }
+booneUnit = {}
+booneUnit.resultTypes = { "pass", "ignore", "empty", "pending", "fail" }
 booneUnit.errorMsgs = { 
     expectWithoutTest = 'booneUnit - "expect()" statements should be placed inside a "test()" declaration',
     delayWithoutTest =  'booneUnit - "delay()" statements should be placed inside a "test()" declaration',
@@ -205,7 +206,14 @@ function booneUnit.FeatureInfo:report()
 end
 function booneUnit.FeatureInfo:tally()
     local theTally = { total = #self.tests }
-
+    for i, v in ipairs( self.tests ) do
+        local testStatus = v:status()
+        if theTally[ testStatus ] then
+            theTally[ testStatus ] = theTally[ testStatus ] + 1
+        else
+            theTally[ testStatus ] = 1
+        end
+    end
     return theTally
 end
 function booneUnit.FeatureInfo.before() end -- default empty function
