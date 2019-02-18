@@ -204,7 +204,8 @@ function booneUnit.FeatureInfo:report()
     -- do some tallying
 end
 function booneUnit.FeatureInfo:tally()
-    local theTally = {}
+    local theTally = { total = #self.tests }
+
     return theTally
 end
 function booneUnit.FeatureInfo.before() end -- default empty function
