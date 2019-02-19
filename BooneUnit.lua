@@ -1,5 +1,12 @@
 booneUnit = {}
-booneUnit.resultTypes = { "pass", "ignore", "empty", "pending", "fail" }
+booneUnit.resultTypes = { "pass", "empty", "ignore", "pending", "fail" }
+booneUnit.resultGroups = { 
+    pass = "Passed", 
+    ignore = "Ignored", 
+    empty = "Empty",
+    pending = "Pending", 
+    fail = "Failed "
+    }
 booneUnit.errorMsgs = { 
     expectWithoutTest = 'booneUnit - "expect()" statements should be placed inside a "test()" declaration',
     delayWithoutTest =  'booneUnit - "delay()" statements should be placed inside a "test()" declaration',
@@ -197,22 +204,23 @@ function booneUnit.FeatureInfo:init( featureDescription, allFeatureTests )
     self.tests = {}
 end
 function booneUnit.FeatureInfo:intro()
-    return string.format( "Feature: %s \ntests:", self.description )
+    return string.format( "Feature: %s \n tests:", self.description )
 end
 -- [feature]:report( detailed )
 function booneUnit.FeatureInfo:report()
     local theTally = self:tally()
     local reportCategories = {}
     for i, v in ipairs( booneUnit.resultTypes ) do
-        local cat = string.format( "%d %s", theTally[v] or 0, v )
-        table.insert( reportCategories, cat )
-        print( cat )
+        if theTally[v] then
+            local cat = string.format( "%d %s", theTally[v] or 0, booneUnit.resultGroups[v] or v )
+            table.insert( reportCategories, cat )
+            print( cat )
+        end
     end
-    return string.format( "Feature: %s \n%d tests\n%s", 
-                                     self.description, 
-                                     theTally.total,
-                                     table.concat( reportCategories, "\n" ) 
-                                    )
+    return string.format( "Feature: %s \n%d tests --\n%s", 
+                          self.description, 
+                          theTally.total,
+                          table.concat( reportCategories, ", " )  )
 end
 function booneUnit.FeatureInfo:tally()
     local theTally = { total = #self.tests }

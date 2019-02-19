@@ -995,10 +995,10 @@ function testMoonUnitFeature()
             _:expect( string.find( featureReport, featureTally.total ) ).isnt( nil )
         end )
         for key, value in pairs( featureTally ) do
-            _:test( string.format( 'report string contains %s number: %d',
-                key, value ), function()
+            _:test( string.format( 'report string contains number %s: %d',
+                booneUnit.resultGroups[key], value ), function()
                 print( featureReport )
-                _:expect( string.find( featureReport, value ) ).isnt( nil )
+                _:expect( string.find( featureReport, value .. " " ) ).isnt( nil )
             end )
         end
     end )
