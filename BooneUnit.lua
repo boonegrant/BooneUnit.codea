@@ -1,11 +1,11 @@
 booneUnit = {}
 booneUnit.tallyCategoryOrder = { "pass", "empty", "ignore", "pending", "fail" }
 booneUnit.tallyCategoryNames = { 
-    pass = "Passed", 
-    ignore = "Ignored", 
-    empty = "Empty",
+    pass    = "Passed", 
+    ignore  = "Ignored", 
+    empty   = "Empty",
     pending = "Pending", 
-    fail = "Failed "
+    fail    = "Failed"
     }
 booneUnit.errorMsgs = { 
     testInsideTest = 'booneUnit:test()" declaration cannot be made inside another "test()" declaration',
@@ -209,12 +209,12 @@ function booneUnit.FeatureInfo:report()
     local reportCategories = {}
     for i, v in ipairs( booneUnit.tallyCategoryOrder ) do
         if theTally[v] then
-            local category = string.format( "%d %s", theTally[v], booneUnit.tallyCategoryNames[v] or v )
+            local category = string.format( "%i %s", theTally[v], booneUnit.tallyCategoryNames[v] or v )
             table.insert( reportCategories, category )
             print( category )
         end
     end
-    return string.format( "Feature: %s \n%d tests --\n%s", 
+    return string.format( "Feature: %s \n%i tests \n--------\n%s", 
                           self.description, 
                           theTally.total,
                           table.concat( reportCategories, ", " ) 
