@@ -209,15 +209,15 @@ function booneUnit.FeatureInfo:report()
     local reportCategories = {}
     for i, v in ipairs( booneUnit.tallyCategoryOrder ) do
         if theTally[v] then
-            local category = string.format( "%i %s", theTally[v], booneUnit.tallyCategoryNames[v] or v )
+            local category = string.format( "%3i %s", theTally[v], booneUnit.tallyCategoryNames[v] or v )
             table.insert( reportCategories, category )
             print( category )
         end
     end
-    return string.format( "Feature: %s \n%i tests \n--------\n%s", 
+    return string.format( "Feature: %s \n%3i Tests \n ----------\n%s\n ----------", 
                           self.description, 
                           theTally.total,
-                          table.concat( reportCategories, ", " ) 
+                          table.concat( reportCategories, "\n" ) 
                         )
 end
 function booneUnit.FeatureInfo:tally()
