@@ -932,7 +932,8 @@ function testMoonUnitFeature()
             end )
             _:expect( thisFeature:tally().total ).isnt( nil )
         end )
-        _:test( "FeatureInfo:tally() table has key holding sum of each category of test status ", function() 
+        _:test( "FeatureInfo:tally() table has key holding sum of each category of test status"..
+                ", if sum is zero, that key is nil", function() 
             booneUnit:reset()
             local thisFeature = booneUnit:describe( "An Example for Tallying", function() 
                 booneUnit:test( "#1 Empty test" )
@@ -959,9 +960,10 @@ function testMoonUnitFeature()
             _:expect( thisFeature:tally().pending ).is( nil )
         end )
     end )
-    _:describe( '"FeatureInfo:report()" returns a string summarizing the outcomes of the tests in the feature', function()
+    _:describe( '"FeatureInfo:report()" returns a string summarizing the outcomes of'..
+            ' the tests in the feature', function()
         booneUnit:reset()
-        local thisFeature = booneUnit:describe( "An Example for Tallying", function() 
+        local thisFeature = booneUnit:describe( "An Example for Reporting", function() 
             booneUnit:test( "#1 Empty test" )
             booneUnit:test( "#2 Empty test" )
             booneUnit:test( "#3 Empty test" )
@@ -990,17 +992,22 @@ function testMoonUnitFeature()
         end )
         local featureTally = thisFeature:tally()
         local featureReport = thisFeature:report()
-        _:test( 'report string contains test total number: 10', function()
+        _:test( 'report string contains number of total tests: 10', function()
             print( featureReport )
             _:expect( string.find( featureReport, featureTally.total ) ).isnt( nil )
         end )
+        featureTally.total = nil  -- Already tested, need this empty to do the next section of tests
         for key, value in pairs( featureTally ) do
-            _:test( string.format( 'report string contains number %s: %d',
+            _:test( string.format( 'report string contains number of %s: %d',
                 booneUnit.resultGroups[key], value ), function()
                 print( featureReport )
                 _:expect( string.find( featureReport, value .. " " ) ).isnt( nil )
+                _:expect( string.find( featureReport, booneUnit.resultGroups[key] ) ).isnt( nil )
             end )
         end
+        _:test( 'If a result category is empty, like "pending" in this case, then it is not present in the report string', function() 
+            _:expect( string.find( featureReport, booneUnit.resultGroups.pending ) ).is( nil )
+        end )
     end )
 end
 

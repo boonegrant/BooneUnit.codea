@@ -8,10 +8,10 @@ booneUnit.resultGroups = {
     fail = "Failed "
     }
 booneUnit.errorMsgs = { 
-    expectWithoutTest = 'booneUnit - "expect()" statements should be placed inside a "test()" declaration',
-    delayWithoutTest =  'booneUnit - "delay()" statements should be placed inside a "test()" declaration',
-    throwsArgIsNotFunction = 'booneUnit - ":expect( arg ).throws()" ; arg must be a function'
-    --, testInsideTest = 'booneUnit-a "test()" declaration cannot be made inside another "test()" declaration'
+    testInsideTest = 'booneUnit:test()" declaration cannot be made inside another "test()" declaration',
+    expectWithoutTest = '"booneUnit:expect()" statements should be placed inside a "test()" declaration',
+    delayWithoutTest =  '"booneUnit:delay()" statements should be placed inside a "test()" declaration',
+    throwsArgIsNotFunction = '"booneUnit:expect( arg ).throws()" -- arg must be a function' 
     }
 function booneUnit:reset ()
     self.features = {}
@@ -36,7 +36,6 @@ function booneUnit:describe( featureDescription, featureTests )
     -- Announce summary of results
     if not self.silent then
         print( string.format( "Dwezil-%s", thisFeature:report() ) )
-
     end
     return thisFeature
 end
@@ -52,7 +51,6 @@ end
 function booneUnit:ignore( testDescription, scenario )
     local thisFeature = self.currentFeature or self:orphanage()
     local thisTest = booneUnit.TestInfo( thisFeature, testDescription )
-
     table.insert( thisFeature.tests, thisTest )   
     thisTest:registerResult("ignore") 
     if not self.silent then
@@ -65,7 +63,6 @@ end
 function booneUnit:test( testDescription, scenario )
     local thisFeature = self.currentFeature or self:orphanage()
     local thisTest = booneUnit.TestInfo( thisFeature, testDescription, scenario )
-
     table.insert( thisFeature.tests, thisTest )   
     thisFeature:before()
     self.currentTest = thisTest
@@ -220,7 +217,8 @@ function booneUnit.FeatureInfo:report()
     return string.format( "Feature: %s \n%d tests --\n%s", 
                           self.description, 
                           theTally.total,
-                          table.concat( reportCategories, ", " )  )
+                          table.concat( reportCategories, ", " ) 
+                        )
 end
 function booneUnit.FeatureInfo:tally()
     local theTally = { total = #self.tests }
