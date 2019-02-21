@@ -17,20 +17,6 @@ end
 function testBooneUnit()
     CodeaUnit.detailed = false
     booneUnit.silent = true
-    -- local theFeature = ""
-    local atestDesc = "location: Springfield"
-    local atestFunc = function ()
-        print( "324 Evergreen Terrace" )
-        return "Shelbyville"
-    end
-    local afeatureDesc = "HomerSimpson"
-    local afeatureFunc = function() 
-        print("woo-hoo!")
-        booneUnit:test( testDesc, testFunc )
-        return( 42 )
-    end
-    
-    booneUnit:reset()
 
     -- booneUnit is something --
     _:describe( "BooneUnit initial state", function()
@@ -48,21 +34,6 @@ function testBooneUnit()
                                     before = "function",
                                     after = "function" }
         memberTypeTest( "public methods: booneUnit", booneUnit, publicUnitMethods )
-        --tableKeyValueTypeTest
-        --tableKeyValueTest
-        
-        -- Result categories 
-        local definedResultTypes = { "pass", "fail", "ignore", "pending", "empty"}
-        _:test( string.format( "There are %d result categories", #definedResultTypes ), function ()
-            _:expect( #booneUnit.resultTypes ).is( #definedResultTypes )
-        end )
-        -- tableHasValueTest()
-        for i, v in ipairs(definedResultTypes) do
-            _:test( "booneUnit.resultTypes has", function()
-                _:expect( booneUnit.resultTypes ).has( v )
-            end)
-        end
-        
         -- reset exists
         _:test( "reset exists", function ()
             _:expect( booneUnit.reset ).isnt( nil )
@@ -75,7 +46,8 @@ function testBooneUnit()
         
         -- booneUnit post-reset tests
         local privateUnitMembers = { features = "table", 
-                                     resultTypes = "table",
+                                     tallyCategoryOrder = "table",
+                                     tallyCategoryNames = "table",
                                      errorMsgs = "table",
                                      currentFeature = "nil", 
                                      currentTest = "nil", 
@@ -83,6 +55,23 @@ function testBooneUnit()
                                      continue = "function", 
                                      aHomeForOrphanTests = "nil" }
         memberTypeTest( "post-reset booneUnit", booneUnit, privateUnitMembers )
+        
+        -- Result categories 
+        local definedTallyCategories = { "pass", "fail", "ignore", "pending", "empty" }
+        _:test( string.format( "There are %d tally categories", #definedTallyCategories ), function ()
+            _:expect( #booneUnit.tallyCategoryOrder ).is( #definedTallyCategories )
+        end )
+        -- tableHasValueTest()
+        for i, v in ipairs(definedTallyCategories) do
+            _:test( string.format( 'booneUnit.tallyCategoryOrder has "%s"', v ), function()
+                _:expect( booneUnit.tallyCategoryOrder ).has( v )
+            end)
+        end
+        for i, v in ipairs(definedTallyCategories) do
+            _:test( string.format( 'booneUnit.tallyCategoryNames has key "%s"', v ), function()
+                _:expect( booneUnit.tallyCategoryNames[ v ] ).isnt( nil )
+            end)
+        end
         
         -- features is empty
         _:test( "booneUnit.features has 0 length", function ()
@@ -998,15 +987,16 @@ function testMoonUnitFeature()
         end )
         featureTally.total = nil  -- Already tested, need this empty to do the next section of tests
         for key, value in pairs( featureTally ) do
-            _:test( string.format( 'report string contains number of %s: %d',
-                booneUnit.resultGroups[key], value ), function()
+            _:test( string.format( 'report string contains "%s" and sum: %d',
+                booneUnit.tallyCategoryNames[key], value ), function()
                 print( featureReport )
                 _:expect( string.find( featureReport, value .. " " ) ).isnt( nil )
-                _:expect( string.find( featureReport, booneUnit.resultGroups[key] ) ).isnt( nil )
+                _:expect( string.find( featureReport, booneUnit.tallyCategoryNames[key] ) ).isnt( nil )
             end )
         end
-        _:test( 'If a result category is empty, like "pending" in this case, then it is not present in the report string', function() 
-            _:expect( string.find( featureReport, booneUnit.resultGroups.pending ) ).is( nil )
+        _:test( 'If a result category is empty, like "pending" in this case,'..
+                ' then it is not present in the report string', function() 
+            _:expect( string.find( featureReport, booneUnit.tallyCategoryNames.pending ) ).is( nil )
         end )
     end )
 end

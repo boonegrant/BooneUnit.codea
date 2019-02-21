@@ -1,6 +1,6 @@
 booneUnit = {}
-booneUnit.resultTypes = { "pass", "empty", "ignore", "pending", "fail" }
-booneUnit.resultGroups = { 
+booneUnit.tallyCategoryOrder = { "pass", "empty", "ignore", "pending", "fail" }
+booneUnit.tallyCategoryNames = { 
     pass = "Passed", 
     ignore = "Ignored", 
     empty = "Empty",
@@ -207,11 +207,11 @@ end
 function booneUnit.FeatureInfo:report()
     local theTally = self:tally()
     local reportCategories = {}
-    for i, v in ipairs( booneUnit.resultTypes ) do
+    for i, v in ipairs( booneUnit.tallyCategoryOrder ) do
         if theTally[v] then
-            local cat = string.format( "%d %s", theTally[v] or 0, booneUnit.resultGroups[v] or v )
-            table.insert( reportCategories, cat )
-            print( cat )
+            local category = string.format( "%d %s", theTally[v], booneUnit.tallyCategoryNames[v] or v )
+            table.insert( reportCategories, category )
+            print( category )
         end
     end
     return string.format( "Feature: %s \n%d tests --\n%s", 
