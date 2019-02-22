@@ -8,7 +8,7 @@ booneUnit.tallyCategoryNames = {
     fail    = "Failed"
     }
 booneUnit.errorMsgs = { 
-    testInsideTest = 'booneUnit:test()" declaration cannot be made inside another "test()" declaration',
+    testInsideTest = '"booneUnit:test()" declaration cannot be made inside another "test()" declaration',
     expectWithoutTest = '"booneUnit:expect()" statements should be placed inside a "test()" declaration',
     delayWithoutTest =  '"booneUnit:delay()" statements should be placed inside a "test()" declaration',
     throwsArgIsNotFunction = '"booneUnit:expect( arg ).throws()" -- arg must be a function' 
@@ -61,6 +61,9 @@ function booneUnit:ignore( testDescription, scenario )
 end
 
 function booneUnit:test( testDescription, scenario )
+    if self.currentTest then
+        error( self.errorMsgs.testInsideTest, 2 )
+    end
     local thisFeature = self.currentFeature or self:orphanage()
     local thisTest = booneUnit.TestInfo( thisFeature, testDescription, scenario )
     table.insert( thisFeature.tests, thisTest )   
@@ -237,7 +240,6 @@ booneUnit.TestInfo = class()
 function booneUnit.TestInfo:init( parent, testDescription, scenario )
     self.feature = parent  -- not sure I need this,
     self.description = testDescription or ""
-    self.test = scenario or ( function() end )
     self.results = {}
 end
 function booneUnit.TestInfo:run( scenario )

@@ -39,3 +39,9 @@ function draw()
     -- Do your drawing here
     
 end
+
+function tryThis() 
+    booneUnit:test( "An outside test", function() 
+        booneUnit:test( "An inside test" )
+    end )
+end

@@ -453,7 +453,7 @@ function testBooneUnitIgnore()
         _:test( "booneUnit.ignore is a function", function()        
             _:expect( type( booneUnit.ignore ) ).is( "function" )
         end )
-        -- test() returns a table
+        -- ignore() returns a table
         _:test( "booneUnit:ignore( description_string, function ) returns a table", function()
             local testDesc = "Gingerbread Man"
             local emptyTestFunc = function() end 
@@ -502,7 +502,7 @@ end
 
 function testBooneUnitTest()
     -- booneUnit.test()
-    _:describe( "booneUnit.test() returns a test object", function()
+    _:describe( "booneUnit.test() produces a TestInfo object", function()
         _:test( "booneUnit.test() exists", function()
             _:expect( type( booneUnit.test ) ).is( "function" )
         end )
@@ -516,8 +516,8 @@ function testBooneUnitTest()
         _:test( "booneUnit:test() without arguments returns a table", function()
             _:expect( type( booneUnit:test() ) ).is( "table" )
         end )
-        -- test() returns a table of class NewTable
-        _:test( "booneUnit:test() returns a table of class NewTable", function()
+        -- test() returns a table of class TestInfo
+        _:test( "booneUnit:test() returns a table of class TestInfo", function()
             local testDesc = "Gingerbread Man"
             local emptyTestFunc = function() end 
             local testReturn = booneUnit:test( testDesc, emptyTestFunc )
@@ -529,10 +529,11 @@ function testBooneUnitTest()
             local testDesc = "Gingerbread Man"
             local emptyTestFunc = function() end 
             local testTable = booneUnit:test( testDesc, emptyTestFunc )
-            local testTableProperties = { passed = "function",
-                                          report = "function",
+            local testTableProperties = { description = "string",
+                                          feature = "table",
                                           results = "table",
-                                          description = "string",
+                                          passed = "function",
+                                          report = "function",
                                           registerResult = "function" }
             memberTypeTest("booneUnit:test produces table", testTable, testTableProperties )
         end
@@ -652,7 +653,7 @@ function testBooneUnitTest()
 
     -- booneUnit:test():passed() 
     --      returns true if all results are true and there is at least one result. 
-    _:describe( "booneUnit:test():passed()\nReturns true if there is at least one result,"..
+    _:describe( "booneUnit:test():passed()\nReturns true only if there is at least one result,"..
                 " and all results are true", function()
         _:test( "passed() returns false if there were no results", function() 
             booneUnit:reset()
@@ -916,7 +917,11 @@ function testBooneUnitFeature()
         memberValueTest( "someFeatureData", someFeatureData, featureValues )
         
     end )
-    ---[[
+    _:describe( 'Test statements enclosed in a describe() statement produce'..
+                ' TestInfo objects that are stored in <FeatureInfo>.tests', function() 
+        -- _:test( "" )
+    end )
+    --[[
     _:describe( '"FeatureInfo:tally()" returns a table summarizing the outcomes of the tests in the feature', function()
         _:test( "FeatureInfo:tally() returns a table", function() 
             booneUnit:reset()
@@ -1010,6 +1015,8 @@ function testBooneUnitFeature()
             _:expect( string.find( featureReport, booneUnit.tallyCategoryNames.pending ) ).is( nil )
         end )
     end )
+    --]]
 end
 
 -- test output and report functions
+-- test "test within test" error
