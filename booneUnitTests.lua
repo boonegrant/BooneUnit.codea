@@ -501,8 +501,10 @@ function testBooneUnitIgnore()
 end
 
 function testBooneUnitTest()
+    CodeaUnit.detailed = false
+    booneUnit.silent = true
     -- booneUnit.test()
-    _:describe( "booneUnit.test() produces a TestInfo object", function()
+    _:describe( "booneUnit.test() produces and stores a TestInfo object", function()
         _:test( "booneUnit.test() exists", function()
             _:expect( type( booneUnit.test ) ).is( "function" )
         end )
@@ -538,8 +540,23 @@ function testBooneUnitTest()
             memberTypeTest("booneUnit:test produces table", testTable, testTableProperties )
         end
         
+        _:test( 'This TestInfo table is stored in the "tests" table of the feature that encloses it', function()
+            local thisFeature, thisTest
+            thisFeature = booneUnit:describe( "A standard feature", function()
+                thisTest = booneUnit:test( "Your basic non-test", function() end )
+            end )
+            _:expect( thisFeature.tests ).has( thisTest )
+        end )
+        _:test( 'Therefore, this TestInfo table will be found in the "tests" table of the parent feature', function()
+            local thisFeature, thisTest
+            thisFeature = booneUnit:describe( "Another standard feature", function()
+                thisTest = booneUnit:test( "Your basic non-test", function() end )
+            end )
+            _:expect( thisTest.feature.tests ).has( thisTest )
+        end )
+        
         -- length of table "results"
-        _:test( "length of table results is 0 with empty test", function()
+        _:test( 'With empty test, length of table "results" is 0', function()
             local testDesc = "Gingerbread Man"
             local emptyTestFunc = function() end 
             local testTable = booneUnit:test( testDesc, emptyTestFunc )
@@ -581,7 +598,7 @@ function testBooneUnitTest()
     end )
     
     -- booneUnit:expect().is() also appends a table to aTest.results
-    _:describe( "booneUnit:expect().is() also appends a table to aTest.results", function()
+    _:describe( '"booneUnit:expect().is()" appends a table to aTest.results', function()
         for i = 0, 5 do
             thisTestDesc = string.format( "call expect().is() %d times, results length is %d", i, i )
             _:test( thisTestDesc, function() 
@@ -597,7 +614,7 @@ function testBooneUnitTest()
     end )
     
     -- booneUnit:expect().is() stores data in [test].results
-    _:describe( "booneUnit:expect().is() stores data in [test].results", function()
+    _:describe( '"booneUnit:expect().is()" stores data in [test].results', function()
         for i = 1, 5 do
             thisTestDesc = string.format( "call expect(n).is(n) %d times, results[%d] contains n", i, i )
             _:test( thisTestDesc, function() 
@@ -850,7 +867,7 @@ function testBooneUnitFeature()
         booneUnit:test( testDesc, testFunc )
         return( 42 )
     end        
-    _:describe( "booneUnit:describe() creates FeatureInfo table", function ()
+    _:describe( "booneUnit:describe() produces and stores a FeatureInfo object", function ()
         -- features is empty
         _:test( "after reset, booneUnit.features is empty", function ()
             booneUnit:reset()
