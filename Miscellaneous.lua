@@ -29,4 +29,3 @@ import table inspection functions
 
 -- Each Expectation registers a result in a test, a test's results determine its outcome, Features tally outcomes
 
---    resultGroups = { pass = "passed", ignore = "ignored", pending = "pending", fail = "failed "}

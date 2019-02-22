@@ -140,12 +140,9 @@ function booneUnit:expect( conditional ) -- TODO: add name arg
     local throws = function(expected)
         if type( conditional ) ~= "function" then 
             -- usage check : conditional is not function
-            thisTest:registerResult( -- TODO: should throw error
-                false, 
-                string.format( 'arg is "%s", not "function"', type( conditional )),
-                booneUnit.errorMsgs.throwsArgIsNotFunction 
-            )
-            return false
+            error(string.format( '%s -- is "%s"', 
+                booneUnit.errorMsgs.throwsArgIsNotFunction, 
+                type( conditional ) ), 2 )
         else 
             -- conditional is a function
             local ok, error = pcall( conditional )
