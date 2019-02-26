@@ -1068,6 +1068,13 @@ function testTheMostRecent()
             local testReportString = booneUnit:test( testDescription ):report()
             _:expect( string.find( testReportString, testDescription ) ).isnt( nil )
         end )
+        _:test( ' the "TestInfo:report()" string contains the test status', function()
+            local testDescription = "Blah Blah Blah and so on" 
+            local aTest = booneUnit:test( testDescription, function()
+                booneUnit:expect( true ).isnt( false )
+            end)
+            _:expect( string.find( aTest:report(), aTest:status() ) ).isnt( nil )
+        end )
     end )
     
 end

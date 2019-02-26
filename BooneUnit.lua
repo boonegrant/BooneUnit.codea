@@ -73,9 +73,8 @@ function booneUnit:test( testDescription, scenario )
     self.currentTest = nil
     thisFeature:after()
     if not self.silent then
-        print( string.format( "Dwezil:test( %s )\n" ..
-            "   [ %s ]", thisTest.description, thisTest:status() ) )
-        -- thisTest:report( self.detailed )
+        print( string.format( 'Dwezil:test()\n%s', thisTest:report() ) )
+        -- print( thisTest:report( self.detailed ) )
     end
     return thisTest
 end
@@ -294,6 +293,6 @@ function booneUnit.TestInfo:status()
 end
 
 function booneUnit.TestInfo:report( detailed )
-    local reportString = self.description
+    local reportString = string.format( '"%s"\n[ %s ]', self.description, self:status() )
     return reportString
 end
