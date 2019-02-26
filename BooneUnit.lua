@@ -294,5 +294,6 @@ function booneUnit.TestInfo:status()
 end
 
 function booneUnit.TestInfo:report( detailed )
-
+    local reportString = self.description
+    return reportString
 end

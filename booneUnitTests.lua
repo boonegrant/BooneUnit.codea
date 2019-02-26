@@ -564,7 +564,7 @@ function testBooneUnitTest()
         end )
     end)
     --test.registerResult() appends table
-    _:describe( "test:registerResult() appends a table to test.results", function()
+    _:describe( "TestInfo:registerResult() appends a table to test.results", function()
         for i = 0, 5 do
             thisTestDesc = string.format( "call test.registerResult() %d times, results length is %d", i, i )
             _:test( thisTestDesc, function() 
@@ -580,7 +580,7 @@ function testBooneUnitTest()
     end )
     
     --test.registerResult(result, actual, expected) stores data
-    _:describe( "test:registerResult(outcome, expected, actual) stores data in test.results", function()
+    _:describe( "TestInfo:registerResult(outcome, expected, actual) stores data in test.results", function()
         for i = 1, 5 do
             thisTestDesc = string.format( 'registerResult(true, "foo", n^2); result[n] matches; n=%d', i )
             _:test( thisTestDesc, function() 
@@ -649,9 +649,9 @@ function testBooneUnitTest()
     
     -- booneUnit:expect().has() stores data in [test].results
     _:describe( "booneUnit:expect().has() stores data in [test].results", function()
-        local vipData = { lat = 834.5677, long = true }
-        local aTable = { "foo", "bar", other = "baz", diameter = math.pi, vip = vipData, vec3(24,7,365.25) }
-        local bTable = { "foo", "Bar", vipData, math.pi } 
+        local someData = { lat = 834.5677, long = true }
+        local aTable = { "foo", "bar", other = "baz", diameter = math.pi, vip = someData, vec3(24,7,365.25) }
+        local bTable = { "foo", "Bar", someData, math.pi } 
         for i, v in ipairs( bTable ) do
             thisTestDesc = string.format( "call expect( table ).has( value ) %d times," ..
                                           " results[%d] contains value %s", i, i, v )
@@ -778,7 +778,7 @@ end
 function bestBooneUnitDelay()
     CodeaUnit.detailed = false
     booneUnit.silent = true
-    _:describe( 'booneUnit:delay() evaluates the conclusion to a test'..
+    _:describe( 'booneUnit:delay() executes the conclusion of a test'..
         ' after a certain amount of time has passed', function()
         booneUnit:reset()
         _:test( "booneUnit:delay() is a function", function()
@@ -825,7 +825,7 @@ function bestBooneUnitDelay()
             end )
         end )
         _:test( "booneUnit:expect() statements inside booneUnit:delay()"..
-            " will register results in appropriate test", function()
+            " will register results with the appropriate test", function()
             local doneDelayStuff = false
             local test1 = booneUnit:test( "do a delay", function()
                 booneUnit:delay( 0.8, function()
@@ -1046,7 +1046,7 @@ function testBooneUnitFeature()
                 _:expect( string.find( featureReport, booneUnit.tallyCategoryNames[key] ) ).isnt( nil )
             end )
         end
-        _:test( 'If a result category is empty, like "pending" in this case,'..
+        _:test( 'If a result category is empty, such as "pending" in this case,'..
                 ' then it is not present in the report string', function() 
             _:expect( string.find( featureReport, booneUnit.tallyCategoryNames.pending ) ).is( nil )
         end )
@@ -1054,5 +1054,22 @@ function testBooneUnitFeature()
     --]]
 end
 
+function testTheMostRecent()
+    CodeaUnit.detailed = true
+    booneUnit.silent = false
+    
+    _:describe( 'TestInfo:report()\nReturns a string describing the individual results of that test', function()
+        booneUnit:reset()
+        _:test( '"booneUnit:test():report()" returns a string', function() 
+            _:expect( type( booneUnit:test():report() ) ).is( "string" )
+        end )
+        _:test( ' the "TestInfo:report()" string contains the test description string', function()
+            local testDescription = "Blah Blah Blah and so on" 
+            local testReportString = booneUnit:test( testDescription ):report()
+            _:expect( string.find( testReportString, testDescription ) ).isnt( nil )
+        end )
+    end )
+    
+end
 -- test output and report functions
 -- test "test within test" error
