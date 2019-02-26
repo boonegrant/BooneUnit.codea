@@ -73,7 +73,7 @@ function booneUnit:test( testDescription, scenario )
     self.currentTest = nil
     thisFeature:after()
     if not self.silent then
-        print( string.format( 'Dwezil:test()\n%s', thisTest:report() ) )
+        print( string.format( '#%d Dwezil:test()\n%s', #thisFeature.tests ,thisTest:report() ) )
         -- print( thisTest:report( self.detailed ) )
     end
     return thisTest
@@ -202,7 +202,6 @@ end
 function booneUnit.FeatureInfo:intro()
     return string.format( "Feature: %s \n tests:", self.description )
 end
--- [feature]:report( detailed )
 function booneUnit.FeatureInfo:report()
     local theTally = self:tally()
     local reportCategories = {}
@@ -210,7 +209,6 @@ function booneUnit.FeatureInfo:report()
         if theTally[v] then
             local category = string.format( "%3i %s", theTally[v], booneUnit.tallyCategoryNames[v] or v )
             table.insert( reportCategories, category )
-            print( category )
         end
     end
     return string.format( "Feature: %s \n%3i Tests \n ----------\n%s\n ----------", 

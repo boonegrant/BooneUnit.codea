@@ -1,5 +1,5 @@
 --CodeaUnit = class()
-CodeaUnit = {}
+CodeaUnit = { status = "All Passed", totalFailed = 0 }
 
 function CodeaUnit:describe(feature, allTests)
     self.tests = 0
