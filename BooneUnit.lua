@@ -205,16 +205,19 @@ end
 function booneUnit.FeatureInfo:report()
     local theTally = self:tally()
     local reportCategories = {}
+    local separator = ' ----------'
     for i, v in ipairs( booneUnit.tallyCategoryOrder ) do
         if theTally[v] then
             local category = string.format( "%3i %s", theTally[v], booneUnit.tallyCategoryNames[v] or v )
             table.insert( reportCategories, category )
         end
     end
-    return string.format( "Feature: %s \n%3i Tests \n ----------\n%s\n ----------", 
+    return string.format( "Feature: %s \n%3i Tests \n%s\n%s\n%s", 
                           self.description, 
                           theTally.total,
-                          table.concat( reportCategories, "\n" ) 
+                          separator,
+                          table.concat( reportCategories, "\n" ),
+                          separator
                         )
 end
 function booneUnit.FeatureInfo:tally()
@@ -248,7 +251,7 @@ end
 
 function booneUnit.TestInfo:registerResult( outcome, actual, expected )
     table.insert( self.results, { outcome = outcome, actual = actual, expected = expected} )
-    print( string.format( "  actual: %s \nexpected: %s \nDwezil-Result: %s ", actual, expected, outcome ) )
+    -- print( string.format( "  actual: %s \nexpected: %s \nDwezil-Result: %s ", actual, expected, outcome ) )
     return #self.results
 end
 
@@ -291,6 +294,27 @@ function booneUnit.TestInfo:status()
 end
 
 function booneUnit.TestInfo:report( detailed )
-    local reportString = string.format( '"%s"\n[ %s ]', self.description, self:status() )
-    return reportString
+    local bigDivider = '--------'
+    local startChunk = ' |-(a) '
+    local midChunk   = ' |  |  '
+    local endChunk   = ' |  --->'
+    local reportTable = {}
+    table.insert( reportTable, string.format( '"%s"\n%s', self.description, bigDivider) )
+    
+    for i, v in ipairs( self.results ) do
+        -- string.format("%s -- Actual: %s, Expected: %s \n-- FAIL", message, actual, expected)
+        -- string.format( "  actual: %s \nexpected: %s Result: %s ", v.actual, v.expected, v.outcome )
+        table.insert( reportTable, string.format( '%sexpected: %s', startChunk, v.expected ) )
+        table.insert( reportTable, string.format( '%sactual:   %s', midChunk, v.actual ) )
+        table.insert( reportTable, string.format( '%s(%s)', endChunk, v.outcome ) )
+    end
+    --[[
+    local reportString = string.format( '"%s"\n%s\n[ %s ]', 
+                                        self.description, 
+                                        table.concat( resultStringTable ), 
+                                        self:status() 
+                                      )
+      ]]
+    table.insert( reportTable, string.format( '%s\n[ %s ]', bigDivider, self:status() ) )
+    return table.concat( reportTable, '\n' )
 end

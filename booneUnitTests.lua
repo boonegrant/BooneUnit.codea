@@ -1056,7 +1056,7 @@ end
 
 function testTheMostRecent()
     CodeaUnit.detailed = true
-    booneUnit.silent = false
+    booneUnit.silent = nil
     
     _:describe( 'TestInfo:report()\nReturns a string describing the individual results of that test', function()
         booneUnit:reset()
@@ -1074,6 +1074,14 @@ function testTheMostRecent()
                 booneUnit:expect( true ).isnt( false )
             end)
             _:expect( string.find( aTest:report(), aTest:status() ) ).isnt( nil )
+        end )
+        _:test( ' the "TestInfo:report()" string contains an entry for each ":expect()" statement in the test', function()
+            local testDescription = "Double Expectation" 
+            local aTest = booneUnit:test( testDescription, function()
+                booneUnit:expect( true ).isnt( false )
+                booneUnit:expect( 2+2 ).is( 5 )
+            end)
+            _:expect( string.find( aTest:report(), "(a)" ) ).isnt( nil )
         end )
     end )
     
