@@ -54,7 +54,7 @@ function booneUnit:ignore( testDescription, scenario )
     table.insert( thisFeature.tests, thisTest )   
     thisTest:registerResult("ignore") 
     if not self.silent then
-        print( string.format( "Dwezil:ignore( %s)", testDescription ) )
+        print( string.format( '#%d Dwezil:ignore()\n%s', #thisFeature.tests ,thisTest:report() ) )
         -- thisTest:report( self.detailed )
     end
     return thisTest

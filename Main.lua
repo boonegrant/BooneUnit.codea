@@ -90,3 +90,5 @@ function bestBasics()
     end)
 end
 
+parameter.action( "Basic Tests", bestBasics )
+
