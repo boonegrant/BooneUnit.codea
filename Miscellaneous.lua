@@ -33,4 +33,7 @@ import test generation functions
 local function alphaIndex( num )
   return string.char( string.byte( "a" ) + num - 1 )
 end
+
+00000000000
+└╠╳╰⚪︎
 --]]

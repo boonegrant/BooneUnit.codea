@@ -8,6 +8,8 @@
 	<array>
 		<string>Miscellaneous</string>
 		<string>CodeaUnit</string>
+		<string>OriginalCodeaUnit</string>
+		<string>JefferiesUnit</string>
 		<string>BooneUnit</string>
 		<string>booneUnitTests</string>
 		<string>Main</string>

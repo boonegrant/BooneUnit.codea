@@ -66,7 +66,7 @@ function booneUnit:test( testDescription, scenario )
     end
     local thisFeature = self.currentFeature or self:orphanage()
     local thisTest = booneUnit.TestInfo( thisFeature, testDescription, scenario )
-    table.insert( thisFeature.tests, thisTest )   
+    table.insert( thisFeature.tests, thisTest )   -- make method call registerTest?
     thisFeature:before()
     self.currentTest = thisTest
     thisTest:run( scenario )
@@ -79,6 +79,7 @@ function booneUnit:test( testDescription, scenario )
     return thisTest
 end
 
+-- booneUnit:delay() used inside a test statement to delay evaluation of expectations
 function booneUnit:delay( numSeconds, scenario )
     local thisTest = self.currentTest
     if thisTest == nil then
@@ -102,7 +103,7 @@ end
 function booneUnit:expect( conditional ) -- TODO: add name arg
     local thisTest = self.currentTest
     if thisTest == nil then
-        error( self.errorMsgs.expectWithoutTest, 2 )
+        error( self.errorMsgs.expectWithoutTest, 2 ) -- 2 is where in stack level is returned for context
         return nil
     end
         
@@ -182,6 +183,7 @@ end
 
 function booneUnit:orphanage()  -- create a home for tests not placed inside a :describe() declaration
     -- this is so they can be grouped and tabulated together 
+    -- ?Create new Feature for each group of orphan tests i.e. remove .aHomeForOrphanTests ?
     -- print( "Dwezil- Oh you poor lost test!" )
     if ( self.aHomeForOrphanTests == nil ) then  -- or aHomeForOrphanTests ~= self.features[#self.features]
         self.aHomeForOrphanTests = self.FeatureInfo( "No Description" )
@@ -193,7 +195,7 @@ function booneUnit:orphanage()  -- create a home for tests not placed inside a :
 end
 
 
--- Feature class --
+-- Feature Info class --
 booneUnit.FeatureInfo = class()
 function booneUnit.FeatureInfo:init( featureDescription, allFeatureTests )
     self.description = featureDescription or ""
@@ -235,13 +237,14 @@ end
 function booneUnit.FeatureInfo.before() end -- default empty function
 function booneUnit.FeatureInfo.after() end  -- default empty function
 
--- Test class --
+-- Test Info class --
 booneUnit.TestInfo = class()
 function booneUnit.TestInfo:init( parent, testDescription, scenario )
     self.feature = parent  -- not sure I need this,
     self.description = testDescription or ""
     self.results = {}
 end
+
 function booneUnit.TestInfo:run( scenario )
     local status, error = pcall( scenario or function() end )
     if error then
@@ -295,9 +298,9 @@ end
 
 function booneUnit.TestInfo:report( detailed )
     local bigDivider = '--------'
-    local startChunk = ' |-(a) '
+    local startChunk = '├━(♴) '
     local midChunk   = ' |  |  '
-    local endChunk   = ' |  --->'
+    local endChunk   = ' |  +-->'
     local reportTable = {}
     table.insert( reportTable, string.format( '"%s"\n%s', self.description, bigDivider) )
     

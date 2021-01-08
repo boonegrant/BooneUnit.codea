@@ -146,7 +146,7 @@ function testBooneUnitExpect()
                             { math.sin, otherFunc },
                             { math.sin(math.pi), otherFunc(math.pi) },
                             { vec2(5,2), vec2(5,2)},
-                            { color(43)  , color(43,43,43)  } }
+                            { color(43)    , color(43,43,43)  } }
         for i, v in ipairs( equalities ) do
             local testDesc = string.format('booneUnit:expect(%s).is(%s) returns true', v[1], v[2] )
             _:test( testDesc, function()
