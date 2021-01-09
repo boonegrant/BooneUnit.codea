@@ -238,7 +238,7 @@ function testBooneUnitExpect()
                               {"foo", "bar"},
                               {"24", 24 },
                               { 3.0, math.pi },
-                              { {}, {"a","b","c"} },
+                              { {"a","b"}, {"a","b","c"} },
                               { {}, {} },
                               { math.cos, math.sin},
                               { function() end, function() end },
@@ -268,10 +268,10 @@ function testBooneUnitExpect()
         local otherFunc = math.sin
         local aVector = vec2(5,2)
         local aColor = color(43)
-        local aTable = { true, false, "foo", aVar, "24", 24, 
+        local aTable = { first = true, true, false, "foo", aVar, "24", 24, 
                          emptyTable, alphaTable, aFunction, otherFunc,
                          aFunction(otherFunc(16)), 0.3296, math.pi, 
-                         aVector, aColor }
+                         aVector, aColor}
         local bTable = { true, false, "foo", "bar", "24", 24, 
                          emptyTable, sameTable, aFunction, math.sin,
                          aFunction(math.sin(16)), 00.329600, math.pi, 
@@ -723,11 +723,12 @@ function testBooneUnitTest()
     
     -- booneUnit:test():status() 
     --      Returns a string describing the aggregate result status
-    --      ( Empty | Ignored ) > Failed > Passed
+    --      ( Empty | Ignored ) < Passed < Failed
+    --      ! no ignored test yet !
     _:describe( 'booneUnit:test():status()\nReturns a string describing the aggregate result status', function()
         _:test( 'status() returns "empty" if there were no results', function() 
             booneUnit:reset()
-            local testTable = booneUnit:test( "an empty test", function()end )
+            local testTable = booneUnit:test( "an empty test", function() end )
             _:expect( testTable:status() ).is( "empty" )
         end )
         _:test( "status() returns 'pass' if there is one true result", function()

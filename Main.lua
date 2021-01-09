@@ -69,14 +69,17 @@ function bestBasics()
         end)
 
         _:test("Containment test", function()
-            _:expect({"Foo", "Bar", "Baz"}).has("Foo")
+            local aTable = { foo = "Bar", bopper = "Big", 42}
+            _:expect(aTable).has("Bar")
+            _:expect(aTable).has(42)
+            _:expect(aTable).has("Baz")
         end)
 
         _:test("Thrown test", function()
             _:expect(function()
                 print( "I don't feel so good…" )
-                error('Foo error')
-            end).throws("Foo")
+                error('Cookies Tossed!')
+            end).throws("Cookies")
         end)
 
         _:ignore("Ignored test", function()
@@ -87,6 +90,16 @@ function bestBasics()
             _:expect("Foo").is("Bar")
         end)
 
+        _:test("Test with Great Expectations", function()
+            local someWord = "Foo"
+            local someNumber = (2+2)
+            _:expect(someWord).is("Foo")
+            _:expect(someWord).is("foo")
+            someWord = "Bar"
+            _:expect(someWord).is("Bar")
+            _:expect(someNumber).is(4)
+        end)
+        
     end)
 end
 

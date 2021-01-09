@@ -22,6 +22,7 @@ end
 booneUnit:reset()
 
 function booneUnit:describe( featureDescription, featureTests )
+    -- Create feature info table
     local thisFeature = self.FeatureInfo( featureDescription )
     table.insert( self.features, thisFeature )   
     -- Announce feature
@@ -52,7 +53,7 @@ function booneUnit:ignore( testDescription, scenario )
     local thisFeature = self.currentFeature or self:orphanage()
     local thisTest = booneUnit.TestInfo( thisFeature, testDescription )
     table.insert( thisFeature.tests, thisTest )   
-    thisTest:registerResult("ignore") 
+    thisTest:registerResult("ignore", "", "") 
     if not self.silent then
         print( string.format( '#%d Dwezil:ignore()\n%s', #thisFeature.tests ,thisTest:report() ) )
         -- thisTest:report( self.detailed )
@@ -115,7 +116,7 @@ function booneUnit:expect( conditional ) -- TODO: add name arg
 
     local isnt = function(expected)
         -- notify( conditional ~= expected, string.format("not %s", expected) )
-        thisTest:registerResult( conditional ~= expected, conditional, string.format("not %s", expected) )
+        thisTest:registerResult( conditional ~= expected, conditional, string.format("NOT %s", expected) )
         return( conditional ~= expected )
     end
 
@@ -130,13 +131,13 @@ function booneUnit:expect( conditional ) -- TODO: add name arg
             then  -- test for equality
                 if v == expected then
                     found = true
-                    actual = string.format('target[ %s ] is %s', k, v )
+                    actual = string.format('[ %s ] is %s', k, v )
                 end
             end
              
         end
         --notify(found, expected)
-        thisTest:registerResult( found, actual, expected )
+        thisTest:registerResult( found, actual, string.format("HAS %s", expected) )
         return found
     end
 
@@ -151,7 +152,9 @@ function booneUnit:expect( conditional ) -- TODO: add name arg
             local ok, error = pcall( conditional )
             if ok then 
                 -- no error thrown
-                thisTest:registerResult( false, "Nothing thrown", expected )
+                thisTest:registerResult( false, 
+                                         "No error thrown", 
+                                         string.format('THROWN: "%s"', expected) )
                 return false
             else 
                 -- some error was thrown 
@@ -167,7 +170,9 @@ function booneUnit:expect( conditional ) -- TODO: add name arg
                     foundExpectedError = ( expected == error ) 
                 end
                 -- register and return findings
-                thisTest:registerResult( foundExpectedError, error, expected )
+                thisTest:registerResult( foundExpectedError, 
+                                         string.format('ERROR- "%s"', error),
+                                         string.format('THROWN- "%s"', expected) )
                 return foundExpectedError
             end
         end
@@ -201,9 +206,15 @@ function booneUnit.FeatureInfo:init( featureDescription, allFeatureTests )
     self.description = featureDescription or ""
     self.tests = {}
 end
+function booneUnit.FeatureInfo:registerTest( aTest )
+    -- put the test in the table
+end
 function booneUnit.FeatureInfo:intro()
     return string.format( "Feature: %s \n tests:", self.description )
 end
+
+-- booneUnit.FeatureInfo:report()
+-- Returns a string describing the results of the tests within the feature
 function booneUnit.FeatureInfo:report()
     local theTally = self:tally()
     local reportCategories = {}
@@ -222,6 +233,9 @@ function booneUnit.FeatureInfo:report()
                           separator
                         )
 end
+
+-- booneUnit.FeatureInfo:tally()
+-- Returns a table summing and totaling the test results in a feature
 function booneUnit.FeatureInfo:tally()
     local theTally = { total = #self.tests }
     for i, v in ipairs( self.tests ) do
@@ -237,7 +251,10 @@ end
 function booneUnit.FeatureInfo.before() end -- default empty function
 function booneUnit.FeatureInfo.after() end  -- default empty function
 
+
+-- --------------- --
 -- Test Info class --
+-- --------------- --
 booneUnit.TestInfo = class()
 function booneUnit.TestInfo:init( parent, testDescription, scenario )
     self.feature = parent  -- not sure I need this,
@@ -248,7 +265,7 @@ end
 function booneUnit.TestInfo:run( scenario )
     local status, error = pcall( scenario or function() end )
     if error then
-        self:registerResult( false, "error", error )
+        self:registerResult( false, "ERROR", error )
     end
 end
 
@@ -298,9 +315,9 @@ end
 
 function booneUnit.TestInfo:report( detailed )
     local bigDivider = '--------'
-    local startChunk = '├━(♴) '
-    local midChunk   = ' |  |  '
-    local endChunk   = ' |  +-->'
+    local startChunk = '├─○ '
+    local midChunk   = '│ │ '
+    local endChunk   = '│ ╰>'
     local reportTable = {}
     table.insert( reportTable, string.format( '"%s"\n%s', self.description, bigDivider) )
     
