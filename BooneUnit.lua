@@ -62,7 +62,7 @@ function booneUnit:ignore( testDescription, scenario )
 end
 
 function booneUnit:test( testDescription, scenario )
-    if self.currentTest then
+    if self.currentTest then  -- check if there already an active test statement
         error( self.errorMsgs.testInsideTest, 2 )
     end
     local thisFeature = self.currentFeature or self:orphanage()
@@ -75,7 +75,6 @@ function booneUnit:test( testDescription, scenario )
     thisFeature:after()
     if not self.silent then
         print( string.format( '#%d Dwezil:test()\n%s', #thisFeature.tests ,thisTest:report() ) )
-        -- print( thisTest:report( self.detailed ) )
     end
     return thisTest
 end
@@ -257,7 +256,7 @@ function booneUnit.FeatureInfo.after() end  -- default empty function
 -- --------------- --
 booneUnit.TestInfo = class()
 function booneUnit.TestInfo:init( parent, testDescription, scenario )
-    self.feature = parent  -- not sure I need this,
+    self.feature = parent  -- not sure I need this
     self.description = testDescription or ""
     self.results = {}
 end
@@ -276,7 +275,7 @@ function booneUnit.TestInfo:registerResult( outcome, actual, expected )
 end
 
 -- [test]:passed() - returns true if there is at least one result 
---                   recorded and all results are successful
+--                   recorded and all results are successful or ignored
 function booneUnit.TestInfo:passed()
     local testPassed = #self.results > 0  -- at least one result recorded
     for i, v in ipairs( self.results ) do
@@ -313,28 +312,18 @@ function booneUnit.TestInfo:status()
     return isOther
 end
 
-function booneUnit.TestInfo:report( detailed )
+function booneUnit.TestInfo:report() --TODO: add 'detailed' parameter
     local bigDivider = '--------'
     local startChunk = '├─○ '
     local midChunk   = '│ │ '
     local endChunk   = '│ ╰>'
     local reportTable = {}
     table.insert( reportTable, string.format( '"%s"\n%s', self.description, bigDivider) )
-    
     for i, v in ipairs( self.results ) do
-        -- string.format("%s -- Actual: %s, Expected: %s \n-- FAIL", message, actual, expected)
-        -- string.format( "  actual: %s \nexpected: %s Result: %s ", v.actual, v.expected, v.outcome )
         table.insert( reportTable, string.format( '%sexpected: %s', startChunk, v.expected ) )
         table.insert( reportTable, string.format( '%sactual:   %s', midChunk, v.actual ) )
         table.insert( reportTable, string.format( '%s(%s)', endChunk, v.outcome ) )
     end
-    --[[
-    local reportString = string.format( '"%s"\n%s\n[ %s ]', 
-                                        self.description, 
-                                        table.concat( resultStringTable ), 
-                                        self:status() 
-                                      )
-      ]]
     table.insert( reportTable, string.format( '%s\n[ %s ]', bigDivider, self:status() ) )
     return table.concat( reportTable, '\n' )
 end

@@ -4,6 +4,15 @@
 -- output to text box (soda)
 
 --[[
+make method call FeatureInfo:registerTest (logTest?)
+
+? split out descriptor in result registration function ? (HAS, ISNT, etc)
+
+booneUnit.test.status() I have no idea what it does for ignored
+
+make booneunit a class
+use booneunit to run self tests
+
 testInfo.report() output to console
     detailed
 
@@ -12,10 +21,7 @@ booneUnit.report()
 
 all print statements made by booneUnit
 
-expect() takes name argument
-
-make booneunit a class
-use booneunit to run self tests
+expect() takes description argument
 
 group orphan tests between features
 
@@ -24,6 +30,8 @@ before and after statements clarification or warning without describe
 .has() works with strings
 
 import test generation functions 
+
+linebrake function
 --]]
 
 

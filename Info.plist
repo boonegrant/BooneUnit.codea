@@ -6,7 +6,7 @@
 	<string>Unknown</string>
 	<key>Buffer Order</key>
 	<array>
-		<string>Miscellaneous</string>
+		<string>Notes</string>
 		<string>CodeaUnit</string>
 		<string>OriginalCodeaUnit</string>
 		<string>JefferiesUnit</string>
