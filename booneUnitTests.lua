@@ -917,8 +917,10 @@ function testBooneUnitFeature()
         -- feature members 
         booneUnit:reset()
         local someFeatureData = booneUnit:describe( aFeatureDesc, aFeatureFunc )
+        
         local featureMembers = { description = "string", 
                                  tests = "table", 
+                                 addTest = "function",
                                  intro = "function",
                                  tally = "function",
                                  report = "function",
@@ -927,12 +929,12 @@ function testBooneUnitFeature()
         memberTypeTest( "someFeatureData", someFeatureData, featureMembers )
         
         local featureValues = { description = aFeatureDesc, 
-                                intro = booneUnit.FeatureInfo.intro, 
-                                tally = booneUnit.FeatureInfo.tally, 
-                                report = booneUnit.FeatureInfo.report, 
-                                before = booneUnit.FeatureInfo.before, 
-                                after = booneUnit.FeatureInfo.after }
-        
+                                addTest = booneUnit.FeatureInfo.addTest,
+                                intro   = booneUnit.FeatureInfo.intro, 
+                                tally   = booneUnit.FeatureInfo.tally, 
+                                report  = booneUnit.FeatureInfo.report, 
+                                before  = booneUnit.FeatureInfo.before, 
+                                after   = booneUnit.FeatureInfo.after }
         memberValueTest( "someFeatureData", someFeatureData, featureValues )
         
     end )
