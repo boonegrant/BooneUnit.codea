@@ -51,8 +51,9 @@ end
 
 function booneUnit:ignore( testDescription, scenario )
     local thisFeature = self.currentFeature or self:orphanage()
-    local thisTest = booneUnit.TestInfo( thisFeature, testDescription )
-    table.insert( thisFeature.tests, thisTest )   
+    local thisTest = booneUnit.TestInfo( thisFeature, testDescription ) -- move this process into the following function
+    thisFeature:addTest( thisTest )
+    -- table.insert( thisFeature.tests, thisTest )
     thisTest:registerResult("ignore", "", "") 
     if not self.silent then
         print( string.format( '#%d Dwezil:ignore()\n%s', #thisFeature.tests ,thisTest:report() ) )
@@ -67,7 +68,8 @@ function booneUnit:test( testDescription, scenario )
     end
     local thisFeature = self.currentFeature or self:orphanage()
     local thisTest = booneUnit.TestInfo( thisFeature, testDescription, scenario )
-    table.insert( thisFeature.tests, thisTest )   -- make method call registerTest?
+    thisFeature:addTest( thisTest )
+    --table.insert( thisFeature.tests, thisTest )   -- make method call registerTest?
     thisFeature:before()
     self.currentTest = thisTest
     thisTest:run( scenario )
@@ -91,6 +93,7 @@ function booneUnit:delay( numSeconds, scenario )
     tween.delay( numSeconds, function ()
         self:continue( thisTest, pendingIndex, scenario )
     end )
+    -- return tween, test, what?
 end
 
 function booneUnit:continue( thisTest, pendingIndex, scenario )
@@ -205,15 +208,16 @@ function booneUnit.FeatureInfo:init( featureDescription, allFeatureTests )
     self.description = featureDescription or ""
     self.tests = {}
 end
-function booneUnit.FeatureInfo:registerTest( aTest )
+function booneUnit.FeatureInfo:addTest( aTest )
     -- put the test in the table
+    table.insert( self.tests, aTest )
 end
 function booneUnit.FeatureInfo:intro()
     return string.format( "Feature: %s \n tests:", self.description )
 end
 
 -- booneUnit.FeatureInfo:report()
--- Returns a string describing the results of the tests within the feature
+--          Returns a string describing the results of the tests within the feature
 function booneUnit.FeatureInfo:report()
     local theTally = self:tally()
     local reportCategories = {}
@@ -234,7 +238,7 @@ function booneUnit.FeatureInfo:report()
 end
 
 -- booneUnit.FeatureInfo:tally()
--- Returns a table summing and totaling the test results in a feature
+--          Returns a table summing and totaling the test results in a feature
 function booneUnit.FeatureInfo:tally()
     local theTally = { total = #self.tests }
     for i, v in ipairs( self.tests ) do

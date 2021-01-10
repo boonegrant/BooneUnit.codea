@@ -4,11 +4,11 @@
 -- output to text box (soda)
 
 --[[
-make method call FeatureInfo:registerTest (logTest?)
+make method call FeatureInfo:registerTest (logTest?, addTest?)
+
+booneUnit.test.status() I have no idea how ignored is handled
 
 ? split out descriptor in result registration function ? (HAS, ISNT, etc)
-
-booneUnit.test.status() I have no idea what it does for ignored
 
 make booneunit a class
 use booneunit to run self tests

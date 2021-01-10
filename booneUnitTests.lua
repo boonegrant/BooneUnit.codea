@@ -855,8 +855,8 @@ end
 
 function testBooneUnitFeature() 
     -- Feature Creation --
-    CodeaUnit.detailed = false
-    booneUnit.silent = true
+    CodeaUnit.detailed = true
+    booneUnit.silent = false
     booneUnit:reset()
     local atestDesc = "location: Springfield"
     local atestFunc = function ()
