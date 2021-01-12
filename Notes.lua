@@ -4,9 +4,12 @@
 -- output to text box (soda)
 
 --[[
+
 make method call FeatureInfo:registerTest (logTest?, addTest?)
 
 booneUnit.test.status() I have no idea how ignored is handled
+
+check where print() statements come from
 
 ? split out descriptor in result registration function ? (HAS, ISNT, etc)
 

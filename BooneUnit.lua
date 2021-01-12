@@ -51,9 +51,7 @@ end
 
 function booneUnit:ignore( testDescription, scenario )
     local thisFeature = self.currentFeature or self:orphanage()
-    local thisTest = booneUnit.TestInfo( thisFeature, testDescription ) -- move this process into the following function
-    thisFeature:addTest( thisTest )
-    -- table.insert( thisFeature.tests, thisTest )
+    local thisTest = thisFeature:makeTest( testDescription, scenario )
     thisTest:registerResult("ignore", "", "") 
     if not self.silent then
         print( string.format( '#%d Dwezil:ignore()\n%s', #thisFeature.tests ,thisTest:report() ) )
@@ -67,9 +65,7 @@ function booneUnit:test( testDescription, scenario )
         error( self.errorMsgs.testInsideTest, 2 )
     end
     local thisFeature = self.currentFeature or self:orphanage()
-    local thisTest = booneUnit.TestInfo( thisFeature, testDescription, scenario )
-    thisFeature:addTest( thisTest )
-    --table.insert( thisFeature.tests, thisTest )   -- make method call registerTest?
+    local thisTest = thisFeature:makeTest( testDescription, scenario )
     thisFeature:before()
     self.currentTest = thisTest
     thisTest:run( scenario )
@@ -93,7 +89,7 @@ function booneUnit:delay( numSeconds, scenario )
     tween.delay( numSeconds, function ()
         self:continue( thisTest, pendingIndex, scenario )
     end )
-    -- return tween, test, what?
+    -- return tween, test, callback,what?
 end
 
 function booneUnit:continue( thisTest, pendingIndex, scenario )
@@ -201,27 +197,32 @@ function booneUnit:orphanage()  -- create a home for tests not placed inside a :
     return self.aHomeForOrphanTests
 end
 
-
+-- ------------------ --
 -- Feature Info class --
+-- ------------------ --
 booneUnit.FeatureInfo = class()
-function booneUnit.FeatureInfo:init( featureDescription, allFeatureTests )
+
+function booneUnit.FeatureInfo:init( featureDescription )
     self.description = featureDescription or ""
     self.tests = {}
 end
-function booneUnit.FeatureInfo:addTest( aTest )
-    -- put the test in the table
-    table.insert( self.tests, aTest )
+
+function booneUnit.FeatureInfo:makeTest( testDescription, scenario )
+    theTest = booneUnit.TestInfo( self, testDescription, scenario )
+    table.insert( self.tests, theTest )
+    return theTest
 end
+
 function booneUnit.FeatureInfo:intro()
     return string.format( "Feature: %s \n tests:", self.description )
 end
-
 -- booneUnit.FeatureInfo:report()
 --          Returns a string describing the results of the tests within the feature
-function booneUnit.FeatureInfo:report()
+function booneUnit.FeatureInfo:report() --change name to summary
     local theTally = self:tally()
     local reportCategories = {}
     local separator = ' ----------'
+    -- assemble tally strings in prefered order
     for i, v in ipairs( booneUnit.tallyCategoryOrder ) do
         if theTally[v] then
             local category = string.format( "%3i %s", theTally[v], booneUnit.tallyCategoryNames[v] or v )
@@ -260,7 +261,7 @@ function booneUnit.FeatureInfo.after() end  -- default empty function
 -- --------------- --
 booneUnit.TestInfo = class()
 function booneUnit.TestInfo:init( parent, testDescription, scenario )
-    self.feature = parent  -- not sure I need this
+    self.feature = parent  -- not sure I need this, may be useful for delayed reports
     self.description = testDescription or ""
     self.results = {}
 end
@@ -274,7 +275,6 @@ end
 
 function booneUnit.TestInfo:registerResult( outcome, actual, expected )
     table.insert( self.results, { outcome = outcome, actual = actual, expected = expected} )
-    -- print( string.format( "  actual: %s \nexpected: %s \nDwezil-Result: %s ", actual, expected, outcome ) )
     return #self.results
 end
 

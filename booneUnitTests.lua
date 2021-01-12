@@ -501,6 +501,7 @@ function testBooneUnitIgnore()
 end
 
 function testBooneUnitTest()
+    booneUnit:reset()
     CodeaUnit.detailed = false
     booneUnit.silent = true
     -- booneUnit.test()
@@ -524,7 +525,6 @@ function testBooneUnitTest()
             local emptyTestFunc = function() end 
             local testReturn = booneUnit:test( testDesc, emptyTestFunc )
             _:expect( testReturn:is_a( booneUnit.TestInfo ) ).is( true )
-
         end )
         -- properties of that table
         do
@@ -726,6 +726,7 @@ function testBooneUnitTest()
     --      Returns a string describing the aggregate result status
     --      ( Empty | Ignored ) < Passed < Failed
     --      ! no ignored test yet !
+    --      ! no pending test yet !
     _:describe( 'booneUnit:test():status()\nReturns a string describing the aggregate result status', function()
         _:test( 'status() returns "empty" if there were no results', function() 
             booneUnit:reset()
@@ -920,7 +921,7 @@ function testBooneUnitFeature()
         
         local featureMembers = { description = "string", 
                                  tests = "table", 
-                                 addTest = "function",
+                                 makeTest = "function",
                                  intro = "function",
                                  tally = "function",
                                  report = "function",
@@ -929,7 +930,7 @@ function testBooneUnitFeature()
         memberTypeTest( "someFeatureData", someFeatureData, featureMembers )
         
         local featureValues = { description = aFeatureDesc, 
-                                addTest = booneUnit.FeatureInfo.addTest,
+                                makeTest = booneUnit.FeatureInfo.makeTest,
                                 intro   = booneUnit.FeatureInfo.intro, 
                                 tally   = booneUnit.FeatureInfo.tally, 
                                 report  = booneUnit.FeatureInfo.report, 
@@ -938,8 +939,10 @@ function testBooneUnitFeature()
         memberValueTest( "someFeatureData", someFeatureData, featureValues )
         
     end )
+    
     _:describe( 'Test statements enclosed in a "describe()" statement produce'..
                 ' TestInfo objects that are stored in "<FeatureInfo>.tests"', function() 
+        -- Create a feature with some tests...
         local thisFeatureInfo, testOneInfo, testTwoInfo, testThreeInfo
         thisFeatureInfo = booneUnit:describe( "An Uneventful Group of Tests", function() 
             testOneInfo = booneUnit:test( "empty" )
@@ -950,6 +953,7 @@ function testBooneUnitFeature()
                 booneUnit:expect( "foo" ).is( "bar" )
             end )
         end )
+        -- ...Check the data in the feature object
         _:test( '"<FeatureInfo>.tests[1]" is <testOneInfo>', function()
             _:expect( thisFeatureInfo.tests[1] ).is( testOneInfo )
         end )
@@ -961,7 +965,41 @@ function testBooneUnitFeature()
             _:expect( #thisFeatureInfo.tests ).is( 3 )
         end )
     end )
-    ---[[
+    
+    
+    _:describe( '"FeatureInfo:makeTest()" returns a TestInfo object', function()
+        booneUnit:reset()
+        --[[
+        booneUnit:reset()
+        local thisFeatureInfo, testOneInfo, testTwoInfo, testThreeInfo
+        thisFeatureInfo = booneUnit:describe( "A Feature Description String")
+        testOneInfo = thisFeatureInfo:makeTest( thisFeatureInfo, "empty" )
+        testTwoInfo = thisFeatureInfo:makeTest( thisFeatureInfo, "passable", function()
+            booneUnit:expect( "foo" ).is( "foo" )
+        end )
+        
+        testThreeInfo = thisFeatureInfo:makeTest( thisFeatureInfo, "impassable", function()
+            booneUnit:expect( "foo" ).is( "bar" )
+        end )
+        --]]
+        _:test( 'returns table', function()
+            booneUnit:reset()
+            local thisFeatureInfo, testOneInfo, testTwoInfo, testThreeInfo
+            thisFeatureInfo = booneUnit:describe( "A Feature Description String")
+            testOneInfo = thisFeatureInfo:makeTest( thisFeatureInfo, "empty" )
+            _:expect( type(testOneInfo)== 'table' ).is( true )
+        end )
+        _:test( 'returns TestInfo object', function()
+            booneUnit:reset()
+            local thisFeatureInfo, testOneInfo, testTwoInfo, testThreeInfo
+            thisFeatureInfo = booneUnit:describe( "A Feature Description String")
+            testOneInfo = thisFeatureInfo:makeTest( thisFeatureInfo, "empty" )
+            _:expect( testOneInfo:is_a( booneUnit.TestInfo ) ).is( true )
+        end )
+        --next test BooneUnit:ignore ? or do existing tests
+    end )
+
+
     _:describe( '"FeatureInfo:tally()" returns a table summarizing the outcomes of the tests in the feature', function()
         _:test( "FeatureInfo:tally() returns a table", function() 
             booneUnit:reset()
@@ -1055,7 +1093,7 @@ function testBooneUnitFeature()
             _:expect( string.find( featureReport, booneUnit.tallyCategoryNames.pending ) ).is( nil )
         end )
     end )
-    --]]
+    
 end
 
 function testTheMostRecent()
@@ -1090,5 +1128,12 @@ function testTheMostRecent()
     end )
     
 end
+
+
+function isolate()
+    CodeaUnit.detailed = true
+    booneUnit.silent = nil
+end
+    
 -- test output and report functions
 -- test "test within test" error
