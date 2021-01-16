@@ -16,6 +16,8 @@ check where print() statements come from
 make booneunit a class
 use booneunit to run self tests
 
+indicate private data members with underscore (i.e.  "aBooneUnit._tests")
+
 testInfo.report() output to console
     detailed
 

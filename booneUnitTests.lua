@@ -46,8 +46,8 @@ function testBooneUnit()
         
         -- booneUnit post-reset tests
         local privateUnitMembers = { features = "table", 
-                                     tallyCategoryOrder = "table",
-                                     tallyCategoryNames = "table",
+                                     _tallyCategoryOrder = "table",
+                                     _tallyCategoryNames = "table",
                                      errorMsgs = "table",
                                      currentFeature = "nil", 
                                      currentTest = "nil", 
@@ -59,17 +59,17 @@ function testBooneUnit()
         -- Result categories 
         local definedTallyCategories = { "pass", "fail", "ignore", "pending", "empty" }
         _:test( string.format( "There are %d tally categories", #definedTallyCategories ), function ()
-            _:expect( #booneUnit.tallyCategoryOrder ).is( #definedTallyCategories )
+            _:expect( #booneUnit._tallyCategoryOrder ).is( #definedTallyCategories )
         end )
         -- tableHasValueTest()
         for i, v in ipairs(definedTallyCategories) do
             _:test( string.format( 'booneUnit.tallyCategoryOrder has "%s"', v ), function()
-                _:expect( booneUnit.tallyCategoryOrder ).has( v )
+                _:expect( booneUnit._tallyCategoryOrder ).has( v )
             end)
         end
         for i, v in ipairs(definedTallyCategories) do
-            _:test( string.format( 'booneUnit.tallyCategoryNames has key "%s"', v ), function()
-                _:expect( booneUnit.tallyCategoryNames[ v ] ).isnt( nil )
+            _:test( string.format( 'booneUnit._tallyCategoryNames has key "%s"', v ), function()
+                _:expect( booneUnit._tallyCategoryNames[ v ] ).isnt( nil )
             end)
         end
         
@@ -1082,15 +1082,15 @@ function testBooneUnitFeature()
         featureTally.total = nil  -- Already tested, need this empty to do the next section of tests
         for key, value in pairs( featureTally ) do
             _:test( string.format( 'report string contains "%s" and sum: %d',
-                booneUnit.tallyCategoryNames[key], value ), function()
+                booneUnit._tallyCategoryNames[key], value ), function()
                 print( featureReport )
                 _:expect( string.find( featureReport, value .. " " ) ).isnt( nil )
-                _:expect( string.find( featureReport, booneUnit.tallyCategoryNames[key] ) ).isnt( nil )
+                _:expect( string.find( featureReport, booneUnit._tallyCategoryNames[key] ) ).isnt( nil )
             end )
         end
         _:test( 'If a result category is empty, such as "pending" in this case,'..
                 ' then it is not present in the report string', function() 
-            _:expect( string.find( featureReport, booneUnit.tallyCategoryNames.pending ) ).is( nil )
+            _:expect( string.find( featureReport, booneUnit._tallyCategoryNames.pending ) ).is( nil )
         end )
     end )
     

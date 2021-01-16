@@ -155,5 +155,6 @@ CodeaUnit.detailed = true
 _ = CodeaUnit
 
 parameter.action("CodeaUnit Runner", function()
-    CodeaUnit.execute()
+    _ = CodeaUnit
+    _.execute()
 end) 

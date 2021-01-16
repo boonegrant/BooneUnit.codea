@@ -1,6 +1,6 @@
 booneUnit = {}
-booneUnit.tallyCategoryOrder = { "pass", "empty", "ignore", "pending", "fail" }
-booneUnit.tallyCategoryNames = { 
+booneUnit._tallyCategoryOrder = { "pass", "empty", "ignore", "pending", "fail" }
+booneUnit._tallyCategoryNames = { 
     pass    = "Passed", 
     ignore  = "Ignored", 
     empty   = "Empty",
@@ -223,9 +223,9 @@ function booneUnit.FeatureInfo:report() --change name to summary
     local reportCategories = {}
     local separator = ' ----------'
     -- assemble tally strings in prefered order
-    for i, v in ipairs( booneUnit.tallyCategoryOrder ) do
+    for i, v in ipairs( booneUnit._tallyCategoryOrder ) do
         if theTally[v] then
-            local category = string.format( "%3i %s", theTally[v], booneUnit.tallyCategoryNames[v] or v )
+            local category = string.format( "%3i %s", theTally[v], booneUnit._tallyCategoryNames[v] or v )
             table.insert( reportCategories, category )
         end
     end
@@ -262,7 +262,7 @@ function booneUnit.FeatureInfo.after() end  -- default empty function
 booneUnit.TestInfo = class()
 function booneUnit.TestInfo:init( parent, testDescription, scenario )
     self.feature = parent  -- not sure I need this, may be useful for delayed reports
-    self.description = testDescription or ""
+    self.description = tostring(testDescription or "")
     self.results = {}
 end
 

@@ -1,4 +1,5 @@
 JeffriesUnit = class()
+JeffriesUnit.console = ""
 
 function JeffriesUnit:describe(feature, allTests)
     self.tests = 0
@@ -149,7 +150,9 @@ JeffriesUnit.detailed = true
 -- _ = JeffriesUnit()
 
 parameter.action("JeffriesUnit Runner", function()
-    JeffriesUnit.execute()
+    print( "Running JeffriesUnit…" )
+    _ = JeffriesUnit
+    _.runTests()
 end)
 
 -- make these JeffriesUnit.etc
@@ -158,28 +161,44 @@ end)
 
 -- or do we start from an example?
 
-function runTests()
+function JeffriesUnit.runTests()
     local det = JeffriesUnit.detailed
     JeffriesUnit.detailed = false
-    Console = _.execute()
+    JeffriesUnit.console = ""
+    JeffriesUnit.console = _.execute()
     JeffriesUnit.detailed = det
 end
 
-function showTests()
+function JeffriesUnit.showTests()
     pushMatrix()
     pushStyle()
     fontSize(50)
     textAlign(CENTER)
-    if not Console:find("0 Failed") then
+    if not JeffriesUnit.console:find("0 Failed") then
         stroke(255,0,0)
         fill(255,0,0)
-    elseif not Console:find("0 Ignored") then
+    elseif not JeffriesUnit.console:find("0 Ignored") then
         stroke(255,255,0)
         fill(255,255,0)
     else
+        stroke(0,128,0)
         fill(0,128,0)
     end
-    text(Console, WIDTH/2, HEIGHT-200)
+    text("bleep blorp\n" .. JeffriesUnit.console, WIDTH/2, HEIGHT-200)
+    --The above does not work with a long long string, I think. 1/16/21
+    popStyle()
+    popMatrix()
+end
+
+-- from CUB: 
+function showCodeaUnitTests()
+    background(40, 40, 50)
+    pushMatrix()
+    pushStyle()
+    fontSize(50)
+    textAlign(CENTER)
+    --text(JeffriesUnit.console, WIDTH/2, HEIGHT-200)
+    text("bleep blorp"..JeffriesUnit.console, WIDTH/2, HEIGHT-200)
     popStyle()
     popMatrix()
 end

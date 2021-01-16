@@ -37,7 +37,7 @@ function draw()
     strokeWidth(5)
 
     -- Do your drawing here
-    
+    JeffriesUnit.showTests() -- replace with _.showTests()
 end
 
 function tryThis() 
@@ -103,5 +103,5 @@ function bestBasics()
     end)
 end
 
-parameter.action( "Basic Tests", bestBasics )
+parameter.action( "BooneUnit Basic Tests", bestBasics )
 

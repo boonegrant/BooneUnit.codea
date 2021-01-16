@@ -129,5 +129,6 @@ OriginalCodeaUnit.detailed = true
 -- _ = OriginalCodeaUnit()
 
 parameter.action("OriginalCodeaUnit Runner", function()
-    OriginalCodeaUnit.execute()
+    _ = OriginalCodeaUnit
+    _.execute()
 end)
