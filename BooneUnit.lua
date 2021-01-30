@@ -1,4 +1,4 @@
-booneUnit = {}
+booneUnit = class()
 booneUnit._tallyCategoryOrder = { "pass", "empty", "ignore", "pending", "fail" }
 booneUnit._tallyCategoryNames = { 
     pass    = "Passed", 
