@@ -923,7 +923,7 @@ function testBooneUnitFeature()
         
         local featureMembers = { description = "string", 
                                  tests = "table", 
-                                 makeTest = "function",
+                                 registerTest = "function",
                                  intro = "function",
                                  tally = "function",
                                  report = "function",
@@ -932,7 +932,7 @@ function testBooneUnitFeature()
         memberTypeTest( "someFeatureData", someFeatureData, featureMembers )
         
         local featureValues = { description = aFeatureDesc, 
-                                makeTest = aBooneUnit.FeatureInfo.makeTest,
+                                registerTest = aBooneUnit.FeatureIregisterTestTest,
                                 intro   = aBooneUnit.FeatureInfo.intro, 
                                 tally   = aBooneUnit.FeatureInfo.tally, 
                                 report  = aBooneUnit.FeatureInfo.report, 
@@ -969,18 +969,18 @@ function testBooneUnitFeature()
     end )
     
     
-    _:describe( '"FeatureInfo:makeTest()" returns a TestInfo object', function()
+    _:describe( '"FeatureInfo:registerTest()" returns a TestInfo object', function()
         aBooneUnit:reset()
         --[[
         aBooneUnit:reset()
         local thisFeatureInfo, testOneInfo, testTwoInfo, testThreeInfo
         thisFeatureInfo = aBooneUnit:describe( "A Feature Description String")
-        testOneInfo = thisFeatureInfo:makeTest( thisFeatureInfo, "empty" )
-        testTwoInfo = thisFeatureInfo:makeTest( thisFeatureInfo, "passable", function()
+        testOneInfo = thisFeatureInfo:registerTest( thisFeatureInfo, "empty" )
+        testTwoInfo = thisFeatureInfo:registerTest( thisFeatureInfo, "passable", function()
             aBooneUnit:expect( "foo" ).is( "foo" )
         end )
         
-        testThreeInfo = thisFeatureInfo:makeTest( thisFeatureInfo, "impassable", function()
+        testThreeInfo = thisFeatureInfo:registerTest( thisFeatureInfo, "impassable", function()
             aBooneUnit:expect( "foo" ).is( "bar" )
         end )
         --]]
@@ -988,14 +988,14 @@ function testBooneUnitFeature()
             aBooneUnit:reset()
             local thisFeatureInfo, testOneInfo, testTwoInfo, testThreeInfo
             thisFeatureInfo = aBooneUnit:describe( "A Feature Description String")
-            testOneInfo = thisFeatureInfo:makeTest( thisFeatureInfo, "empty" )
+            testOneInfo = thisFeatureInfo:registerTest( thisFeatureInfo, "empty" )
             _:expect( type(testOneInfo)== 'table' ).is( true )
         end )
         _:test( 'returns TestInfo object', function()
             aBooneUnit:reset()
             local thisFeatureInfo, testOneInfo, testTwoInfo, testThreeInfo
             thisFeatureInfo = aBooneUnit:describe( "A Feature Description String")
-            testOneInfo = thisFeatureInfo:makeTest( thisFeatureInfo, "empty" )
+            testOneInfo = thisFeatureInfo:registerTest( thisFeatureInfo, "empty" )
             _:expect( testOneInfo:is_a( aBooneUnit.TestInfo ) ).is( true )
         end )
         --next test BooneUnit:ignore ? or do existing tests

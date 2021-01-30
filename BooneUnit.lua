@@ -51,7 +51,7 @@ end
 
 function BooneUnit:ignore( testDescription, scenario )
     local thisFeature = self.currentFeature or self:orphanage()
-    local thisTest = thisFeature:makeTest( testDescription, scenario )
+    local thisTest = thisFeature:registerTest( testDescription, scenario )
     thisTest:registerResult("ignore", "", "") 
     if not self.silent then
         print( string.format( '#%d Dwezil:ignore()\n%s', #thisFeature.tests ,thisTest:report() ) )
@@ -65,7 +65,7 @@ function BooneUnit:test( testDescription, scenario )
         error( self.errorMsgs.testInsideTest, 2 )
     end
     local thisFeature = self.currentFeature or self:orphanage()
-    local thisTest = thisFeature:makeTest( testDescription, scenario )
+    local thisTest = thisFeature:registerTest( testDescription, scenario )
     thisFeature:before()
     self.currentTest = thisTest
     thisTest:run( scenario )
@@ -207,7 +207,7 @@ function BooneUnit.FeatureInfo:init( featureDescription )
     self.tests = {}
 end
 
-function BooneUnit.FeatureInfo:makeTest( testDescription, scenario )
+function BooneUnit.FeatureInfo:registerTest( testDescription, scenario )
     theTest = BooneUnit.TestInfo( self, testDescription, scenario )
     table.insert( self.tests, theTest )
     return theTest
