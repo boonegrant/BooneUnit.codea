@@ -61,7 +61,7 @@ function booneUnit:ignore( testDescription, scenario )
 end
 
 function booneUnit:test( testDescription, scenario )
-    if self.currentTest then  -- check if there already an active test statement
+    if self.currentTest then  -- check if there is already an active test statement
         error( self.errorMsgs.testInsideTest, 2 )
     end
     local thisFeature = self.currentFeature or self:orphanage()
