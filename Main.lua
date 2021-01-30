@@ -4,13 +4,13 @@
 function setup()
     afun = function() 
         -- print( "Average expectations" )
-        -- booneUnit:expect( math.pie() ).is( 3 )
+        -- BooneUnit:expect( math.pie() ).is( 3 )
     end
     somefun = function() 
         -- print( "Yabba-Dabba-Doo!" )
-        -- booneUnit:test( "Great: 2 + 2 = 4", function()
+        -- BooneUnit:test( "Great: 2 + 2 = 4", function()
             -- print("Great expectations")
-            -- booneUnit:expect( 2 + 2 ).is( 4 )
+            -- BooneUnit:expect( 2 + 2 ).is( 4 )
         -- end )
     end
     
@@ -19,11 +19,11 @@ function setup()
     
     --[[
     print( table.tostring( bloop ) )
-    booneUnit:test("Average pie", afun )
-    booneUnit:test("Still average pie", afun )
-    booneUnit:describe( "Fred Flintstone", somefun )
-    booneUnit:describe( "Fred Flintstone 2", somefun )
-    booneUnit:test( "Would you like more pie?", afun )
+    BooneUnit:test("Average pie", afun )
+    BooneUnit:test("Still average pie", afun )
+    BooneUnit:describe( "Fred Flintstone", somefun )
+    BooneUnit:describe( "Fred Flintstone 2", somefun )
+    BooneUnit:test( "Would you like more pie?", afun )
     print("Hello World!")
     --]]
 end
@@ -41,13 +41,13 @@ function draw()
 end
 
 function tryThis() 
-    booneUnit:test( "An outside test", function() 
-        booneUnit:test( "An inside test" )
+    BooneUnit:test( "An outside test", function() 
+        BooneUnit:test( "An inside test" )
     end )
 end
 
 function bestBasics()
-    local _ = booneUnit
+    local _ = BooneUnit
     _.detailed = true
 
     _:describe("Unit Tester Basic Functionality", function()

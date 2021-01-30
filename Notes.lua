@@ -7,7 +7,7 @@
 
 make method call FeatureInfo:registerTest (logTest?, addTest?)
 
-booneUnit.test.status() I have no idea how ignored is handled
+BooneUnit.test.status() I have no idea how ignored is handled
 
 check where print() statements come from
 
@@ -21,10 +21,10 @@ indicate private data members with underscore (i.e.  "aBooneUnit._tests")
 testInfo.report() output to console
     detailed
 
-booneUnit.tally()
-booneUnit.report() 
+BooneUnit.tally()
+BooneUnit.report() 
 
-all print statements made by booneUnit
+all print statements made by BooneUnit
 
 expect() takes description argument
 
