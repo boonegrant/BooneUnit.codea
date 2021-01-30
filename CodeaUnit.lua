@@ -143,10 +143,12 @@ CodeaUnit.execute = function()
     for i,v in pairs(listProjectTabs()) do
         local source = readProjectTab(v)
         for match in string.gmatch(source, "function%s-(test.-%(%))") do
+            -- self._activeFunction = match
             loadstring(match)()
+            -- self._activeFunction = nil
         end
     end
-    CodeaUnit.summarize()
+    CodeaUnit:summarize()
 end
 
 CodeaUnit.detailed = true
