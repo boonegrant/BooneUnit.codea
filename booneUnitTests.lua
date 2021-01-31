@@ -53,7 +53,7 @@ function testaBooneUnit()
                                      currentFeature = "nil", 
                                      currentTest = "nil", 
                                      orphanage = "function", 
-                                     continue = "function", 
+                                     _continue = "function", 
                                      aHomeForOrphanTests = "nil" }
         memberTypeTest( "post-reset aBooneUnit", aBooneUnit, privateUnitMembers )
         
@@ -789,8 +789,8 @@ function bestBooneUnitDelay()
         _:test( "aBooneUnit:delay() is a function", function()
             _:expect( type( aBooneUnit.delay ) ).is( "function" )
         end )
-        _:test( "aBooneUnit:continue() is a function", function()
-            _:expect( type( aBooneUnit.continue ) ).is( "function" )
+        _:test( "aBooneUnit:_continue() is a function", function()
+            _:expect( type( aBooneUnit._continue ) ).is( "function" )
         end )
         _:test( "aBooneUnit:delay() throws error if not inside a test", function()
             _:expect( function() aBooneUnit:delay() end ).throws( aBooneUnit.errorMsgs.delayWithoutTest )
@@ -804,7 +804,7 @@ function bestBooneUnitDelay()
                 end )
             end )
         end )
-        _:test( "aBooneUnit:continue() removes pending status ", function()
+        _:test( "aBooneUnit:_continue() removes pending status ", function()
             local doneDelayStuff = false
             local testTable = aBooneUnit:test( "do a delay", function()
                 aBooneUnit:delay( 0.001, function() 
@@ -816,7 +816,7 @@ function bestBooneUnitDelay()
             end )
         end )
         ---[[
-        _:test( "aBooneUnit:continue() runs the function passed in aBooneUnit.delay", function()
+        _:test( "aBooneUnit:_continue() runs the function passed in aBooneUnit.delay", function()
             local doneDelayStuff = false
             aBooneUnit:test( "do a delay", function()
                 print( "getting ready" )

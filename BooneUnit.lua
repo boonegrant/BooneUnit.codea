@@ -87,12 +87,12 @@ function BooneUnit:delay( numSeconds, scenario )
     thisTest:registerResult( "pending" ) -- next add tween id
     local pendingIndex = #thisTest.results
     tween.delay( numSeconds, function ()
-        self:continue( thisTest, pendingIndex, scenario )
+        self:_continue( thisTest, pendingIndex, scenario )
     end )
     -- return tween, test, callback,what?
 end
 
-function BooneUnit:continue( thisTest, pendingIndex, scenario )
+function BooneUnit:_continue( thisTest, pendingIndex, scenario )
     self.currentTest = thisTest
     thisTest:run( scenario )
     self.currentTest = nil
