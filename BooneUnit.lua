@@ -7,7 +7,7 @@ BooneUnit._tallyCategoryNames = {
     pending = "Pending", 
     fail    = "Failed"
     }
-BooneUnit.errorMsgs = { 
+BooneUnit._errorMsgs = { 
     testInsideTest = '"BooneUnit:test()" declaration cannot be made inside another "test()" declaration',
     expectWithoutTest = '"BooneUnit:expect()" statements should be placed inside a "test()" declaration',
     delayWithoutTest =  '"BooneUnit:delay()" statements should be placed inside a "test()" declaration',
@@ -15,11 +15,15 @@ BooneUnit.errorMsgs = {
     }
 function BooneUnit:reset ()
     self.features = {}
-    self.currentFeature = nil
-    self.currentTest = nil
-    self.aHomeForOrphanTests = nil
+    self._currentFeature = nil
+    self._currentTest = nil
+    self._aHomeForOrphanTests = nil
 end
 BooneUnit:reset()
+
+function BooneUnit:init ()
+    self:reset()
+end
 
 function BooneUnit:describe( featureDescription, featureTests )
     -- Create feature info table
@@ -30,10 +34,10 @@ function BooneUnit:describe( featureDescription, featureTests )
         print( string.format( "Dwezil-%s", thisFeature:intro() ) )
     end
     -- Run tests
-    self.currentFeature = thisFeature
+    self._currentFeature = thisFeature
     local runTests = featureTests or function() end
     runTests()
-    self.currentFeature = nil
+    self._currentFeature = nil
     -- Announce summary of results
     if not self.silent then
         print( string.format( "Dwezil-%s", thisFeature:report() ) )
@@ -42,15 +46,15 @@ function BooneUnit:describe( featureDescription, featureTests )
 end
 
 function BooneUnit:before(setup)
-    if self.currentFeature then self.currentFeature.before = setup end
+    if self._currentFeature then self._currentFeature.before = setup end
     -- error message: before and after must be inside a describe: declaration
 end
 function BooneUnit:after(teardown)
-    if self.currentFeature then self.currentFeature.after = teardown end
+    if self._currentFeature then self._currentFeature.after = teardown end
 end
 
 function BooneUnit:ignore( testDescription, scenario )
-    local thisFeature = self.currentFeature or self:orphanage()
+    local thisFeature = self._currentFeature or self:_orphanage()
     local thisTest = thisFeature:registerTest( testDescription, scenario )
     thisTest:registerResult("ignore", "", "") 
     if not self.silent then
@@ -61,15 +65,15 @@ function BooneUnit:ignore( testDescription, scenario )
 end
 
 function BooneUnit:test( testDescription, scenario )
-    if self.currentTest then  -- check if there is already an active test statement
-        error( self.errorMsgs.testInsideTest, 2 )
+    if self._currentTest then  -- check if there is already an active test statement
+        error( self._errorMsgs.testInsideTest, 2 )
     end
-    local thisFeature = self.currentFeature or self:orphanage()
+    local thisFeature = self._currentFeature or self:_orphanage()
     local thisTest = thisFeature:registerTest( testDescription, scenario )
     thisFeature:before()
-    self.currentTest = thisTest
+    self._currentTest = thisTest
     thisTest:run( scenario )
-    self.currentTest = nil
+    self._currentTest = nil
     thisFeature:after()
     if not self.silent then
         print( string.format( '#%d Dwezil:test()\n%s', #thisFeature.tests ,thisTest:report() ) )
@@ -79,9 +83,9 @@ end
 
 -- BooneUnit:delay() used inside a test statement to delay evaluation of expectations
 function BooneUnit:delay( numSeconds, scenario )
-    local thisTest = self.currentTest
+    local thisTest = self._currentTest
     if thisTest == nil then
-        error( self.errorMsgs.delayWithoutTest, 2 )
+        error( self._errorMsgs.delayWithoutTest, 2 )
         return nil
     end
     thisTest:registerResult( "pending" ) -- next add tween id
@@ -93,16 +97,16 @@ function BooneUnit:delay( numSeconds, scenario )
 end
 
 function BooneUnit:_continue( thisTest, pendingIndex, scenario )
-    self.currentTest = thisTest
+    self._currentTest = thisTest
     thisTest:run( scenario )
-    self.currentTest = nil
+    self._currentTest = nil
     table.remove( thisTest.results, pendingIndex )
 end
 
 function BooneUnit:expect( conditional ) -- TODO: add name arg
-    local thisTest = self.currentTest
+    local thisTest = self._currentTest
     if thisTest == nil then
-        error( self.errorMsgs.expectWithoutTest, 2 ) -- 2 is where in stack level is returned for context
+        error( self._errorMsgs.expectWithoutTest, 2 ) -- 2 is where in stack level is returned for context
         return nil
     end
         
@@ -143,7 +147,7 @@ function BooneUnit:expect( conditional ) -- TODO: add name arg
         if type( conditional ) ~= "function" then 
             -- usage check : conditional is not function
             error(string.format( '%s -- is "%s"', 
-                BooneUnit.errorMsgs.throwsArgIsNotFunction, 
+                BooneUnit._errorMsgs.throwsArgIsNotFunction, 
                 type( conditional ) ), 2 )
         else 
             -- conditional is a function
@@ -184,17 +188,17 @@ function BooneUnit:expect( conditional ) -- TODO: add name arg
     }
 end
 
-function BooneUnit:orphanage()  -- create a home for tests not placed inside a :describe() declaration
+function BooneUnit:_orphanage()  -- create a home for tests not placed inside a :describe() declaration
     -- this is so they can be grouped and tabulated together 
-    -- ?Create new Feature for each group of orphan tests i.e. remove .aHomeForOrphanTests ?
+    -- ?Create new Feature for each group of orphan tests i.e. remove ._aHomeForOrphanTests ?
     -- print( "Dwezil- Oh you poor lost test!" )
-    if ( self.aHomeForOrphanTests == nil ) then  -- or aHomeForOrphanTests ~= self.features[#self.features]
-        self.aHomeForOrphanTests = self.FeatureInfo( "No Description" )
-        table.insert( self.features, self.aHomeForOrphanTests )   
+    if ( self._aHomeForOrphanTests == nil ) then  -- or aHomeForOrphanTests ~= self.features[#self.features]
+        self._aHomeForOrphanTests = self.FeatureInfo( "No Description" )
+        table.insert( self.features, self._aHomeForOrphanTests )   
         -- print( "Dwezil- I have made a home for you" )
     end
-    -- print( string.format( "Dwezil- This is your home now: %s", self.aHomeForOrphanTests ) )
-    return self.aHomeForOrphanTests
+    -- print( string.format( "Dwezil- This is your home now: %s", self._aHomeForOrphanTests ) )
+    return self._aHomeForOrphanTests
 end
 
 -- ------------------ --

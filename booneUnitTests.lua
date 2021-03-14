@@ -14,7 +14,7 @@ function memberValueTest( targetDescription, target, targetMembersAndValues )
     end
 end
     
-function testaBooneUnit()
+function testABooneUnit()
     aBooneUnit = BooneUnit()
     CodeaUnit.detailed = false
     aBooneUnit.silent = true
@@ -49,12 +49,12 @@ function testaBooneUnit()
         local privateUnitMembers = { features = "table", 
                                      _tallyCategoryOrder = "table",
                                      _tallyCategoryNames = "table",
-                                     errorMsgs = "table",
-                                     currentFeature = "nil", 
-                                     currentTest = "nil", 
-                                     orphanage = "function", 
+                                     _errorMsgs = "table",
+                                     _currentFeature = "nil", 
+                                     _currentTest = "nil", 
+                                     _orphanage = "function", 
                                      _continue = "function", 
-                                     aHomeForOrphanTests = "nil" }
+                                     _aHomeForOrphanTests = "nil" }
         memberTypeTest( "post-reset aBooneUnit", aBooneUnit, privateUnitMembers )
         
         -- Result categories 
@@ -100,7 +100,7 @@ function testBooneUnitExpect()
     _:describe( "Function aBooneUnit:expect() takes an argument and returns" ..
                 " a set of functions which evaluate that argument.", function()
         _:test( "expect() throws error if not inside a test", function()
-            _:expect( function() aBooneUnit:expect() end ).throws( aBooneUnit.errorMsgs.expectWithoutTest )
+            _:expect( function() aBooneUnit:expect() end ).throws( aBooneUnit._errorMsgs.expectWithoutTest )
         end )
         _:test( "expect() returns a table", function()
             aBooneUnit:reset()
@@ -335,7 +335,7 @@ function testBooneUnitExpect()
             local throwTest = aBooneUnit:test( "a nil expectation", function()
                 expectation = aBooneUnit:expect( nil )
             end )
-            _:expect( function() expectation:throws("") end ).throws( aBooneUnit.errorMsgs.throwsArgIsNotFunction )
+            _:expect( function() expectation:throws("") end ).throws( aBooneUnit._errorMsgs.throwsArgIsNotFunction )
         end )
         
         -- executes function argument
@@ -793,14 +793,14 @@ function bestBooneUnitDelay()
             _:expect( type( aBooneUnit._continue ) ).is( "function" )
         end )
         _:test( "aBooneUnit:delay() throws error if not inside a test", function()
-            _:expect( function() aBooneUnit:delay() end ).throws( aBooneUnit.errorMsgs.delayWithoutTest )
+            _:expect( function() aBooneUnit:delay() end ).throws( aBooneUnit._errorMsgs.delayWithoutTest )
         end )
         _:test( "aBooneUnit:delay() sets test status to pending", function()
             local doneDelayStuff = false
             local testTable = aBooneUnit:test( "do a delay", function()
                 aBooneUnit:delay( 0.01, function() 
                     doneDelayStuff = true
-                    _:expect( aBooneUnit.currentTest:status() ).is( "pending" )
+                    _:expect( aBooneUnit._currentTest:status() ).is( "pending" )
                 end )
             end )
         end )
@@ -881,9 +881,9 @@ function testBooneUnitFeature()
             _:expect( #f ).is( 0 )
         end )
         
-        _:test( "aBooneUnit.currentFeature is nil", function ()
+        _:test( "aBooneUnit._currentFeature is nil", function ()
             aBooneUnit:reset()
-            _:expect( aBooneUnit.currentFeature ).is( nil )
+            _:expect( aBooneUnit._currentFeature ).is( nil )
         end )
         
         --call :describe()
@@ -911,8 +911,8 @@ function testBooneUnitFeature()
             _:expect( aBooneUnit.features[2] ).is( anotherFeatureData )
         end )
         
-        _:test( "aBooneUnit.currentFeature is nil again", function ()
-            _:expect( aBooneUnit.currentFeature ).is( nil )
+        _:test( "aBooneUnit._currentFeature is nil again", function ()
+            _:expect( aBooneUnit._currentFeature ).is( nil )
         end )
     end )
     -- Feature Properties --
@@ -1102,7 +1102,8 @@ function testTheMostRecent()
     CodeaUnit.detailed = true
     aBooneUnit.silent = nil
     
-    _:describe( 'TestInfo:report()\nReturns a string describing the individual results of that test', function()
+    _:describe( 'TestInfo:report()\nReturns a string describing the individual results of that test',
+                function()
         aBooneUnit:reset()
         _:test( '"aBooneUnit:test():report()" returns a string', function() 
             _:expect( type( aBooneUnit:test():report() ) ).is( "string" )
@@ -1132,7 +1133,7 @@ function testTheMostRecent()
 end
 
 
-function isolate()
+function focusedTests()
     CodeaUnit.detailed = true
     aBooneUnit.silent = nil
 end
