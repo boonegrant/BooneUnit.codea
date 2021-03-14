@@ -1,42 +1,38 @@
 
 -- output to clipboard
 -- output to project tab
+-- output to text file
 -- output to text box (soda)
 
 --[[
 
-make method call FeatureInfo:registerTest (logTest?, addTest?)
+( ) indicate private data members with underscore (i.e.  "aBooneUnit._tests")
 
-BooneUnit.test.status() I have no idea how ignored is handled
+(X) make booneunit a class
+( ) use booneunit to run self tests
 
-check where print() statements come from
+() check where print() statements come from
+() all print statements made by BooneUnit
 
-? split out descriptor in result registration function ? (HAS, ISNT, etc)
+() ?split out descriptor in result registration function? (HAS, ISNT, etc)
 
-make booneunit a class
-use booneunit to run self tests
+() testInfo.report() output to console
+    detailed arg
 
-indicate private data members with underscore (i.e.  "aBooneUnit._tests")
+() BooneUnit.tally()
+() BooneUnit.report() 
 
-testInfo.report() output to console
-    detailed
+() expect() takes description argument
 
-BooneUnit.tally()
-BooneUnit.report() 
+() group orphan tests between features
 
-all print statements made by BooneUnit
+() before and after statements clarification or warning without describe
 
-expect() takes description argument
+() .has() works with strings
 
-group orphan tests between features
+() import test generation functions 
 
-before and after statements clarification or warning without describe
-
-.has() works with strings
-
-import test generation functions 
-
-linebrake function
+() linebrake function
 --]]
 
 

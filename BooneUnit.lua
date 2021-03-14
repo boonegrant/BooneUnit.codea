@@ -208,9 +208,9 @@ function BooneUnit.FeatureInfo:init( featureDescription )
 end
 
 function BooneUnit.FeatureInfo:registerTest( testDescription, scenario )
-    theTest = BooneUnit.TestInfo( self, testDescription, scenario )
-    table.insert( self.tests, theTest )
-    return theTest
+    aTest = BooneUnit.TestInfo( self, testDescription, scenario )
+    table.insert( self.tests, aTest )
+    return aTest
 end
 
 function BooneUnit.FeatureInfo:intro()
@@ -218,7 +218,7 @@ function BooneUnit.FeatureInfo:intro()
 end
 -- BooneUnit.FeatureInfo:report()
 --          Returns a string describing the results of the tests within the feature
-function BooneUnit.FeatureInfo:report() --change name to summary
+function BooneUnit.FeatureInfo:report() --change name to summary; report will be enitre report
     local theTally = self:tally()
     local reportCategories = {}
     local separator = ' ----------'
