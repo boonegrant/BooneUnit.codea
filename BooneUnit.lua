@@ -1,4 +1,5 @@
 BooneUnit = class()
+BooneUnit.id = "BooneUnit"
 BooneUnit._tallyCategoryOrder = { "pass", "empty", "ignore", "pending", "fail" }
 BooneUnit._tallyCategoryNames = { 
     pass    = "Passed", 
@@ -21,7 +22,8 @@ function BooneUnit:reset ()
 end
 BooneUnit:reset()
 
-function BooneUnit:init ()
+function BooneUnit:init ( id )
+    self.id = id or ""
     self:reset()
 end
 
@@ -256,6 +258,7 @@ function BooneUnit.FeatureInfo:tally()
     end
     return theTally
 end
+
 function BooneUnit.FeatureInfo.before() end -- default empty function
 function BooneUnit.FeatureInfo.after() end  -- default empty function
 
@@ -334,4 +337,16 @@ function BooneUnit.TestInfo:report() --TODO: add 'detailed' parameter
     end
     table.insert( reportTable, string.format( '%s\n[ %s ]', bigDivider, self:status() ) )
     return table.concat( reportTable, '\n' )
+end
+
+function BooneUnit.TestInfo:formatHeader( description )
+    return "header"
+end
+
+function BooneUnit.TestInfo:formatResult( expected, actual, outcome )
+    return "result"
+end
+
+function BooneUnit.TestInfo:formatStatus( status )
+    return "status"
 end

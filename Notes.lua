@@ -6,9 +6,10 @@
 
 --[[
 
-( ) indicate private data members with underscore (i.e.  "aBooneUnit._tests")
+(X) indicate private data members with underscore (i.e.  "aBooneUnit._tests")
 
 (X) make booneunit a class
+( ) booneUnits have id
 ( ) use booneunit to run self tests
 
 () check where print() statements come from

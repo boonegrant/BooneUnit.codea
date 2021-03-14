@@ -47,7 +47,7 @@ function tryThis()
 end
 
 function bestBasics()
-    local _ = BooneUnit()
+    local _ = BooneUnit("Basic Tests")
     _.detailed = true
 
     _:describe("Unit Tester Basic Functionality", function()
