@@ -144,7 +144,7 @@ CodeaUnit.execute = function()
         local source = readProjectTab(v)
         for match in string.gmatch(source, "function%s-(test.-%(%))") do
             -- self._activeFunction = match
-            loadstring(match)()
+            load(match)()
             -- self._activeFunction = nil
         end
     end

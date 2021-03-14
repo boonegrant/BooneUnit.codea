@@ -117,7 +117,7 @@ OriginalCodeaUnit.execute = function()
     for i,v in pairs(listProjectTabs()) do
         local source = readProjectTab(v)
         for match in string.gmatch(source, "function%s-(test.-%(%))") do
-            loadstring(match)()
+            load(match)()
         end
     end
 end

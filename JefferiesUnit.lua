@@ -137,7 +137,7 @@ JeffriesUnit.execute = function()
         local source = readProjectTab(v)
         for match in string.gmatch(source, "function%s-(test.-%(%))") do
             print("loading", match)
-            loadstring(match)()
+            load(match)()
         end
     end
     return JeffriesUnit._summary

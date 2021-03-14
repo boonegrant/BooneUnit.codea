@@ -11,7 +11,7 @@ BooneUnit.errorMsgs = {
     testInsideTest = '"BooneUnit:test()" declaration cannot be made inside another "test()" declaration',
     expectWithoutTest = '"BooneUnit:expect()" statements should be placed inside a "test()" declaration',
     delayWithoutTest =  '"BooneUnit:delay()" statements should be placed inside a "test()" declaration',
-    throwsArgIsNotFunction = '"BooneUnit:expect( arg ).throws()" -- arg must be a function' 
+    throwsArgIsNotFunction = '"BooneUnit:expect( <arg> ).throws()" -- <arg> must be a function' 
     }
 function BooneUnit:reset ()
     self.features = {}
