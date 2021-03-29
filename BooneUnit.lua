@@ -107,6 +107,7 @@ end
 
 function BooneUnit:expect( conditional ) -- TODO: add name arg
     local thisTest = self._currentTest
+    -- Usage check: expect statements must occur inside a test statement
     if thisTest == nil then
         error( self._errorMsgs.expectWithoutTest, 2 ) -- 2 is where in stack level is returned for context
         return nil
@@ -147,7 +148,7 @@ function BooneUnit:expect( conditional ) -- TODO: add name arg
 
     local throws = function(expected)
         if type( conditional ) ~= "function" then 
-            -- usage check : conditional is not function
+            -- usage check : conditional must be function
             error(string.format( '%s -- is "%s"', 
                 BooneUnit._errorMsgs.throwsArgIsNotFunction, 
                 type( conditional ) ), 2 )
