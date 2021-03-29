@@ -15,7 +15,7 @@ function memberValueTest( targetDescription, target, targetMembersAndValues )
 end
     
 function testABooneUnit()
-    aBooneUnit = BooneUnit()
+    aBooneUnit = BooneUnit("Dwezil")
     CodeaUnit.detailed = false
     aBooneUnit.silent = true
 
@@ -93,7 +93,7 @@ function testABooneUnit()
 end
     
 function testBooneUnitExpect()
-    aBooneUnit = BooneUnit()
+    aBooneUnit = BooneUnit("Dwezil")
     _.detailed = true
     aBooneUnit.silent = false
     aBooneUnit:reset()

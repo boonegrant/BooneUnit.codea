@@ -33,7 +33,7 @@ function BooneUnit:describe( featureDescription, featureTests )
     table.insert( self.features, thisFeature )   
     -- Announce feature
     if not self.silent then
-        print( string.format( "Dwezil-%s", thisFeature:intro() ) )
+        print( string.format( "%s-%s", self.id, thisFeature:intro() ) )
     end
     -- Run tests
     self._currentFeature = thisFeature
@@ -42,7 +42,7 @@ function BooneUnit:describe( featureDescription, featureTests )
     self._currentFeature = nil
     -- Announce summary of results
     if not self.silent then
-        print( string.format( "Dwezil-%s", thisFeature:report() ) )
+        print( string.format( "%s-%s", self.id, thisFeature:report() ) )
     end
     return thisFeature
 end
@@ -60,7 +60,7 @@ function BooneUnit:ignore( testDescription, scenario )
     local thisTest = thisFeature:registerTest( testDescription, scenario )
     thisTest:registerResult("ignore", "", "") 
     if not self.silent then
-        print( string.format( '#%d Dwezil:ignore()\n%s', #thisFeature.tests ,thisTest:report() ) )
+        print( string.format( '#%d %s:ignore()\n%s', #thisFeature.tests, self.id, thisTest:report() ) )
         -- thisTest:report( self.detailed )
     end
     return thisTest
@@ -78,7 +78,7 @@ function BooneUnit:test( testDescription, scenario )
     self._currentTest = nil
     thisFeature:after()
     if not self.silent then
-        print( string.format( '#%d Dwezil:test()\n%s', #thisFeature.tests ,thisTest:report() ) )
+        print( string.format( '#%d %s:test()\n%s', #thisFeature.tests, self.id, thisTest:report() ) )
     end
     return thisTest
 end
