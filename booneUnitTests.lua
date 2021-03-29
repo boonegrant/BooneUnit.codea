@@ -1098,8 +1098,9 @@ function testBooneUnitFeature()
     
 end
 
-function testTheMostRecent()
+function testTestReport()
     CodeaUnit.detailed = true
+    local aBooneUnit = BooneUnit("Dweezil")
     aBooneUnit.silent = nil
     
     _:describe( 'TestInfo:report()\nReturns a string describing the individual results of that test',
@@ -1111,32 +1112,44 @@ function testTheMostRecent()
         _:test( 'the "TestInfo:report()" string contains the test description string', function()
             local testDescription = "Blah Blah Blah and so on" 
             local testReportString = aBooneUnit:test( testDescription ):report()
-            _:expect( string.find( testReportString, testDescription ) ).isnt( nil )
+            _:expect( string.find( testReportString, testDescription, 1, true ) ).isnt( nil )
         end )
         _:test( 'the "TestInfo:report()" string contains the test status', function()
             local testDescription = "Blah Blah Blah and so on" 
             local aTest = aBooneUnit:test( testDescription, function()
                 aBooneUnit:expect( true ).isnt( false )
             end)
-            _:expect( string.find( aTest:report(), aTest:status() ) ).isnt( nil )
+            _:expect( string.find( aTest:report(), aTest:status(), 1, true ) ).isnt( nil )
         end )
-        _:test( 'the "TestInfo:report()" string contains an entry for each ":expect()" statement in the test', function()
+        _:ignore( 'the "TestInfo:report()" string contains an entry for each '..
+                '":expect()" statement in the test', function()
             local testDescription = "Double Expectation" 
             local aTest = aBooneUnit:test( testDescription, function()
                 aBooneUnit:expect( true ).isnt( false )
                 aBooneUnit:expect( 2+2 ).is( 5 )
             end)
-            _:expect( string.find( aTest:report(), "(a)" ) ).isnt( nil )
+            _:expect( string.find( aTest:report(), "(a)", 1, true ) ).isnt( nil )
         end )
     end )
     
 end
 
 
-function focusedTests()
+function testCurrent()
+    local _ = BooneUnit("Testor")
     CodeaUnit.detailed = true
+    local aBooneUnit = BooneUnit( "Dweezil" )
     aBooneUnit.silent = nil
+    
+    _:describe( "BooneUnit:tally() returns a table categorizing "..
+                "the results of all tests run", function()
+        _:test( "aBooneUnit:tally() returns a table", function() 
+            _:expect( type( aBooneUnit:tally() ) ).is( "table" )
+            _:expect( #(aBooneUnit:tally()) ).is( 0 )
+        end)
+    end)
 end
     
 -- test output and report functions
 -- test "test within test" error
+parameter.action( "testCurrent()", testCurrent )

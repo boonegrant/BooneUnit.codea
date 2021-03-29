@@ -27,6 +27,21 @@ function BooneUnit:init ( id )
     self:reset()
 end
 
+function BooneUnit:execute()
+    self:reset()
+    self.status = "All Passed"
+    self.totalFailed = 0
+    for i,v in pairs(listProjectTabs()) do
+        local source = readProjectTab(v)
+        for match in string.gmatch(source, "function%s-(test.-%(%))") do
+            -- self._activeFunction = match
+            load(match)()
+            -- self._activeFunction = nil
+        end
+    end
+    CodeaUnit:summarize()
+end
+
 function BooneUnit:describe( featureDescription, featureTests )
     -- Create feature info table
     local thisFeature = self.FeatureInfo( featureDescription )
@@ -204,9 +219,30 @@ function BooneUnit:_orphanage()  -- create a home for tests not placed inside a 
     return self._aHomeForOrphanTests
 end
 
--- ------------------ --
--- Feature Info class --
--- ------------------ --
+--no test coverage yet
+-- returns table
+function BooneUnit:tally()
+    local totalTally = {}
+    -- itterate over features
+    for i,v  in ipairs( self.features ) do
+        featureTally = v:tally()
+        -- itterate over feature tally results 
+        for category, count in pairs( featureTally ) do
+            if ( totalTally[ category ] ) then
+                -- category already exists
+                totalTally[ category ] = totalTally[ category ] + count
+            else
+                -- create category
+                totalTally[ category ] = count
+            end
+        end
+    end
+    return totalTally
+end
+
+-- ---------------------- --
+--   Feature Info class   --
+-- ---------------------- --
 BooneUnit.FeatureInfo = class()
 
 function BooneUnit.FeatureInfo:init( featureDescription )
@@ -224,7 +260,7 @@ function BooneUnit.FeatureInfo:intro()
     return string.format( "Feature: %s \n tests:", self.description )
 end
 -- BooneUnit.FeatureInfo:report()
---          Returns a string describing the results of the tests within the feature
+--      Returns a string describing the results of the tests within the feature
 function BooneUnit.FeatureInfo:report() --change name to summary; report will be enitre report
     local theTally = self:tally()
     local reportCategories = {}
@@ -249,8 +285,10 @@ end
 --          Returns a table summing and totaling the test results in a feature
 function BooneUnit.FeatureInfo:tally()
     local theTally = { total = #self.tests }
+    -- walk through tests
     for i, v in ipairs( self.tests ) do
         local testStatus = v:status()
+        -- tally by category
         if theTally[ testStatus ] then
             theTally[ testStatus ] = theTally[ testStatus ] + 1
         else
@@ -264,9 +302,9 @@ function BooneUnit.FeatureInfo.before() end -- default empty function
 function BooneUnit.FeatureInfo.after() end  -- default empty function
 
 
--- --------------- --
--- Test Info class --
--- --------------- --
+-- ------------------- --
+--   Test Info class   --
+-- ------------------- --
 BooneUnit.TestInfo = class()
 function BooneUnit.TestInfo:init( parent, testDescription, scenario )
     self.feature = parent  -- not sure I need this, may be useful for delayed reports
