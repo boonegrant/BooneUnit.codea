@@ -12,6 +12,8 @@
 		<string>JefferiesUnit</string>
 		<string>BooneUnit</string>
 		<string>booneUnitTests</string>
+		<string>BooneUnitFeatureTests</string>
+		<string>booneUnitDelayTests</string>
 		<string>Main</string>
 	</array>
 	<key>Dependencies</key>
