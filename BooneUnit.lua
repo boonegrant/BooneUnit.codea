@@ -29,8 +29,6 @@ end
 
 function BooneUnit:execute()
     self:reset()
-    self.status = "All Passed"
-    self.totalFailed = 0
     for i,v in pairs(listProjectTabs()) do
         local source = readProjectTab(v)
         for match in string.gmatch(source, "function%s-(test.-%(%))") do
@@ -39,7 +37,7 @@ function BooneUnit:execute()
             -- self._activeFunction = nil
         end
     end
-    CodeaUnit:summarize()
+    self:summarize()
 end
 
 function BooneUnit:describe( featureDescription, featureTests )
