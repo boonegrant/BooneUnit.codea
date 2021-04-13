@@ -11,7 +11,8 @@
 		<string>OriginalCodeaUnit</string>
 		<string>JefferiesUnit</string>
 		<string>BooneUnit</string>
-		<string>booneUnitTests</string>
+		<string>booneUnitReportingTests</string>
+		<string>booneUnitCoreTests</string>
 		<string>BooneUnitFeatureTests</string>
 		<string>booneUnitDelayTests</string>
 		<string>Main</string>
