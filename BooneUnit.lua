@@ -23,6 +23,8 @@ end
 BooneUnit:reset()
 
 function BooneUnit:init ( id )
+    -- Stores id to differentiate text output, mostly for 
+    -- self-testing purposes 
     self.id = id or ""
     self:reset()
 end
@@ -217,12 +219,13 @@ function BooneUnit:_orphanage()  -- create a home for tests not placed inside a 
     return self._aHomeForOrphanTests
 end
 
---no test coverage yet
 -- returns table
 function BooneUnit:tally()
     local totalTally = {}
+    totalTally.features = #self.features
+    totalTally.total = 0
     -- itterate over features
-    for i,v  in ipairs( self.features ) do
+    for i,v in ipairs( self.features ) do
         featureTally = v:tally()
         -- itterate over feature tally results 
         for category, count in pairs( featureTally ) do

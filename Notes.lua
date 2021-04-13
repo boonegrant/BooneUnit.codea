@@ -17,11 +17,11 @@
 
 () ?split out descriptor in result registration function? (HAS, ISNT, etc)
 
-() testInfo.report() output to console
+( ) testInfo.report() output to console
     detailed arg
 
-() BooneUnit.tally()
-() BooneUnit.report() 
+(X) BooneUnit.tally()
+( ) BooneUnit.report() 
 
 () expect() takes description argument
 

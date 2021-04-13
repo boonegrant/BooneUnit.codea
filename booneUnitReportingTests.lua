@@ -73,9 +73,11 @@ function testCurrent()
     end
     _:describe( "BooneUnit:tally() returns a table categorizing "..
                 "the results of all tests run", function()
-        _:test( "aBooneUnit:tally() returns a table", function() 
+        _:test( "aBooneUnit:tally() returns a table", function()
+            -- No tests run
+            aBooneUnit:reset() 
             _:expect( type( aBooneUnit:tally() ) ).is( "table" )
-            _:expect( #(aBooneUnit:tally()) ).is( 0 )
+            _:expect( aBooneUnit:tally().total ).is( 0 )
         end)
         _:test( "aBooneUnit:tally() table records total # of tests", 
                 function()
@@ -89,11 +91,20 @@ function testCurrent()
             -- do some tests
             aBooneUnit:reset()
             doSomeTests()
-            _:expect( aBooneUnit:tally().pass   ).is( 4 )
-            _:expect( aBooneUnit:tally().empty  ).is( 2 )
-            _:expect( aBooneUnit:tally().ignore ).is( 1 )
-            _:expect( aBooneUnit:tally().fail   ).is( 2 )
+            local theFullTally = aBooneUnit:tally()
+            _:expect( theFullTally.pass   ).is( 4 )
+            _:expect( theFullTally.empty  ).is( 2 )
+            _:expect( theFullTally.ignore ).is( 1 )
+            _:expect( theFullTally.fail   ).is( 2 )
         end)
+        _:test( "aBooneUnit:tally() table records total "..
+                "# of features", function()
+            -- do some tests
+            aBooneUnit:reset()
+            doSomeTests()
+            _:expect( aBooneUnit:tally().features ).is( 3 )
+        end)
+        
     end)
 end
     
