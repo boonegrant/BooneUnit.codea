@@ -34,13 +34,13 @@ function testTestReport()
     
 end
 
-
-function testCurrent()
+function testBooneUnitTally()
     -- local _ = BooneUnit("Testor")
-    CodeaUnit.detailed = true
+    CodeaUnit.detailed = false
     local aBooneUnit = BooneUnit("Dweezil")
     aBooneUnit.silent = true
-    local doSomeTests = function()
+    
+    local doSomeTests = function() --run some tests
         aBooneUnit:describe( "The First Feature", function()
             aBooneUnit:test( "1st test: passing 1", function()
                 aBooneUnit:expect( 1+1 ).is( 2 )
@@ -69,15 +69,23 @@ function testCurrent()
         aBooneUnit:test( "9th test: failing 2", function() 
             aBooneUnit:expect( true ).isnt( true )
         end)
-        
     end
+    
     _:describe( "BooneUnit:tally() returns a table categorizing "..
                 "the results of all tests run", function()
         _:test( "aBooneUnit:tally() returns a table", function()
             -- No tests run
             aBooneUnit:reset() 
             _:expect( type( aBooneUnit:tally() ) ).is( "table" )
-            _:expect( aBooneUnit:tally().total ).is( 0 )
+        end)
+        _:test( "aBooneUnit:tally().total is zero if no tests have"..
+                " been run, and test categories are nil when sum is zero", function()
+            -- No tests run
+            aBooneUnit:reset() 
+            _:expect( aBooneUnit:tally().total  ).is( 0 )
+            _:expect( aBooneUnit:tally().pass   ).is( nil )
+            _:expect( aBooneUnit:tally().fail   ).is( nil )
+            _:expect( aBooneUnit:tally().ignore ).is( nil )
         end)
         _:test( "aBooneUnit:tally() table records total # of tests", 
                 function()
@@ -92,10 +100,11 @@ function testCurrent()
             aBooneUnit:reset()
             doSomeTests()
             local theFullTally = aBooneUnit:tally()
-            _:expect( theFullTally.pass   ).is( 4 )
-            _:expect( theFullTally.empty  ).is( 2 )
-            _:expect( theFullTally.ignore ).is( 1 )
-            _:expect( theFullTally.fail   ).is( 2 )
+            _:expect( theFullTally.pass    ).is( 4 )
+            _:expect( theFullTally.empty   ).is( 2 )
+            _:expect( theFullTally.ignore  ).is( 1 )
+            _:expect( theFullTally.fail    ).is( 2 )
+            _:expect( theFullTally.pending ).is( nil )
         end)
         _:test( "aBooneUnit:tally() table records total "..
                 "# of features", function()
@@ -106,6 +115,13 @@ function testCurrent()
         end)
         
     end)
+end
+
+function testCurrent()
+    CodeaUnit.detailed = true
+    local aBooneUnit = BooneUnit("Dweezil")
+    aBooneUnit.silent = true
+
 end
     
 -- test output and report functions
