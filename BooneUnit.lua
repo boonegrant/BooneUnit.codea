@@ -241,6 +241,11 @@ function BooneUnit:tally()
     return totalTally
 end
 
+-- returns string
+function BooneUnit:summary()
+    
+end
+
 -- ---------------------- --
 --   Feature Info class   --
 -- ---------------------- --
@@ -260,6 +265,7 @@ end
 function BooneUnit.FeatureInfo:intro()
     return string.format( "Feature: %s \n tests:", self.description )
 end
+
 -- BooneUnit.FeatureInfo:report()
 --      Returns a string describing the results of the tests within the feature
 function BooneUnit.FeatureInfo:report() --change name to summary; report will be enitre report

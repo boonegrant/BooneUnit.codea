@@ -33,7 +33,9 @@ function testABooneUnit()
                                     test = "function",
                                     delay = "function",
                                     before = "function",
-                                    after = "function" }
+                                    after = "function",
+                                    tally = "function", 
+                                    summary = "function" }
         memberTypeTest( "public methods: aBooneUnit", aBooneUnit, publicUnitMethods )
         -- reset exists
         _:test( "reset exists", function ()
@@ -244,7 +246,7 @@ function testBooneUnitExpect()
                               { {}, {} },
                               { math.cos, math.sin},
                               { function() end, function() end },
-                              { vec2(5,2), vec2(5.2,2.5) }}
+                              { vec2(5,2), vec2(5.2,2) }}
         for i, v in ipairs( inequalities ) do
             local testDesc = string.format('aBooneUnit:expect(%s).is(%s) returns false', v[1], v[2] )
             _:test( testDesc, function()
