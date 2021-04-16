@@ -243,7 +243,7 @@ end
 
 -- returns string
 function BooneUnit:summary()
-    
+    return "summary"
 end
 
 -- ---------------------- --

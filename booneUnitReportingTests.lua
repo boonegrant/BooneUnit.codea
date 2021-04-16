@@ -79,7 +79,8 @@ function testBooneUnitTally()
             _:expect( type( aBooneUnit:tally() ) ).is( "table" )
         end)
         _:test( "aBooneUnit:tally().total is zero if no tests have"..
-                " been run, and test categories are nil when sum is zero", function()
+                " been run, and test categories are nil when "..
+                "corresponding sum is zero", function()
             -- No tests run
             aBooneUnit:reset() 
             _:expect( aBooneUnit:tally().total  ).is( 0 )
@@ -122,6 +123,12 @@ function testCurrent()
     local aBooneUnit = BooneUnit("Dweezil")
     aBooneUnit.silent = true
 
+    _:describe( "BooneUnit:summary() returns a string reporting number "..
+                "and outcomes of tests run", function()
+        _:test( "BooneUnit:summary() returns a string", function()
+            _:expect( type( aBooneUnit:summary() ) ).is( "string" )
+        end )
+    end )
 end
     
 -- test output and report functions
