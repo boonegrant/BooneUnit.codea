@@ -128,7 +128,13 @@ function testCurrent()
         _:test( "BooneUnit:summary() returns a string", function()
             _:expect( type( aBooneUnit:summary() ) ).is( "string" )
         end )
-    end )
+        _:test( "BooneUnit:summary() string contains total number of "..
+                "tests recorded", function()
+            _:expect( string.find( aBooneUnit:summary(), 
+                                   " "..string.format( "%i", (aBooneUnit:tally().total) ) 
+                                  ) ).isnt( nil )
+        end)
+    end)
 end
     
 -- test output and report functions

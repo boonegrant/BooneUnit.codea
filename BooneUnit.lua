@@ -221,29 +221,31 @@ end
 
 -- returns table
 function BooneUnit:tally()
-    local totalTally = {}
-    totalTally.features = #self.features
-    totalTally.total = 0
+    local unitTally = {}
+    unitTally.features = #self.features
+    unitTally.total = 0
     -- itterate over features
     for i,v in ipairs( self.features ) do
         featureTally = v:tally()
         -- itterate over feature tally results 
         for category, count in pairs( featureTally ) do
-            if ( totalTally[ category ] ) then
+            if ( unitTally[ category ] ) then
                 -- category already exists
-                totalTally[ category ] = totalTally[ category ] + count
+                unitTally[ category ] = unitTally[ category ] + count
             else
                 -- create category
-                totalTally[ category ] = count
+                unitTally[ category ] = count
             end
         end
     end
-    return totalTally
+    return unitTally
 end
 
 -- returns string
 function BooneUnit:summary()
-    return "summary"
+    local unitTally = self:tally()
+    print( string.format( "summary: %i", unitTally.total ) )
+    return string.format( "summary: %i", unitTally.total ) 
 end
 
 -- ---------------------- --
