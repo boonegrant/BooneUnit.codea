@@ -148,6 +148,12 @@ function testCurrent()
         _:test( "BooneUnit:status() returns a string", function()
             _:expect( type( aBooneUnit:status() ) ).is( "string" )
         end)
+        _:test( "When no tests have run, BooneUnit:status() string "..
+                "contains 'no nests'", function()
+            aBooneUnit:reset()
+            local statusString = string.lower( aBooneUnit:status() )
+            _:expect( string.find( statusString, "no tests" ) ).isnt( nil )
+        end)
     end)
 end
     
