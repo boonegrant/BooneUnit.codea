@@ -1,12 +1,13 @@
 BooneUnit = class()
 BooneUnit.id = "BooneUnit"
-BooneUnit._tallyCategoryOrder = { "pass", "empty", "ignore", "pending", "fail" }
+BooneUnit._tallyCategoryOrder = { "pass", "ignore", "empty", "pending", "fail" }
 BooneUnit._tallyCategoryNames = { 
     pass    = "Passed", 
     ignore  = "Ignored", 
     empty   = "Empty",
     pending = "Pending", 
-    fail    = "Failed"
+    fail    = "Failed",
+    total   = "Tests"
     }
 BooneUnit._errorMsgs = { 
     testInsideTest = '"BooneUnit:test()" declaration cannot be made inside another "test()" declaration',
@@ -208,17 +209,17 @@ end
 
 function BooneUnit:_orphanage()  -- create a home for tests not placed inside a :describe() declaration
     -- this is so they can be grouped and tabulated together 
-    -- ?Create new Feature for each group of orphan tests i.e. remove ._aHomeForOrphanTests ?
-    -- print( "Dwezil- Oh you poor lost test!" )
+    -- ?Create new Feature for each group of orphan tests ?
     if ( self._aHomeForOrphanTests == nil ) then  -- or aHomeForOrphanTests ~= self.features[#self.features]
         self._aHomeForOrphanTests = self.FeatureInfo( "No Description" )
         table.insert( self.features, self._aHomeForOrphanTests )   
-        -- print( "Dwezil- I have made a home for you" )
     end
-    -- print( string.format( "Dwezil- This is your home now: %s", self._aHomeForOrphanTests ) )
     return self._aHomeForOrphanTests
 end
 
+
+-- Reporting Functions
+--
 -- returns table
 function BooneUnit:tally()
     local unitTally = {}
@@ -241,11 +242,33 @@ function BooneUnit:tally()
     return unitTally
 end
 
+-- untested
+function BooneUnit:status(tallyTable)
+    local unitTally = tallyTable or self:tally()
+    if (unitTally.total == 0) then 
+        return "No Tests Run"
+    end 
+    for i = #self._tallyCategoryOrder, 1, -1 do
+        local currentCategory = self._tallyCategoryOrder[i]
+        local countString 
+        if unitTally[ currentCategory ] then
+            if unitTally[ currentCategory ] == unitTally.total then
+                countString = "All"
+            else
+                countString = string.format( "%i", unitTally[ currentCategory ] )
+            end
+            return string.format( "%s %s", 
+                                  countString,
+                                  self._tallyCategoryNames[ currentCategory ] )
+        end
+    end
+    return string.format( "%i tests", unitTally.total )
+end
+
 -- returns string
-function BooneUnit:summary()
-    local unitTally = self:tally()
-    print( string.format( "summary: %i", unitTally.total ) )
-    return string.format( "summary: %i", unitTally.total ) 
+function BooneUnit:summary(tallyTable)
+    local unitTally = tallyTable or self:tally()
+    return string.format( "summary: %i tests", unitTally.total ) 
 end
 
 -- ---------------------- --
@@ -385,6 +408,7 @@ function BooneUnit.TestInfo:report() --TODO: add 'detailed' parameter
     end
     table.insert( reportTable, string.format( '%s\n[ %s ]', bigDivider, self:status() ) )
     return table.concat( reportTable, '\n' )
+    
 end
 
 function BooneUnit.TestInfo:formatHeader( description )

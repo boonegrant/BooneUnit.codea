@@ -38,7 +38,7 @@ function testBooneUnitTally()
     -- local _ = BooneUnit("Testor")
     CodeaUnit.detailed = false
     local aBooneUnit = BooneUnit("Dweezil")
-    aBooneUnit.silent = true
+    aBooneUnit.silent = false
     
     local doSomeTests = function() --run some tests
         aBooneUnit:describe( "The First Feature", function()
@@ -118,7 +118,7 @@ function testBooneUnitTally()
     end)
 end
 
-function testCurrent()
+function testBooneUnitSummary()
     CodeaUnit.detailed = true
     local aBooneUnit = BooneUnit("Dweezil")
     aBooneUnit.silent = true
@@ -133,6 +133,20 @@ function testCurrent()
             _:expect( string.find( aBooneUnit:summary(), 
                                    " "..string.format( "%i", (aBooneUnit:tally().total) ) 
                                   ) ).isnt( nil )
+        end)
+    end)
+end
+
+function testCurrent()
+    CodeaUnit.detailed = true
+    local aBooneUnit = BooneUnit("Dweezil")
+    aBooneUnit.silent = true
+    
+    _:describe( "BooneUnit:status() returns a string reflecting the most "..
+                "pertinent test outcomes, e.g.: '5 tests failed', "..
+                "'2 ignored', 'All Passed', etc", function() 
+        _:test( "BooneUnit:status() returns a string", function()
+            _:expect( type( aBooneUnit:status() ) ).is( "string" )
         end)
     end)
 end
