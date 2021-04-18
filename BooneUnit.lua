@@ -251,15 +251,18 @@ function BooneUnit:status(tallyTable)
     for i = #self._tallyCategoryOrder, 1, -1 do
         local currentCategory = self._tallyCategoryOrder[i]
         local countString 
+        print( currentCategory )
         if unitTally[ currentCategory ] then
             if unitTally[ currentCategory ] == unitTally.total then
                 countString = "All"
             else
                 countString = string.format( "%i", unitTally[ currentCategory ] )
             end
-            return string.format( "%s %s", 
+            local statusString = string.format( "%s %s", 
                                   countString,
                                   self._tallyCategoryNames[ currentCategory ] )
+            print( statusString )
+            return statusString
         end
     end
     return string.format( "%i tests", unitTally.total )
