@@ -141,6 +141,7 @@ function testCurrent()
     CodeaUnit.detailed = true
     local aBooneUnit = BooneUnit("Dweezil")
     aBooneUnit.silent = true
+    --local _ = BooneUnit( "Testor" )
     
     local doTest = function( tester, pass, testDescription )
         tester:describe( string.format( "%i", #tester.features + 1 ), function()
@@ -160,44 +161,112 @@ function testCurrent()
         
     local doIgnoredTest = function( tester )
         tester:describe( string.format( "%i", #tester.features + 1 ), function()
-            tester:ignore( "Ignored Test", function()end )
+            tester:ignore( "An Ignored Test", function()end )
         end)
     end
     local doEmptyTest = function( tester )
         tester:describe( string.format( "%i", #tester.features + 1 ), function()
-            tester:test( "Empty Test", function()end )
+            tester:test( "An Empty Test", function()end )
+        end)
+    end
+    local doPendingTest = function( tester )
+        tester:describe( string.format( "%i", #tester.features + 1 ), function()
+            tester:test( "A Pending Test", function()
+                tester:delay( 1, function()end )
+            end)
         end)
     end
     
     _:describe( "BooneUnit:status() returns a string reflecting the most "..
                 "pertinent test outcomes, e.g.: '5 tests failed', "..
                 "'2 ignored', 'All Passed', etc", function() 
+        
         _:test( "BooneUnit:status() returns a string", function()
             _:expect( type( aBooneUnit:status() ) ).is( "string" )
         end)
+        
         _:test( "When no tests have run, BooneUnit:status() string "..
                 "contains 'no tests'", function()
             aBooneUnit:reset()
             local statusString = string.lower( aBooneUnit:status() )
             _:expect( string.find( statusString, "no tests" ) ).isnt( nil )
         end)
+        
         _:test( "When any tests have failed, BooneUnit:status() string "..
                 "contains word 'failed'", function() 
             aBooneUnit:reset()
+            
             doFailingTest( aBooneUnit )
             local statusString = string.lower( aBooneUnit:status() )
             _:expect( string.find( statusString, "failed" ) ).isnt( nil )
+            
             doPassingTest( aBooneUnit )
             local statusString = string.lower( aBooneUnit:status() )
             _:expect( string.find( statusString, "failed" ) ).isnt( nil )
+            
             doPassingTest( aBooneUnit )
             local statusString = string.lower( aBooneUnit:status() )
             _:expect( string.find( statusString, "failed" ) ).isnt( nil )
-            doPassingTest( aBooneUnit )
+            
+            doIgnoredTest( aBooneUnit )
             local statusString = string.lower( aBooneUnit:status() )
             _:expect( string.find( statusString, "failed" ) ).isnt( nil )
-                        
+            
+            doEmptyTest( aBooneUnit )
+            local statusString = string.lower( aBooneUnit:status() )
+            _:expect( string.find( statusString, "failed" ) ).isnt( nil )
+            
+            aBooneUnit:reset()
+            for i = 1, 10 do
+                doPassingTest( aBooneUnit )
+            end
+            doFailingTest( aBooneUnit )
+            _:expect( string.find( statusString, "failed" ) ).isnt( nil )
         end )
+        
+        _:test( "BooneUnit:status() prioritizes overall status in this order: "..
+                "any Failed > any Pending > any Empty > any Ignored > "..
+                "any Passed", function()
+            aBooneUnit:reset()
+            
+            doPassingTest( aBooneUnit )
+            local statusString = string.lower( aBooneUnit:status() )
+            _:expect( string.find( statusString, "passed" ) ).isnt( nil )
+            
+            doIgnoredTest( aBooneUnit )
+            local statusString = string.lower( aBooneUnit:status() )
+            _:expect( string.find( statusString, "ignored" ) ).isnt( nil )
+            
+            doPassingTest( aBooneUnit )
+            local statusString = string.lower( aBooneUnit:status() )
+            _:expect( string.find( statusString, "ignored" ) ).isnt( nil )
+            
+            doEmptyTest( aBooneUnit )
+            local statusString = string.lower( aBooneUnit:status() )
+            _:expect( string.find( statusString, "empty" ) ).isnt( nil )
+            
+            doIgnoredTest( aBooneUnit )
+            local statusString = string.lower( aBooneUnit:status() )
+            _:expect( string.find( statusString, "empty" ) ).isnt( nil )
+            
+            doPendingTest( aBooneUnit )
+            local statusString = string.lower( aBooneUnit:status() )
+            _:expect( string.find( statusString, "pending" ) ).isnt( nil )
+            
+            doEmptyTest( aBooneUnit )
+            local statusString = string.lower( aBooneUnit:status() )
+            _:expect( string.find( statusString, "pending" ) ).isnt( nil )
+            
+            doFailingTest( aBooneUnit )
+            local statusString = string.lower( aBooneUnit:status() )
+            _:expect( string.find( statusString, "failed" ) ).isnt( nil )
+            
+            doPendingTest( aBooneUnit )
+            local statusString = string.lower( aBooneUnit:status() )
+            _:expect( string.find( statusString, "failed" ) ).isnt( nil )
+            
+            
+        end)
     end )
 end
     
