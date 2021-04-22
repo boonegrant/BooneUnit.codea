@@ -264,9 +264,10 @@ function testCurrent()
             doPendingTest( aBooneUnit )
             local statusString = string.lower( aBooneUnit:status() )
             _:expect( string.find( statusString, "failed" ) ).isnt( nil )
-            
-            
         end)
+        
+        -- _:test("'All'")
+        -- _:test("Count")
     end )
 end
     
