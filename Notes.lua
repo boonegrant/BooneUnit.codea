@@ -37,7 +37,7 @@
 --]]
 
 
--- Each expectation registers a result in a test, a test's results determine its outcome, Features tally outcomes
+-- Each expectation registers a result in a test, a test's results determine its outcome, Features group tests and tally outcomes
 
 --[[
 local function alphaIndex( num )

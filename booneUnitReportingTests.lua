@@ -118,11 +118,42 @@ function testBooneUnitTally()
     end)
 end
 
-function testBooneUnitSummary()
+function testCurrent()
     CodeaUnit.detailed = true
     local aBooneUnit = BooneUnit("Dweezil")
     aBooneUnit.silent = true
 
+    local doSomeTests = function() --run some tests
+        aBooneUnit:describe( "The First Feature", function()
+            aBooneUnit:test( "1st test: passing 1", function()
+                aBooneUnit:expect( 1+1 ).is( 2 )
+            end)
+            aBooneUnit:test( "2nd test: passing 2", function()
+                aBooneUnit:expect( 2+2 ).is( 4 )
+            end)
+            aBooneUnit:test( "3rd test: empty 1" )
+        end)
+        aBooneUnit:describe( "The Second Feature", function()
+            aBooneUnit:test( "4th test: passing 3", function()
+                aBooneUnit:expect( 4+4 ).is( 8 )
+            end)
+            aBooneUnit:test( "5 test: failing 1", function()
+                aBooneUnit:expect( 2+2 ).is( 5 )
+            end)
+            aBooneUnit:test( "6th test: empty 2" )
+            aBooneUnit:test( "7th test: passing 4", function()
+                aBooneUnit:expect( 1==1 ).is( true )
+            end)
+        end)
+        -- third Feature - undeclared
+        aBooneUnit:ignore( "8th test: ignored 1", function()
+            aBooneUnit:expect( "something" ).is( "nothing" )
+        end)
+        aBooneUnit:test( "9th test: failing 2", function() 
+            aBooneUnit:expect( true ).isnt( true )
+        end)
+    end
+    
     _:describe( "BooneUnit:summary() returns a string reporting number "..
                 "and outcomes of tests run", function()
         _:test( "BooneUnit:summary() returns a string", function()
@@ -130,15 +161,22 @@ function testBooneUnitSummary()
         end )
         _:test( "BooneUnit:summary() string contains total number of "..
                 "tests recorded", function()
+            print( aBooneUnit:summary() )
             _:expect( string.find( aBooneUnit:summary(), 
                                    " "..string.format( "%i", (aBooneUnit:tally().total) ) 
                                   ) ).isnt( nil )
+            doSomeTests()
+            print( aBooneUnit:summary() )
+            _:expect( string.find( aBooneUnit:summary(), 
+                                   " "..string.format( "%i", (aBooneUnit:tally().total) ) 
+                                  ) ).isnt( nil )
+            
         end)
     end)
 end
 
-function testCurrent()
-    CodeaUnit.detailed = true
+function testBooneUnitStatus()
+    CodeaUnit.detailed = false
     local aBooneUnit = BooneUnit("Dweezil")
     aBooneUnit.silent = true
     --local _ = BooneUnit( "Testor" )
@@ -269,6 +307,15 @@ function testCurrent()
         -- _:test("'All'")
         -- _:test("Count")
     end )
+end
+
+function testExecute()
+    CodeaUnit.detailed = true
+    local aBooneUnit = BooneUnit("Dweezil")
+    aBooneUnit.silent = true
+    --local _ = BooneUnit( "Testor" )
+    
+    
 end
     
 -- test output and report functions

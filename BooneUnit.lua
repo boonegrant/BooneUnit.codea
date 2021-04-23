@@ -242,7 +242,7 @@ function BooneUnit:tally()
     return unitTally
 end
 
--- untested
+-- returns string
 function BooneUnit:status(tallyTable)
     local unitTally = tallyTable or self:tally()
     if (unitTally.total == 0) then 
@@ -251,7 +251,7 @@ function BooneUnit:status(tallyTable)
     for i = #self._tallyCategoryOrder, 1, -1 do
         local currentCategory = self._tallyCategoryOrder[i]
         local countString 
-        print( currentCategory )
+        -- print( currentCategory )
         if unitTally[ currentCategory ] then
             if unitTally[ currentCategory ] == unitTally.total then
                 countString = "All"
@@ -261,7 +261,7 @@ function BooneUnit:status(tallyTable)
             local statusString = string.format( "%s %s", 
                                   countString,
                                   self._tallyCategoryNames[ currentCategory ] )
-            print( statusString )
+            -- print( statusString )
             return statusString
         end
     end
@@ -271,9 +271,29 @@ end
 -- returns string
 function BooneUnit:summary(tallyTable)
     local unitTally = tallyTable or self:tally()
-    return string.format( "summary: %i tests", unitTally.total ) 
+    local divider = "○------------------------○"
+    local textTable = { divider }
+    table.insert( textTable, string.format( "summary: %i tests", unitTally.total ) )
+    for i, v in ipairs( BooneUnit._tallyCategoryOrder ) do
+        if unitTally[v] then
+            local category = string.format( "%3i %s", unitTally[v], BooneUnit._tallyCategoryNames[v] or v )
+            table.insert( textTable, category )
+        end
+    end
+    table.insert( textTable, divider )
+    table.insert( textTable, string.format("------- %s -------", self:status(unitTally) ) )
+    table.insert( textTable, divider )
+    return table.concat( textTable, "\n" )
 end
 
+function BooneUnit:summarize()
+        local unitTally = self:tally()
+        print( string.format("\n\n------- %s -------\n", self:status(unitTally) ) )
+end
+
+function BooneUnit:tallyString( tallyTable, separator )
+    
+end
 -- ---------------------- --
 --   Feature Info class   --
 -- ---------------------- --
