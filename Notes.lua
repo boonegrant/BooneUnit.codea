@@ -1,3 +1,7 @@
+loadOrder = function ()
+    print( "Project Last" )
+    print( "Left Tab Last" )
+end
 
 -- output to clipboard
 -- output to project tab

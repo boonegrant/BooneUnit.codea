@@ -1,13 +1,14 @@
 BooneUnit = class()
 BooneUnit.id = "BooneUnit"
-BooneUnit._tallyCategoryOrder = { "pass", "ignore", "empty", "pending", "fail" }
+BooneUnit._tallyCategoryOrder = { "pass", "ignore", "empty", "pending", "fail" } -- in ascending order of priority
 BooneUnit._tallyCategoryNames = { 
-    pass    = "Passed", 
-    ignore  = "Ignored", 
-    empty   = "Empty",
-    pending = "Pending", 
-    fail    = "Failed",
-    total   = "Tests"
+    pass     = "Passed", 
+    ignore   = "Ignored", 
+    empty    = "Empty",
+    pending  = "Pending", 
+    fail     = "Failed",
+    total    = "Tests",
+    features = "Features"
     }
 BooneUnit._errorMsgs = { 
     testInsideTest = '"BooneUnit:test()" declaration cannot be made inside another "test()" declaration',
@@ -243,8 +244,8 @@ function BooneUnit:tally()
 end
 
 -- returns string
-function BooneUnit:status(tallyTable)
-    local unitTally = tallyTable or self:tally()
+function BooneUnit:status()
+    local unitTally = self:tally()
     if (unitTally.total == 0) then 
         return "No Tests Run"
     end 
@@ -261,6 +262,7 @@ function BooneUnit:status(tallyTable)
             local statusString = string.format( "%s %s", 
                                   countString,
                                   self._tallyCategoryNames[ currentCategory ] )
+            local statusColor = self._tallyCategoryColor
             -- print( statusString )
             return statusString
         end
@@ -281,7 +283,7 @@ function BooneUnit:summary(tallyTable)
         end
     end
     table.insert( textTable, divider )
-    table.insert( textTable, string.format("------- %s -------", self:status(unitTally) ) )
+    table.insert( textTable, string.format("------- %s -------", self:status( unitTally ) ) )
     table.insert( textTable, divider )
     return table.concat( textTable, "\n" )
 end

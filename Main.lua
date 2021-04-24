@@ -1,4 +1,8 @@
 -- BooneUnit
+loadOrder = function ()
+    print( "Project Last" )
+    print( "Right Tab Last" )
+end
 
 -- Use this function to perform your initial setup
 function setup()

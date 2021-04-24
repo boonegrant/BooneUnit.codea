@@ -11,6 +11,7 @@
 		<string>OriginalCodeaUnit</string>
 		<string>JefferiesUnit</string>
 		<string>BooneUnit</string>
+		<string>TallyTerpreter</string>
 		<string>booneUnitReportingTests</string>
 		<string>booneUnitCoreTests</string>
 		<string>BooneUnitFeatureTests</string>
