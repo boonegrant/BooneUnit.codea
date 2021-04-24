@@ -247,19 +247,15 @@ function BooneUnit:status()
 end
 
 -- returns string
-function BooneUnit:summary(tallyTable)
-    local unitTally = tallyTable or self:tally()
-    local divider = "○------------------------○"
+function BooneUnit:summary()
+    local unitTally = self:tally()
+    local divider = "**************************"
     local textTable = { divider }
-    table.insert( textTable, string.format( "summary: %i tests", unitTally.total ) )
-    for i, v in ipairs( BooneUnit._tallyCategoryOrder ) do
-        if unitTally[v] then
-            local category = string.format( "%3i %s", unitTally[v], BooneUnit._tallyCategoryNames[v] or v )
-            table.insert( textTable, category )
-        end
-    end
+    table.insert( textTable, unitTally:toStringHeader() )
     table.insert( textTable, divider )
-    table.insert( textTable, string.format("------- %s -------", self:status( unitTally ) ) )
+    table.insert( textTable, unitTally:toStringBody() )
+    table.insert( textTable, divider )
+    table.insert( textTable, string.format("\n------- %s -------\n", self:status() ) )
     table.insert( textTable, divider )
     return table.concat( textTable, "\n" )
 end
@@ -293,20 +289,12 @@ end
 --      Returns a string describing the results of the tests within the feature
 function BooneUnit.FeatureInfo:report() --change name to summary; report will be enitre report
     local theTally = self:tally()
-    local reportCategories = {}
     local separator = ' ----------'
-    -- assemble tally strings in prefered order
-    for i, v in ipairs( BooneUnit._tallyCategoryOrder ) do
-        if theTally[v] then
-            local category = string.format( "%3i %s", theTally[v], BooneUnit._tallyCategoryNames[v] or v )
-            table.insert( reportCategories, category )
-        end
-    end
-    return string.format( "Feature: %s \n%3i Tests \n%s\n%s\n%s", 
+    return string.format( "Feature: %s \n%s\n%s\n%s\n%s", 
                           self.description, 
-                          theTally.total,
+                          theTally:toStringHeader(),
                           separator,
-                          table.concat( reportCategories, "\n" ),
+                          theTally:toStringBody(),
                           separator
                         )
 end
@@ -355,7 +343,7 @@ function BooneUnit.TestInfo:registerResult( outcome, actual, expected )
 end
 
 -- [test]:passed() - returns true if there is at least one result 
---                   recorded and all results are successful or ignored
+--                   recorded and all results are successful
 function BooneUnit.TestInfo:passed()
     local testPassed = #self.results > 0  -- at least one result recorded
     for i, v in ipairs( self.results ) do

@@ -51,7 +51,7 @@ function tryThis()
 end
 
 function bestBasics()
-    local _ = BooneUnit("booneUnit")
+    local _ = BooneUnit()
     _.detailed = true
 
     _:describe("Unit Tester Basic Functionality", function()
@@ -103,8 +103,8 @@ function bestBasics()
             _:expect(someWord).is("Bar")
             _:expect(someNumber).is(4)
         end)
-        
     end)
+    print( _:summary() )
 end
 
 parameter.action( "BooneUnit Basic Tests", bestBasics )
