@@ -262,7 +262,6 @@ function BooneUnit:status()
             local statusString = string.format( "%s %s", 
                                   countString,
                                   self._tallyCategoryNames[ currentCategory ] )
-            local statusColor = self._tallyCategoryColor
             -- print( statusString )
             return statusString
         end
