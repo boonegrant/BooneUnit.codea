@@ -251,9 +251,9 @@ function BooneUnit:summary()
     local unitTally = self:tally()
     local divider = "**************************"
     local textTable = { divider }
-    table.insert( textTable, unitTally:toStringHeader() )
+    table.insert( textTable, unitTally:headerToString() )
     table.insert( textTable, divider )
-    table.insert( textTable, unitTally:toStringBody() )
+    table.insert( textTable, unitTally:bodyToString() )
     table.insert( textTable, divider )
     table.insert( textTable, string.format("\n------- %s -------\n", self:status() ) )
     table.insert( textTable, divider )
@@ -292,9 +292,9 @@ function BooneUnit.FeatureInfo:report() --change name to summary; report will be
     local separator = ' ----------'
     return string.format( "Feature: %s \n%s\n%s\n%s\n%s", 
                           self.description, 
-                          theTally:toStringHeader(),
+                          theTally:headerToString(),
                           separator,
-                          theTally:toStringBody(),
+                          theTally:bodyToString(),
                           separator
                         )
 end
