@@ -1,7 +1,10 @@
 TallyTerpreter = class()
 
-function TallyTerpreter:init()
-    
+function TallyTerpreter:init( tallyTable )
+    tallyTable = tallyTable or {}
+    for key, value in pairs( tallyTable ) do
+        self[ key ] = value
+    end
 end
 
 do 

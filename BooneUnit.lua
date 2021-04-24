@@ -240,7 +240,7 @@ function BooneUnit:tally()
             end
         end
     end
-    return unitTally
+    return TallyTerpreter( unitTally )
 end
 
 -- returns string
@@ -292,9 +292,6 @@ function BooneUnit:summarize()
         print( string.format("\n\n------- %s -------\n", self:status(unitTally) ) )
 end
 
-function BooneUnit:tallyString( tallyTable, separator )
-    
-end
 -- ---------------------- --
 --   Feature Info class   --
 -- ---------------------- --
@@ -338,7 +335,7 @@ function BooneUnit.FeatureInfo:report() --change name to summary; report will be
 end
 
 -- BooneUnit.FeatureInfo:tally()
---          Returns a table summing and totaling the test results in a feature
+--      Returns a table summing and totaling the test results in a feature
 function BooneUnit.FeatureInfo:tally()
     local theTally = { total = #self.tests }
     -- walk through tests
@@ -351,7 +348,7 @@ function BooneUnit.FeatureInfo:tally()
             theTally[ testStatus ] = 1
         end
     end
-    return theTally
+    return TallyTerpreter( theTally )
 end
 
 function BooneUnit.FeatureInfo.before() end -- default empty function
