@@ -231,12 +231,10 @@ function BooneUnit:tally()
         featureTally = v:tally()
         -- itterate over feature tally results 
         for category, count in pairs( featureTally ) do
-            if ( unitTally[ category ] ) then
-                -- category already exists
-                unitTally[ category ] = unitTally[ category ] + count
+            if ( unitTally[ category ] ) then -- category already exists
+                unitTally[ category ] = unitTally[ category ] + count -- increment
             else
-                -- create category
-                unitTally[ category ] = count
+                unitTally[ category ] = count -- create category
             end
         end
     end
@@ -245,28 +243,7 @@ end
 
 -- returns string
 function BooneUnit:status()
-    local unitTally = self:tally()
-    if (unitTally.total == 0) then 
-        return "No Tests Run"
-    end 
-    for i = #self._tallyCategoryOrder, 1, -1 do
-        local currentCategory = self._tallyCategoryOrder[i]
-        local countString 
-        -- print( currentCategory )
-        if unitTally[ currentCategory ] then
-            if unitTally[ currentCategory ] == unitTally.total then
-                countString = "All"
-            else
-                countString = string.format( "%i", unitTally[ currentCategory ] )
-            end
-            local statusString = string.format( "%s %s", 
-                                  countString,
-                                  self._tallyCategoryNames[ currentCategory ] )
-            -- print( statusString )
-            return statusString
-        end
-    end
-    return string.format( "%i tests", unitTally.total )
+    return self:tally():status()
 end
 
 -- returns string

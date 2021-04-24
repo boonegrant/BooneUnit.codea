@@ -8,7 +8,7 @@ function TallyTerpreter:init( tallyTable )
 end
 
 do 
-    TallyTerpreter.tallyCategories = BooneUnit._tallyCategories
+    TallyTerpreter.tallyCategoryOrder = BooneUnit._tallyCategoryOrder
     TallyTerpreter.headerCategories = { "total", "features" }
     TallyTerpreter.categoryNames = BooneUnit._tallyCategoryNames
     local green = color(17, 199, 30)
@@ -30,6 +30,27 @@ function TallyTerpreter:footer()
 end
 
 function TallyTerpreter:status()
-    
+    local unitTally = self
+    if (unitTally.total == 0) then 
+        return "No Tests Run"
+    end 
+    for i = #self.tallyCategoryOrder, 1, -1 do
+        local currentCategory = self.tallyCategoryOrder[i]
+        local countString 
+        -- print( currentCategory )
+        if unitTally[ currentCategory ] then
+            if unitTally[ currentCategory ] == unitTally.total then
+                countString = "All"
+            else
+                countString = string.format( "%i", unitTally[ currentCategory ] )
+            end
+            local statusString = string.format( "%s %s", 
+                                  countString,
+                                  self.categoryNames[ currentCategory ] )
+            -- print( statusString )
+            return statusString
+        end
+    end
+
 end
 
