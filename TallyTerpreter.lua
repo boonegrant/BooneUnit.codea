@@ -46,18 +46,7 @@ function TallyTerpreter:toStringHeader( separator )
     return table.concat( textTable, separator )
 end
 
-function TallyTerpreter:outputToString( orderedFilter, separator )
-    orderedFilter = orderedFilter or self
-    separator = separator or "\n" -- Backfill default
-    local textTable = {}
-    -- assemble tally strings in prefered order
-    for i, v in ipairs( orderedFilter ) do
-        if self[v] then
-            local categoryString = string.format( "%3i %s", self[v], self.categoryNames[v] or v )
-            table.insert( textTable, categoryString )
-        end
-    end
-    return table.concat( textTable, separator )
+function TallyTerpreter:footer()
 end
 
 function TallyTerpreter:status()
