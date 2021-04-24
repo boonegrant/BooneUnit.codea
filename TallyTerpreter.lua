@@ -30,24 +30,22 @@ function TallyTerpreter:footer()
 end
 
 function TallyTerpreter:status()
-    local unitTally = self
-    if (unitTally.total == 0) then 
+    if (self.total == 0) then 
         return "No Tests Run"
     end 
+    -- itterate over tallyCategoryOrder in reverse (descending signifigance)
     for i = #self.tallyCategoryOrder, 1, -1 do
         local currentCategory = self.tallyCategoryOrder[i]
         local countString 
-        -- print( currentCategory )
-        if unitTally[ currentCategory ] then
-            if unitTally[ currentCategory ] == unitTally.total then
+        if self[ currentCategory ] then -- found most significant category
+            if self[ currentCategory ] == self.total then
                 countString = "All"
             else
-                countString = string.format( "%i", unitTally[ currentCategory ] )
+                countString = string.format( "%i", self[ currentCategory ] )
             end
             local statusString = string.format( "%s %s", 
                                   countString,
                                   self.categoryNames[ currentCategory ] )
-            -- print( statusString )
             return statusString
         end
     end
