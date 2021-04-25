@@ -1,5 +1,32 @@
 TallyTerpreter = class()
 
+do 
+    TallyTerpreter.tallyCategoryOrder = BooneUnit._tallyCategoryOrder
+    TallyTerpreter.tallyHeaderOrder = { "total", "features" }
+    TallyTerpreter.tallyCategoryNames = { 
+        pass     = "Passed", 
+        ignore   = "Ignored", 
+        empty    = "Empty",
+        pending  = "Pending", 
+        fail     = "Failed",
+        total    = "Tests",
+        features = "Features"
+    }
+    local green = color(17, 199, 30)
+    local yellow = color(255, 229, 0)
+    local red = color(255, 5, 0)
+    local gray = color(184)
+    TallyTerpreter.tallyStatusColors = { 
+        pass    = green, 
+        ignore  = yellow,
+        empty   = yellow,
+        pending = yellow,
+        fail    = red,
+        none    = gray
+    }
+end
+
+
 function TallyTerpreter:init( tallyTable )
     tallyTable = tallyTable or {}
     for key, value in pairs( tallyTable ) do
@@ -7,17 +34,7 @@ function TallyTerpreter:init( tallyTable )
     end
 end
 
-do 
-    TallyTerpreter.tallyCategoryOrder = BooneUnit._tallyCategoryOrder
-    TallyTerpreter.tallyHeaderOrder = { "total", "features" }
-    TallyTerpreter.tallyCategoryNames = BooneUnit._tallyCategoryNames
-    local green = color(17, 199, 30)
-    local yellow = color(255, 229, 0)
-    local red = color(255, 5, 0)
-    TallyTerpreter.statusColors = { pass = green, fail = red }
-end
-
-function TallyTerpreter:toStringFilter( orderedCategoryTable, separator )
+function TallyTerpreter:filteredToString( orderedCategoryTable, separator )
     orderedFilter = orderedFilter or {}
     separator = separator or "\n" -- Backfill default
     local textTable = {}
@@ -33,12 +50,12 @@ end
 
 function TallyTerpreter:bodyToString( separator )
     separator = separator or "\n" -- Backfill default
-    return self:toStringFilter( self.tallyCategoryOrder, separator )
+    return self:filteredToString( self.tallyCategoryOrder, separator )
 end
 
 function TallyTerpreter:headerToString( separator )
     separator = separator or ", " -- Backfill default
-    return self:toStringFilter( self.tallyHeaderOrder, separator )
+    return self:filteredToString( self.tallyHeaderOrder, separator )
 end
 
 function TallyTerpreter:footer()

@@ -25,8 +25,8 @@ end
 BooneUnit:reset()
 
 function BooneUnit:init ( id )
-    -- Stores id to differentiate text output, mostly for 
-    -- self-testing purposes 
+    -- Stores id to differentiate text output, 
+    -- mostly for self-testing purposes 
     self.id = id or ""
     self:reset()
 end
