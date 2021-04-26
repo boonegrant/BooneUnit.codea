@@ -28,7 +28,6 @@ do
     }
 end
 
-
 function TallyTerpreter:init( tallyTable )
     tallyTable = tallyTable or {}
     for key, value in pairs( tallyTable ) do
@@ -58,9 +57,6 @@ end
 function TallyTerpreter:headerToString( separator )
     separator = separator or ", " -- Backfill default
     return self:filteredToString( self.tallyHeaderOrder, separator )
-end
-
-function TallyTerpreter:footer()
 end
 
 function TallyTerpreter:status()

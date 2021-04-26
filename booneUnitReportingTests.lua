@@ -305,7 +305,7 @@ function testBooneUnitStatus()
         end)
         
         -- _:test("'All'")
-        -- _:test("Count")
+        -- _:test("Count is included")
     end )
     _:describe( "BooneUnit.status() also returns a color "..
                 "representing status", function() 

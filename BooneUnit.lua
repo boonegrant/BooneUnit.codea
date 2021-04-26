@@ -146,7 +146,7 @@ function BooneUnit:expect( conditional ) -- TODO: add name arg
         local found = false
         local actual
         for k,v in pairs(conditional) do
-            -- make sure they are not different userdata types; "==" will throw error
+            -- make sure expected and v are not different userdata types; "==" will throw error
             if type( v ) ~= "userdata" 
                 or type( expected ) ~= "userdata" 
                 or  getmetatable( v ) == getmetatable( expected )
@@ -218,7 +218,6 @@ function BooneUnit:_orphanage()  -- create a home for tests not placed inside a 
     return self._aHomeForOrphanTests
 end
 
-
 -- Reporting Functions
 --
 -- returns table
@@ -231,6 +230,7 @@ function BooneUnit:tally()
         featureTally = v:tally()
         -- itterate over feature tally results 
         for category, count in pairs( featureTally ) do
+            --unitTally:add( category, count )
             if ( unitTally[ category ] ) then -- category already exists
                 unitTally[ category ] = unitTally[ category ] + count -- increment
             else
@@ -306,6 +306,7 @@ function BooneUnit.FeatureInfo:tally()
     -- walk through tests
     for i, v in ipairs( self.tests ) do
         local testStatus = v:status()
+        --theTally:add( v:status(), 1 )
         -- tally by category
         if theTally[ testStatus ] then
             theTally[ testStatus ] = theTally[ testStatus ] + 1
