@@ -16,13 +16,15 @@ do
     local yellow = color(255, 229, 0)
     local red = color(255, 5, 0)
     local gray = color(184)
+    local magenta = color(255, 0, 255)
     TallyTerpreter.tallyStatusColors = { 
         pass    = green, 
         ignore  = yellow,
         empty   = yellow,
         pending = yellow,
         fail    = red,
-        none    = gray
+        none    = gray,
+        other   = magenta
     }
 end
 
@@ -63,7 +65,7 @@ end
 
 function TallyTerpreter:status()
     if (self.total == 0) then 
-        return "No Tests Run"
+        return "No Tests Run", self.tallyStatusColors[ "none" ]
     end 
     -- itterate over tallyCategoryOrder in reverse (descending signifigance)
     for i = #self.tallyCategoryOrder, 1, -1 do
@@ -78,7 +80,9 @@ function TallyTerpreter:status()
             local statusString = string.format( "%s %s", 
                                   countString,
                                   self.tallyCategoryNames[ currentCategory ] )
-            return statusString
+            local statusColor = self.tallyStatusColors[ currentCategory ] or 
+                                self.tallyStatusColors[ "other" ]
+            return statusString, statusColor
         end
     end
 

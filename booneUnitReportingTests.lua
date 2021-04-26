@@ -118,7 +118,7 @@ function testBooneUnitTally()
     end)
 end
 
-function testCurrent()
+function testBooneUnitSummary()
     CodeaUnit.detailed = true
     local aBooneUnit = BooneUnit("Dweezil")
     aBooneUnit.silent = true
@@ -176,10 +176,10 @@ function testCurrent()
 end
 
 function testBooneUnitStatus()
-    CodeaUnit.detailed = false
+    CodeaUnit.detailed = true
     local aBooneUnit = BooneUnit("Dweezil")
     aBooneUnit.silent = true
-    --local _ = BooneUnit( "Testor" )
+    -- local _ = BooneUnit( "Testor" )
     
     local doTest = function( tester, pass, testDescription )
         tester:describe( string.format( "%i", #tester.features + 1 ), function()
@@ -307,6 +307,33 @@ function testBooneUnitStatus()
         -- _:test("'All'")
         -- _:test("Count")
     end )
+    _:describe( "BooneUnit.status() also returns a color "..
+                "representing status", function() 
+        _:test( "BooneUnit.status() returns a color as 2nd return", function() 
+            aBooneUnit:reset()
+            local statusString, statusColor = aBooneUnit:status()
+            _:expect( type( statusColor ) ).is( type( color(0)) )
+        end )
+        _:test( "BooneUnit.status() returns a different color when "..
+                "passing than when failing", function() 
+            aBooneUnit:reset()
+            -- test color difference
+            local threshold = 255/3
+            
+            -- get colors
+            doPassingTest( aBooneUnit )
+            local passingString, passingColor = aBooneUnit:status()
+            
+            doFailingTest( aBooneUnit )
+            local failingString, failingColor = aBooneUnit:status()
+            
+            -- compare colors
+            local isDifferent = ( math.abs( passingColor.r - failingColor.r ) > threshold ) or
+                                ( math.abs( passingColor.g - failingColor.g ) > threshold ) or
+                                ( math.abs( passingColor.b - failingColor.b ) > threshold )
+            _:expect( isDifferent ).is( true )
+        end )
+    end )
 end
 
 function testExecute()
@@ -320,4 +347,5 @@ end
     
 -- test output and report functions
 -- test "test within test" error
-parameter.action( "testCurrent()", testCurrent )
+currentTest = testBooneUnitStatus
+parameter.action( "testCurrent()", currentTest )
