@@ -37,11 +37,12 @@ function BooneUnit:execute()
         local source = readProjectTab(v)
         for match in string.gmatch(source, "function%s-(test.-%(%))") do
             -- self._activeFunction = match
+            print( match )
             load(match)()
             -- self._activeFunction = nil
         end
     end
-    self:summarize()
+    print( self:summary() )
 end
 
 function BooneUnit:describe( featureDescription, featureTests )
@@ -260,11 +261,6 @@ function BooneUnit:summary()
     return table.concat( textTable, "\n" )
 end
 
-function BooneUnit:summarize()
-        local unitTally = self:tally()
-        print( string.format("\n\n------- %s -------\n", self:status(unitTally) ) )
-end
-
 -- ---------------------- --
 --   Feature Info class   --
 -- ---------------------- --
@@ -387,7 +383,7 @@ function BooneUnit.TestInfo:report() --TODO: add 'detailed' parameter
     local midChunk   = '│ │ '
     local endChunk   = '│ ╰>'
     local reportTable = {}
-    table.insert( reportTable, string.format( '"%s"\n%s', self.description, bigDivider) )
+    table.insert( reportTable, string.format( '%s\n%s', self.description, bigDivider) )
     for i, v in ipairs( self.results ) do
         table.insert( reportTable, string.format( '%sexpected: %s', startChunk, v.expected ) )
         table.insert( reportTable, string.format( '%sactual:   %s', midChunk, v.actual ) )
@@ -409,3 +405,8 @@ end
 function BooneUnit.TestInfo:formatStatus( status )
     return "status"
 end
+
+parameter.action("BooneUnit Runner", function()
+    _ = BooneUnit()
+    _:execute()
+end) 

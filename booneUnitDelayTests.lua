@@ -1,4 +1,4 @@
-function bestBooneUnitDelay()
+function lestBooneUnitDelay()
     CodeaUnit.detailed = false
     local aBooneUnit = BooneUnit("Dwezil") 
     aBooneUnit.silent = true

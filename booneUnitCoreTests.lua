@@ -95,9 +95,9 @@ function testABooneUnit()
 end
     
 function testBooneUnitExpect()
-    aBooneUnit = BooneUnit("Dwezil")
     _.detailed = true
-    aBooneUnit.silent = false
+    aBooneUnit = BooneUnit("Dwezil")
+    aBooneUnit.silent = true
     aBooneUnit:reset()
     _:describe( "Function aBooneUnit:expect() takes an argument and returns" ..
                 " a set of functions which evaluate that argument.", function()
@@ -451,7 +451,9 @@ function testBooneUnitExpect()
     end )
 end
 
-function testBooneUnitIgnore()    
+function testBooneUnitIgnore()
+    local aBooneUnit = BooneUnit("Dweezil")
+    aBooneUnit.silent = true
     -- Testing aBooneUnit.ignore()
     _:describe( "aBooneUnit.ignore() stores a result but does not run a test", function()
         _:test( "aBooneUnit.ignore is a function", function()        

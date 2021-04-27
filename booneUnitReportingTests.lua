@@ -1,7 +1,7 @@
 function testTestReport()
     CodeaUnit.detailed = true
     local aBooneUnit = BooneUnit("Dweezil")
-    aBooneUnit.silent = nil
+    aBooneUnit.silent = true
     
     _:describe( 'TestInfo:report()\nReturns a string describing the individual results of that test',
                 function()
@@ -38,7 +38,7 @@ function testBooneUnitTally()
     -- local _ = BooneUnit("Testor")
     CodeaUnit.detailed = false
     local aBooneUnit = BooneUnit("Dweezil")
-    aBooneUnit.silent = false
+    aBooneUnit.silent = true
     
     local doSomeTests = function() --run some tests
         aBooneUnit:describe( "The First Feature", function()
