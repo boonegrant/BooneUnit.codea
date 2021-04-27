@@ -226,15 +226,15 @@ function testBooneUnitFeature()
         featureTally.total = nil  -- Already tested, need this empty to do the next section of tests
         for key, value in pairs( featureTally ) do
             _:test( string.format( 'report string contains "%s" and sum: %d',
-                aBooneUnit._tallyCategoryNames[key], value ), function()
+                TallyTerpreter.tallyCategoryNames[key], value ), function()
                 print( featureReport )
                 _:expect( string.find( featureReport, value .. " " ) ).isnt( nil )
-                _:expect( string.find( featureReport, aBooneUnit._tallyCategoryNames[key] ) ).isnt( nil )
+                _:expect( string.find( featureReport, TallyTerpreter.tallyCategoryNames[key] ) ).isnt( nil )
             end )
         end
         _:test( 'If a result category is empty, such as "pending" in this case,'..
                 ' then it is not present in the report string', function() 
-            _:expect( string.find( featureReport, aBooneUnit._tallyCategoryNames.pending ) ).is( nil )
+            _:expect( string.find( featureReport, TallyTerpreter.tallyCategoryNames.pending ) ).is( nil )
         end )
     end )
     

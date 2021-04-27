@@ -1,15 +1,5 @@
 BooneUnit = class()
 BooneUnit.id = "BooneUnit"
-BooneUnit._tallyCategoryOrder = { "pass", "ignore", "empty", "pending", "fail" } -- in ascending order of priority
-BooneUnit._tallyCategoryNames = { 
-    pass     = "Passed", 
-    ignore   = "Ignored", 
-    empty    = "Empty",
-    pending  = "Pending", 
-    fail     = "Failed",
-    total    = "Tests",
-    features = "Features"
-    }
 BooneUnit._errorMsgs = { 
     testInsideTest = '"BooneUnit:test()" declaration cannot be made inside another "test()" declaration',
     expectWithoutTest = '"BooneUnit:expect()" statements should be placed inside a "test()" declaration',

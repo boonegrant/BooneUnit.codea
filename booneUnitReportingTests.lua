@@ -344,6 +344,25 @@ function testExecute()
     
     
 end
+
+function tallyTerpreter()
+    -- Result categories
+    local definedTallyCategories = { "pass", "fail", "ignore", "pending", "empty" }
+    _:test( string.format( "There are %d tally categories", #definedTallyCategories ), function ()
+        _:expect( #aBooneUnit._tallyCategoryOrder ).is( #definedTallyCategories )
+    end )
+    -- tableHasValueTest()
+    for i, v in ipairs(definedTallyCategories) do
+        _:test( string.format( 'aBooneUnit.tallyCategoryOrder has "%s"', v ), function()
+            _:expect( aBooneUnit._tallyCategoryOrder ).has( v )
+        end)
+    end
+    for i, v in ipairs(definedTallyCategories) do
+        _:test( string.format( 'aBooneUnit._tallyCategoryNames has key "%s"', v ), function()
+            _:expect( aBooneUnit._tallyCategoryNames[ v ] ).isnt( nil )
+        end)
+    end
+end
     
 -- test output and report functions
 -- test "test within test" error

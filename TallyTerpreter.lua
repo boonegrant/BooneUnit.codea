@@ -1,7 +1,7 @@
 TallyTerpreter = class()
 
 do 
-    TallyTerpreter.tallyCategoryOrder = BooneUnit._tallyCategoryOrder
+    TallyTerpreter.tallyCategoryOrder = { "pass", "ignore", "empty", "pending", "fail" } -- in ascending order of priority
     TallyTerpreter.tallyHeaderOrder = { "total", "features" }
     TallyTerpreter.tallyCategoryNames = { 
         pass     = "Passed", 
