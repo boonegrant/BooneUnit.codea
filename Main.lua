@@ -6,6 +6,8 @@ end
 
 -- Use this function to perform your initial setup
 function setup()
+    currentTest = testBooneUnitTest
+    parameter.action( "testCurrent()", currentTest )
     afun = function() 
         -- print( "Average expectations" )
         -- BooneUnit:expect( math.pie() ).is( 3 )

@@ -243,11 +243,11 @@ function BooneUnit:summary()
     local divider = "**************************"
     local textTable = { divider }
     table.insert( textTable, unitTally:headerToString() )
-    table.insert( textTable, divider )
+    table.insert( textTable, "" )
     table.insert( textTable, unitTally:bodyToString() )
     table.insert( textTable, divider )
     table.insert( textTable, string.format("\n------- %s -------\n", self:status() ) )
-    table.insert( textTable, divider )
+    table.insert( textTable, "" )
     return table.concat( textTable, "\n" )
 end
 

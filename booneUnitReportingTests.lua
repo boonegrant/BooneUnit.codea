@@ -161,12 +161,12 @@ function testBooneUnitSummary()
         end )
         _:test( "BooneUnit:summary() string contains total number of "..
                 "tests recorded", function()
-            print( aBooneUnit:summary() )
+            -- print( aBooneUnit:summary() )
             _:expect( string.find( aBooneUnit:summary(), 
                                    " "..string.format( "%i", (aBooneUnit:tally().total) ) 
                                   ) ).isnt( nil )
             doSomeTests()
-            print( aBooneUnit:summary() )
+            -- print( aBooneUnit:summary() )
             _:expect( string.find( aBooneUnit:summary(), 
                                    " "..string.format( "%i", (aBooneUnit:tally().total) ) 
                                   ) ).isnt( nil )
@@ -366,5 +366,3 @@ end
     
 -- test output and report functions
 -- test "test within test" error
-currentTest = testBooneUnitStatus
-parameter.action( "testCurrent()", currentTest )

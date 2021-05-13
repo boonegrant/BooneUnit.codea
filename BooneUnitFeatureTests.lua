@@ -1,7 +1,7 @@
 function testBooneUnitFeature() 
     -- Feature Creation --
     CodeaUnit.detailed = true
-    aBooneUnit.silent = false
+    aBooneUnit.silent = true
     aBooneUnit:reset()
     local atestDesc = "location: Springfield"
     local atestFunc = function ()
@@ -220,14 +220,14 @@ function testBooneUnitFeature()
         local featureTally = thisFeature:tally()
         local featureReport = thisFeature:report()
         _:test( 'report string contains number of total tests: 10', function()
-            print( featureReport )
+            -- print( featureReport )
             _:expect( string.find( featureReport, featureTally.total ) ).isnt( nil )
         end )
         featureTally.total = nil  -- Already tested, need this empty to do the next section of tests
         for key, value in pairs( featureTally ) do
             _:test( string.format( 'report string contains "%s" and sum: %d',
                 TallyTerpreter.tallyCategoryNames[key], value ), function()
-                print( featureReport )
+                -- print( featureReport )
                 _:expect( string.find( featureReport, value .. " " ) ).isnt( nil )
                 _:expect( string.find( featureReport, TallyTerpreter.tallyCategoryNames[key] ) ).isnt( nil )
             end )

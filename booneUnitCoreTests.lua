@@ -28,14 +28,14 @@ function testABooneUnit()
         
         -- Public methods list
         local publicUnitMethods = { describe = "function",
-                                    reset = "function",
-                                    ignore = "function",
-                                    test = "function",
-                                    delay = "function",
-                                    before = "function",
-                                    after = "function",
-                                    tally = "function", 
-                                    summary = "function" }
+                                    reset    = "function",
+                                    ignore   = "function",
+                                    test     = "function",
+                                    delay    = "function",
+                                    before   = "function",
+                                    after    = "function",
+                                    tally    = "function", 
+                                    summary  = "function" }
         memberTypeTest( "public methods: aBooneUnit", aBooneUnit, publicUnitMethods )
         -- reset exists
         _:test( "reset exists", function ()
@@ -488,6 +488,7 @@ function testBooneUnitIgnore()
 end
 
 function testBooneUnitTest()
+    local aBooneUnit = BooneUnit("Dweezil")
     aBooneUnit:reset()
     CodeaUnit.detailed = false
     aBooneUnit.silent = true
@@ -575,8 +576,8 @@ function testBooneUnitTest()
                 local anEmptyTestFunc = function() end 
                 local testTable = aBooneUnit:test( aTestDesc, anEmptyTestFunc )
                 for j = 1, i do
+                    --append entry to table test.results
                     testTable:registerResult( true, "foo", j*j )
-                    --appends entry to table test.results
                 end
                 local target = testTable.results[#testTable.results]
                 _:expect( target.expected ).is( i*i )
@@ -643,7 +644,7 @@ function testBooneUnitTest()
             thisTestDesc = string.format( "call expect( table ).has( value ) %d times," ..
                                           " results[%d] contains value %s", i, i, v )
             -- not working! (due to making has results more descriptive)
-            _:ignore( thisTestDesc, function() 
+            _:test( thisTestDesc, function() 
                 local aTestDesc = string.format( "%d expectations", i )
                  testTable = aBooneUnit:test( aTestDesc, function()
                     for j = 1, i do
@@ -651,7 +652,7 @@ function testBooneUnitTest()
                     end
                 end )
                 target = testTable.results[ #testTable.results ]
-                _:expect( target.expected ).is( v )
+                _:expect( target.expected ).is( string.format("HAS %s", v) )
             end )
         end
     end )
