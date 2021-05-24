@@ -1,8 +1,9 @@
 TallyTerpreter = class()
 
+-- setup
 do 
     TallyTerpreter.tallyCategoryOrder = { "pass", "ignore", "empty", "pending", "fail" } -- in ascending order of priority
-    TallyTerpreter.tallyHeaderOrder = { "total", "features" }
+    TallyTerpreter.tallyHeaderOrder = { "features", "total" }
     TallyTerpreter.tallyCategoryNames = { 
         pass     = "Passed", 
         ignore   = "Ignored", 
@@ -35,7 +36,8 @@ function TallyTerpreter:init( tallyTable )
     end
 end
 
-function TallyTerpreter:filteredToString( orderedCategoryTable, separator )
+-- stringFromFilter
+function TallyTerpreter:stringFromFilter( orderedCategoryTable, separator )
     orderedFilter = orderedFilter or {}
     separator = separator or "\n" -- Backfill default
     local textTable = {}
@@ -50,13 +52,11 @@ function TallyTerpreter:filteredToString( orderedCategoryTable, separator )
 end
 
 function TallyTerpreter:bodyToString( separator )
-    separator = separator or "\n" -- Backfill default
-    return self:filteredToString( self.tallyCategoryOrder, separator )
+    return self:stringFromFilter( self.tallyCategoryOrder, separator )
 end
 
 function TallyTerpreter:headerToString( separator )
-    separator = separator or ", " -- Backfill default
-    return self:filteredToString( self.tallyHeaderOrder, separator )
+    return self:stringFromFilter( self.tallyHeaderOrder, separator )
 end
 
 function TallyTerpreter:status()
@@ -74,8 +74,8 @@ function TallyTerpreter:status()
                 countString = string.format( "%i", self[ currentCategory ] )
             end
             local statusString = string.format( "%s %s", 
-                                  countString,
-                                  self.tallyCategoryNames[ currentCategory ] )
+                                 countString,
+                                 self.tallyCategoryNames[ currentCategory ] )
             local statusColor = self.tallyStatusColors[ currentCategory ] or 
                                 self.tallyStatusColors[ "other" ]
             return statusString, statusColor

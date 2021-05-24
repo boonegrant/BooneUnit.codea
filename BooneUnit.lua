@@ -242,7 +242,7 @@ function BooneUnit:summary()
     local unitTally = self:tally()
     local divider = "**************************"
     local textTable = { divider }
-    table.insert( textTable, unitTally:headerToString() )
+    table.insert( textTable, unitTally:headerToString("\n") )
     table.insert( textTable, "" )
     table.insert( textTable, unitTally:bodyToString() )
     table.insert( textTable, divider )
@@ -368,10 +368,13 @@ function BooneUnit.TestInfo:status()
 end
 
 function BooneUnit.TestInfo:report() --TODO: add 'detailed' parameter
-    local bigDivider = '--------'
-    local startChunk = '├─○ '
-    local midChunk   = '│ │ '
-    local endChunk   = '│ ╰──> '
+    local bigDivider       = '--------'
+    local startChunk       = '├─○ '
+    local startChunkIndent = '│ │   '
+    local midChunk         = '│ │ '
+    local midChunkIndent   = '│ │   '
+    local endChunk         = '│ ╰──>  '
+    local endChunkIndent   = '│       '
     local reportTable = {}
     table.insert( reportTable, string.format( '%s', self.description ) )
     for i, v in ipairs( self.results ) do

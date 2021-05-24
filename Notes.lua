@@ -14,7 +14,7 @@ end
 
 (X) make booneunit a class
 (X) booneUnits have id
-( ) use booneunit to run self tests
+(X) use booneunit to run self tests
 
 () check where print() statements come from
 () all print statements made by BooneUnit
@@ -24,8 +24,9 @@ end
 ( ) testInfo.report() output to console
     detailed arg
 
-(X) BooneUnit.tally()
-( ) BooneUnit.report() 
+(X) BooneUnit:tally()
+(X) BooneUnit:summary()
+( ) BooneUnit:report() 
 
 () expect() takes description argument
 

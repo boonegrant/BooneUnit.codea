@@ -21,14 +21,15 @@ function testTestReport()
             end)
             _:expect( string.find( aTest:report(), aTest:status(), 1, true ) ).isnt( nil )
         end )
-        _:ignore( 'the "TestInfo:report()" string contains an entry for each '..
+        _:test( 'the "TestInfo:report()" string contains an entry for each '..
                 '":expect()" statement in the test', function()
             local testDescription = "Double Expectation" 
             local aTest = aBooneUnit:test( testDescription, function()
                 aBooneUnit:expect( true ).isnt( false )
                 aBooneUnit:expect( 2+2 ).is( 5 )
             end)
-            _:expect( string.find( aTest:report(), "(a)", 1, true ) ).isnt( nil )
+            _:expect( string.find( aTest:report(), "true", 1, true ) ).isnt( nil )
+            _:expect( string.find( aTest:report(), "false", 1, true ) ).isnt( nil )
         end )
     end )
     
