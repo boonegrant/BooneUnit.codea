@@ -95,7 +95,11 @@ function bestBasics()
         _:test("Failing test", function()
             _:expect("Foo").is("Bar")
         end)
-
+        
+        _:test("Test with code error", function()
+            _:expect( 5 + "dog" ).is( "5dog" )
+        end)
+                
         _:test("Test with Great Expectations", function()
             local someWord = "Foo"
             local someNumber = (2+2)
