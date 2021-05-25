@@ -320,7 +320,7 @@ end
 function BooneUnit.TestInfo:run( scenario )
     local status, error = pcall( scenario or function() end )
     if error then
-        self:registerResult( false, "ERROR", error )
+        self:registerResult( false, "success", "ERROR: " .. error )
     end
 end
 
@@ -392,6 +392,17 @@ function BooneUnit.TestInfo:formatHeader( description )
 end
 
 function BooneUnit.TestInfo:formatResult( expected, actual, outcome )
+    local startChunk       = '├─○ '
+    local startChunkIndent = '│ │   '
+    local midChunk         = '│ │ '
+    local midChunkIndent   = '│ │   '
+    local endChunk         = '│ ╰──>  '
+    local endChunkIndent   = '│       '
+    reportTable = {}
+    table.insert( reportTable, string.format( '%sexpected: %s', startChunk, v.expected ) )
+    table.insert( reportTable, string.format( '%sactual:   %s', midChunk, v.actual ) )
+    table.insert( reportTable, string.format( '%s(%s)', endChunk, v.outcome ) )
+
     return "result"
 end
 
