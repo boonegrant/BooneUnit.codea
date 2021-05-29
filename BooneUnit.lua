@@ -113,7 +113,7 @@ function BooneUnit:_continue( thisTest, pendingIndex, scenario )
     table.remove( thisTest.results, pendingIndex )
 end
 
-function BooneUnit:expect( conditional ) -- TODO: add name arg
+function BooneUnit:expect( conditional, description ) -- TODO: add name arg
     local thisTest = self._currentTest
     -- Usage check: expect statements must occur inside a test statement
     if thisTest == nil then
@@ -123,13 +123,13 @@ function BooneUnit:expect( conditional ) -- TODO: add name arg
         
     local is = function(expected)
         -- notify(conditional == expected, expected)
-        thisTest:registerResult( conditional == expected, conditional, expected )
+        thisTest:registerResult( conditional == expected, conditional, expected, description )
         return(conditional == expected)
     end
 
     local isnt = function(expected)
         -- notify( conditional ~= expected, string.format("not %s", expected) )
-        thisTest:registerResult( conditional ~= expected, conditional, string.format("NOT %s", expected) )
+        thisTest:registerResult( conditional ~= expected, conditional, string.format("NOT %s", expected), description )
         return( conditional ~= expected )
     end
 
@@ -150,7 +150,7 @@ function BooneUnit:expect( conditional ) -- TODO: add name arg
              
         end
         --notify(found, expected)
-        thisTest:registerResult( found, actual, string.format("HAS %s", expected) )
+        thisTest:registerResult( found, actual, string.format("HAS %s", expected), description )
         return found
     end
 
@@ -167,7 +167,8 @@ function BooneUnit:expect( conditional ) -- TODO: add name arg
                 -- no error thrown
                 thisTest:registerResult( false, 
                                          "No error thrown", 
-                                         string.format('THROWN: "%s"', expected) )
+                                         string.format('THROWN: "%s"', expected),
+                                         description )
                 return false
             else 
                 -- some error was thrown 
@@ -185,7 +186,8 @@ function BooneUnit:expect( conditional ) -- TODO: add name arg
                 -- register and return findings
                 thisTest:registerResult( foundExpectedError, 
                                          string.format('ERROR- "%s"', error),
-                                         string.format('THROWN- "%s"', expected) )
+                                         string.format('THROWN- "%s"', expected),
+                                         description )
                 return foundExpectedError
             end
         end
