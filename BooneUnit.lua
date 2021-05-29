@@ -315,12 +315,19 @@ function BooneUnit.TestInfo:init( parent, testDescription, scenario )
     self.feature = parent  -- not sure I need this, may be useful for delayed reports
     self.description = tostring(testDescription or "")
     self.results = {}
+    if lineBrake then  -- utility for wrapping console output
+        self.preWrap = lineBrake.prefixedWrapString
+    else
+        self.preWrap = function( someText, numChars, prefix ) 
+            return prefix .. someText
+        end
+    end
 end
 
 function BooneUnit.TestInfo:run( scenario )
     local status, error = pcall( scenario or function() end )
     if error then
-        self:registerResult( false, "success", "ERROR: " .. error )
+        self:registerResult( false, "-ERROR- " .. error, "" )
     end
 end
 
@@ -378,9 +385,7 @@ function BooneUnit.TestInfo:report() --TODO: add 'detailed' parameter
     local reportTable = {}
     table.insert( reportTable, string.format( '%s', self.description ) )
     for i, v in ipairs( self.results ) do
-        table.insert( reportTable, string.format( '%sexpected: %s', startChunk, v.expected ) )
-        table.insert( reportTable, string.format( '%sactual:   %s', midChunk, v.actual ) )
-        table.insert( reportTable, string.format( '%s(%s)', endChunk, v.outcome ) )
+        table.insert( reportTable, self:formatResult( v ) )
     end
     table.insert( reportTable, string.format( '%s\n[ %s ]', bigDivider, self:status() ) )
     return table.concat( reportTable, '\n' )
@@ -391,19 +396,23 @@ function BooneUnit.TestInfo:formatHeader( description )
     return "header"
 end
 
-function BooneUnit.TestInfo:formatResult( expected, actual, outcome )
+function BooneUnit.TestInfo:formatResult( result )
+    local lineLength = 30
     local startChunk       = '├─○ '
     local startChunkIndent = '│ │   '
     local midChunk         = '│ │ '
     local midChunkIndent   = '│ │   '
-    local endChunk         = '│ ╰──>  '
+    local endChunk         = '│ ╰───> '
     local endChunkIndent   = '│       '
-    reportTable = {}
-    table.insert( reportTable, string.format( '%sexpected: %s', startChunk, v.expected ) )
-    table.insert( reportTable, string.format( '%sactual:   %s', midChunk, v.actual ) )
-    table.insert( reportTable, string.format( '%s(%s)', endChunk, v.outcome ) )
+    local expected = string.format( 'expected: %s', result.expected )
+    local actual   = string.format( 'actual:   %s', result.actual )
+    local outcome  = string.format( '(%s)', result.outcome )
+    local reportTable = {}
+    table.insert( reportTable, self.preWrap( expected, lineLength, startChunk, startChunkIndent ) )
+    table.insert( reportTable, self.preWrap( actual,   lineLength, midChunk,   midChunkIndent ) )
+    table.insert( reportTable, self.preWrap( outcome,  lineLength, endChunk,   endChunkIndent ) )
 
-    return "result"
+    return table.concat( reportTable, "\n" )
 end
 
 function BooneUnit.TestInfo:formatStatus( status )

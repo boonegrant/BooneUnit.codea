@@ -19,7 +19,9 @@
 		<string>Main</string>
 	</array>
 	<key>Dependencies</key>
-	<array/>
+	<array>
+		<string>Documents:LineBrake</string>
+	</array>
 	<key>Description</key>
 	<string>No description available</string>
 </dict>
