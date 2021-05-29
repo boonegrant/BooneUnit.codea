@@ -376,12 +376,6 @@ end
 
 function BooneUnit.TestInfo:report() --TODO: add 'detailed' parameter
     local bigDivider       = '--------'
-    local startChunk       = '├─○ '
-    local startChunkIndent = '│ │   '
-    local midChunk         = '│ │ '
-    local midChunkIndent   = '│ │   '
-    local endChunk         = '│ ╰──>  '
-    local endChunkIndent   = '│       '
     local reportTable = {}
     table.insert( reportTable, string.format( '%s', self.description ) )
     for i, v in ipairs( self.results ) do
