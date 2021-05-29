@@ -1,7 +1,7 @@
 TallyTerpreter = class()
 
 -- setup
-do 
+do  -- enclosed to keep local variables from polluting global namespace
     TallyTerpreter.tallyCategoryOrder = { "pass", "ignore", "empty", "pending", "fail" } -- in ascending order of priority
     TallyTerpreter.tallyHeaderOrder = { "features", "total" }
     TallyTerpreter.tallyCategoryNames = { 
