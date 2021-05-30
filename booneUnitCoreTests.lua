@@ -583,9 +583,9 @@ function testBooneUnitTestResults()
                     thisTestInfo:registerResult( true, j, j*j, string.format( "%dth result", i ) )
                 end
                 local target = thisTestInfo.results[#thisTestInfo.results]
-                _:expect( target.outcome  ).is( true )
-                _:expect( target.actual ).is( i )
-                _:expect( target.expected ).is( i*i )
+                _:expect( target.outcome     ).is( true )
+                _:expect( target.actual      ).is( i )
+                _:expect( target.expected    ).is( i*i )
                 _:expect( target.description ).is( tostring(i) .. "th result" )
             end )
         end
@@ -615,11 +615,14 @@ function testBooneUnitTestResults()
                 local aTestDesc = string.format( "%d expectations", i )
                 local thisTestInfo = aBooneUnit:test( aTestDesc, function()
                     for j = 1, i do
-                        aBooneUnit:expect( j*j ).is( j*j )
+                        aBooneUnit:expect( j*j, tostring(j).." squared" ).is( j*j )
                     end
                 end )
                 target = thisTestInfo.results[ #thisTestInfo.results ]
-                _:expect( target.actual ).is( i*i )
+                _:expect( target.outcome,     "outcome"  ).is( true )
+                _:expect( target.actual,      "actual"   ).is( i*i )
+                _:expect( target.expected,    "expected" ).is( i*i )
+                _:expect( target.description, "descript" ).is( tostring(i) .. " squared" )
             end )
         end
     end )

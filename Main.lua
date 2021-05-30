@@ -6,8 +6,15 @@ end
 
 -- Use this function to perform your initial setup
 function setup()
-    currentTest = testBooneUnitTest
-    parameter.action( "testCurrent()", currentTest )
+    currentTest = testBooneUnitTestResults
+    parameter.action( "testCurrent()", function() 
+        output.clear()
+        if _.reset then _:reset() end
+        currentTest()
+        if _.summary then
+            print( _:summary() )
+        end
+    end )
     afun = function() 
         -- print( "Average expectations" )
         -- BooneUnit:expect( math.pie() ).is( 3 )
@@ -74,8 +81,8 @@ function bestBasics()
             _:expect("Bar").isnt("Foo")
         end)
 
-        _:test("Containment test", function()
-            local aTable = { foo = "Bar", bopper = "Big", 42}
+        _:test("Containment test - Table contains value", function()
+            local aTable = { foo = "Bar", bopper = "Big", 17, 42}
             _:expect(aTable).has("Bar")
             _:expect(aTable).has(42)
             _:expect(aTable).has("Baz")
@@ -100,20 +107,20 @@ function bestBasics()
             _:expect( 5 + "dog" ).is( "5dog" )
         end)
                 
-        _:test("Test with Great Expectations", function()
+        _:test("Test with Great Expectations (and descriptions)", function()
             local someWord = "Foo"
             local someNumber = (2+2)
-            _:expect(someWord).is("Foo")
-            _:expect(someWord).is("foo")
+            _:expect(someWord, "First Expectation" ).is("Foo")
+            _:expect(someWord, "Second Expectation" ).is("foo")
             someWord = "Bar"
-            _:expect(someWord).is("Bar")
-            _:expect(someNumber).is(4)
+            _:expect(someWord, "Yet Another Expectation").is("Bar")
+            _:expect(someNumber, "One final Expectation").is(4)
         end)
     end)
 end
 
 parameter.action( "BooneUnit Basic Tests", function()
-    _ = BooneUnit("yobba-dobba")
+    _ = BooneUnit("Basic Tests")
     bestBasics()
     print( _:summary() )
 end)

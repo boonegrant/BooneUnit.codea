@@ -408,7 +408,13 @@ function BooneUnit.TestInfo:formatResult( result )
     local actual   = string.format( 'actual:   %s', result.actual )
     local outcome  = string.format( '(%s)', result.outcome )
     local reportTable = {}
-    table.insert( reportTable, self.preWrap( expected, lineLength, startChunk, startChunkIndent ) )
+    if result.description then  --start with description
+        local description = string.format( '"%s"', result.description )
+        table.insert( reportTable, self.preWrap( description, lineLength, startChunk, startChunkIndent ) )
+        table.insert( reportTable, self.preWrap( expected, lineLength, midChunk, midChunkIndent ) )
+    else                        -- no description, start with expected
+        table.insert( reportTable, self.preWrap( expected, lineLength, startChunk, startChunkIndent ) )
+    end
     table.insert( reportTable, self.preWrap( actual,   lineLength, midChunk,   midChunkIndent ) )
     table.insert( reportTable, self.preWrap( outcome,  lineLength, endChunk,   endChunkIndent ) )
 
