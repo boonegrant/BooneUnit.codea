@@ -16,7 +16,7 @@ function lestBooneUnitDelay()
         end )
         _:test( "aBooneUnit:delay() sets test status to pending", function()
             local doneDelayStuff = false
-            local testTable = aBooneUnit:test( "do a delay", function()
+            local thisTestInfo = aBooneUnit:test( "do a delay", function()
                 aBooneUnit:delay( 0.01, function() 
                     doneDelayStuff = true
                     _:expect( aBooneUnit._currentTest:status() ).is( "pending" )
@@ -25,13 +25,13 @@ function lestBooneUnitDelay()
         end )
         _:test( "aBooneUnit:_continue() removes pending status ", function()
             local doneDelayStuff = false
-            local testTable = aBooneUnit:test( "do a delay", function()
+            local thisTestInfo = aBooneUnit:test( "do a delay", function()
                 aBooneUnit:delay( 0.001, function() 
                     doneDelayStuff = true
                 end )
             end )
             tween.delay( 0.2, function()
-                _:expect( testTable:status() ).isnt( "pending" )
+                _:expect( thisTestInfo:status() ).isnt( "pending" )
             end )
         end )
         ---[[

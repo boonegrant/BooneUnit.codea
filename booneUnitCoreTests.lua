@@ -487,11 +487,14 @@ function testBooneUnitIgnore()
     end )
 end
 
-function testBooneUnitTest()
+--add test for erroneous code in test() 
+
+function testBooneUnitTestResults()
     local aBooneUnit = BooneUnit("Dweezil")
     aBooneUnit:reset()
     CodeaUnit.detailed = false
     aBooneUnit.silent = true
+    
     -- aBooneUnit.test()
     _:describe( "aBooneUnit.test() produces and stores a TestInfo object", function()
         _:test( "aBooneUnit.test() exists", function()
@@ -547,8 +550,8 @@ function testBooneUnitTest()
         _:test( 'With empty test, length of table "results" is 0', function()
             local testDesc = "Gingerbread Man"
             local emptyTestFunc = function() end 
-            local testTable = aBooneUnit:test( testDesc, emptyTestFunc )
-            _:expect( #testTable.results ).is( 0 )
+            local thisTestInfo = aBooneUnit:test( testDesc, emptyTestFunc )
+            _:expect( #thisTestInfo.results ).is( 0 )
         end )
     end)
     --test.registerResult() appends table
@@ -558,45 +561,48 @@ function testBooneUnitTest()
             _:test( thisTestDesc, function() 
                 local aTestDesc = "Stinky-Cheese Man"
                 local anEmptyTestFunc = function() end 
-                local testTable = aBooneUnit:test( aTestDesc, anEmptyTestFunc )
+                local thisTestInfo = aBooneUnit:test( aTestDesc, anEmptyTestFunc )
                 for j = 1, i do
-                    testTable:registerResult( true, "foo", "bar" )
+                    thisTestInfo:registerResult( true, "foo", "bar" )
                 end
-                _:expect( #testTable.results ).is( i )
+                _:expect( #thisTestInfo.results ).is( i )
             end )
         end
     end )
-    
-    --test.registerResult(result, actual, expected) stores data
+
+    --testInfo:registerResult(result, actual, expected) stores data
     _:describe( "TestInfo:registerResult(outcome, expected, actual) stores data in test.results", function()
         for i = 1, 5 do
             thisTestDesc = string.format( 'registerResult(true, "foo", n^2); result[n] matches; n=%d', i )
             _:test( thisTestDesc, function() 
                 local aTestDesc = "Stinky-Cheese Man"
                 local anEmptyTestFunc = function() end 
-                local testTable = aBooneUnit:test( aTestDesc, anEmptyTestFunc )
+                local thisTestInfo = aBooneUnit:test( aTestDesc, anEmptyTestFunc )
                 for j = 1, i do
                     --append entry to table test.results
-                    testTable:registerResult( true, "foo", j*j )
+                    thisTestInfo:registerResult( true, j, j*j, string.format( "%dth result", i ) )
                 end
-                local target = testTable.results[#testTable.results]
+                local target = thisTestInfo.results[#thisTestInfo.results]
+                _:expect( target.outcome  ).is( true )
+                _:expect( target.actual ).is( i )
                 _:expect( target.expected ).is( i*i )
+                _:expect( target.description ).is( tostring(i) .. "th result" )
             end )
         end
     end )
-    
+
     -- aBooneUnit:expect().is() also appends a table to aTest.results
     _:describe( '"aBooneUnit:expect().is()" appends a table to aTest.results', function()
         for i = 0, 5 do
             thisTestDesc = string.format( "call expect().is() %d times, results length is %d", i, i )
             _:test( thisTestDesc, function() 
                 local aTestDesc = string.format( "%d expectations", i )
-                local testTable = aBooneUnit:test( aTestDesc, function()
+                local thisTestInfo = aBooneUnit:test( aTestDesc, function()
                     for j = 1, i do
                         aBooneUnit:expect( j*j ).is( j*j )
                     end
                 end )
-                _:expect( #testTable.results ).is( i )
+                _:expect( #thisTestInfo.results ).is( i )
             end )
         end
     end )
@@ -607,12 +613,12 @@ function testBooneUnitTest()
             thisTestDesc = string.format( "call expect(n).is(n) %d times, results[%d] contains n", i, i )
             _:test( thisTestDesc, function() 
                 local aTestDesc = string.format( "%d expectations", i )
-                local testTable = aBooneUnit:test( aTestDesc, function()
+                local thisTestInfo = aBooneUnit:test( aTestDesc, function()
                     for j = 1, i do
                         aBooneUnit:expect( j*j ).is( j*j )
                     end
                 end )
-                target = testTable.results[ #testTable.results ]
+                target = thisTestInfo.results[ #thisTestInfo.results ]
                 _:expect( target.actual ).is( i*i )
             end )
         end
@@ -624,12 +630,12 @@ function testBooneUnitTest()
             thisTestDesc = string.format( "call expect(n).isnt(n) %d times, results[%d] contains n", i, i )
             _:test( thisTestDesc, function() 
                 local aTestDesc = string.format( "%d expectations", i )
-                local testTable = aBooneUnit:test( aTestDesc, function()
+                local thisTestInfo = aBooneUnit:test( aTestDesc, function()
                     for j = 1, i do
                         aBooneUnit:expect( j*j ).isnt( j*j )
                     end
                 end )
-                target = testTable.results[ #testTable.results ]
+                target = thisTestInfo.results[ #thisTestInfo.results ]
                 _:expect( target.outcome ).is( false )
             end )
         end
@@ -643,15 +649,14 @@ function testBooneUnitTest()
         for i, v in ipairs( bTable ) do
             thisTestDesc = string.format( "call expect( table ).has( value ) %d times," ..
                                           " results[%d] contains value %s", i, i, v )
-            -- not working! (due to making has results more descriptive)
             _:test( thisTestDesc, function() 
                 local aTestDesc = string.format( "%d expectations", i )
-                 testTable = aBooneUnit:test( aTestDesc, function()
+                 thisTestInfo = aBooneUnit:test( aTestDesc, function()
                     for j = 1, i do
                         aBooneUnit:expect( aTable ).has( bTable[ j ] )
                     end
                 end )
-                target = testTable.results[ #testTable.results ]
+                target = thisTestInfo.results[ #thisTestInfo.results ]
                 _:expect( target.expected ).is( string.format("HAS %s", v) )
             end )
         end
@@ -663,49 +668,49 @@ function testBooneUnitTest()
                 " and all results are true", function()
         _:test( "passed() returns false if there were no results", function() 
             aBooneUnit:reset()
-            local testTable = aBooneUnit:test( "an empty test", function()end )
-            _:expect( testTable:passed() ).is( false )
+            local thisTestInfo = aBooneUnit:test( "an empty test", function()end )
+            _:expect( thisTestInfo:passed() ).is( false )
         end )
         _:test( "passed() returns true if there is one true result", function()
-            local testTable = aBooneUnit:test( "one true result", function()
+            local thisTestInfo = aBooneUnit:test( "one true result", function()
                 aBooneUnit:expect(true).is(true)
             end )
-            _:expect( testTable:passed() ).is( true )
+            _:expect( thisTestInfo:passed() ).is( true )
         end)
         _:test( "passed() returns true if there are two true results", function()
-            local testTable = aBooneUnit:test( "two true results", function()
+            local thisTestInfo = aBooneUnit:test( "two true results", function()
                 aBooneUnit:expect(true).is(true)
                 aBooneUnit:expect(false).is(false)
             end )
-            _:expect( testTable:passed() ).is( true )
+            _:expect( thisTestInfo:passed() ).is( true )
         end)
         
         _:test( "passed() returns true if there are ten true results", function()
-            local testTable = aBooneUnit:test( "ten true results", function()
+            local thisTestInfo = aBooneUnit:test( "ten true results", function()
                 for i = 1, 5 do
                     aBooneUnit:expect(true).is(true)
                     aBooneUnit:expect(false).is(false)
                 end
             end )
-            _:expect( testTable:passed() ).is( true )
+            _:expect( thisTestInfo:passed() ).is( true )
         end)
         
         _:test( "passed() returns false if there is one false result", function()
-            local testTable = aBooneUnit:test( "one false result", function()
+            local thisTestInfo = aBooneUnit:test( "one false result", function()
                 aBooneUnit:expect(true).is(false)
             end )
-            _:expect( testTable:passed() ).is( false )
+            _:expect( thisTestInfo:passed() ).is( false )
         end)
         
         _:test( "passed() returns false if there are ten true results and one false one", function()
-            local testTable = aBooneUnit:test( "ten true results, one false", function()
+            local thisTestInfo = aBooneUnit:test( "ten true results, one false", function()
                 for i = 1, 5 do
                     aBooneUnit:expect(true).is(true)
                     aBooneUnit:expect(false).is(false)
                 end
                 aBooneUnit:expect(false).is(true)
             end )
-            _:expect( testTable:passed() ).is( false )
+            _:expect( thisTestInfo:passed() ).is( false )
         end)
         
     end )
@@ -718,49 +723,49 @@ function testBooneUnitTest()
     _:describe( 'aBooneUnit:test():status()\nReturns a string describing the aggregate result status', function()
         _:test( 'status() returns "empty" if there were no results', function() 
             aBooneUnit:reset()
-            local testTable = aBooneUnit:test( "an empty test", function() end )
-            _:expect( testTable:status() ).is( "empty" )
+            local thisTestInfo = aBooneUnit:test( "an empty test", function() end )
+            _:expect( thisTestInfo:status() ).is( "empty" )
         end )
         _:test( "status() returns 'pass' if there is one true result", function()
-            local testTable = aBooneUnit:test( "one true result", function()
+            local thisTestInfo = aBooneUnit:test( "one true result", function()
                 aBooneUnit:expect(true).is(true)
             end )
-            _:expect( testTable:status() ).is( "pass" )
+            _:expect( thisTestInfo:status() ).is( "pass" )
         end)
         _:test( "status() returns 'pass' if there are two true results", function()
-            local testTable = aBooneUnit:test( "two true results", function()
+            local thisTestInfo = aBooneUnit:test( "two true results", function()
                 aBooneUnit:expect(true).is(true)
                 aBooneUnit:expect(false).is(false)
             end )
-            _:expect( testTable:status() ).is( "pass" )
+            _:expect( thisTestInfo:status() ).is( "pass" )
         end)
         
         _:test( "status() returns 'pass' if there are ten true results", function()
-            local testTable = aBooneUnit:test( "ten true results", function()
+            local thisTestInfo = aBooneUnit:test( "ten true results", function()
                 for i = 1, 5 do
                     aBooneUnit:expect(true).is(true)
                     aBooneUnit:expect(false).is(false)
                 end
             end )
-            _:expect( testTable:status() ).is( "pass" )
+            _:expect( thisTestInfo:status() ).is( "pass" )
         end)
         
         _:test( "status() returns 'fail' if there is one false result", function()
-            local testTable = aBooneUnit:test( "one false result", function()
+            local thisTestInfo = aBooneUnit:test( "one false result", function()
                 aBooneUnit:expect(true).is(false)
             end )
-            _:expect( testTable:status() ).is( "fail" )
+            _:expect( thisTestInfo:status() ).is( "fail" )
         end)
         
         _:test( "status() returns 'fail' if there are ten true results and one false one", function()
-            local testTable = aBooneUnit:test( "ten true results, one false", function()
+            local thisTestInfo = aBooneUnit:test( "ten true results, one false", function()
                 for i = 1, 5 do
                     aBooneUnit:expect(true).is(true)
                     aBooneUnit:expect(false).is(false)
                 end
                 aBooneUnit:expect(false).is(true)
             end )
-            _:expect( testTable:status() ).is( "fail" )
+            _:expect( thisTestInfo:status() ).is( "fail" )
         end)
 
     end )
