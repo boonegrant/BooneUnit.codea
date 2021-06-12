@@ -113,7 +113,7 @@ function BooneUnit:_continue( thisTest, pendingIndex, scenario )
     table.remove( thisTest.results, pendingIndex )
 end
 
-function BooneUnit:expect( conditional, description ) -- TODO: add name arg
+function BooneUnit:expect( conditional, description ) 
     local thisTest = self._currentTest
     -- Usage check: expect statements must occur inside a test statement
     if thisTest == nil then
@@ -121,7 +121,7 @@ function BooneUnit:expect( conditional, description ) -- TODO: add name arg
         return nil
     end
         
-    local is = function(expected)
+    local is = function(expected, epsilon)
         -- notify(conditional == expected, expected)
         thisTest:registerResult( conditional == expected, conditional, expected, description )
         return(conditional == expected)
