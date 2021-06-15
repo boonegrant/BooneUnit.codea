@@ -57,7 +57,7 @@ end
 
 function BooneUnit:before(setup)
     if self._currentFeature then self._currentFeature.before = setup end
-    -- error message: before and after must be inside a describe: declaration
+    -- error message: before and after must be inside a describe: declaration -- or not
 end
 function BooneUnit:after(teardown)
     if self._currentFeature then self._currentFeature.after = teardown end
@@ -80,11 +80,11 @@ function BooneUnit:test( testDescription, scenario )
     end
     local thisFeature = self._currentFeature or self:_orphanage()
     local thisTest = thisFeature:registerTest( testDescription, scenario )
-    thisFeature:before()
+    thisFeature:before()  -- should be protected to log errors
     self._currentTest = thisTest
     thisTest:run( scenario )
     self._currentTest = nil
-    thisFeature:after()
+    thisFeature:after()  -- should be protected to log errors 
     if not self.silent then
         print( string.format( '#%d %s:test()\n%s', #thisFeature.tests, self.id, thisTest:report() ) )
     end

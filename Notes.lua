@@ -10,6 +10,8 @@ end
 
 --[[
 
+( ) booneUnit:test() should protect and log errors when running :before() and :after()
+
 (X) indicate private data members with underscore (i.e.  "aBooneUnit._tests")
 
 (X) make booneunit a class
