@@ -31,6 +31,7 @@ end
 
 function TallyTerpreter:init( tallyTable )
     tallyTable = tallyTable or {}
+    -- copy the tallyTable
     for key, value in pairs( tallyTable ) do
         self[ key ] = value
     end
@@ -38,7 +39,6 @@ end
 
 -- stringFromFilter
 function TallyTerpreter:stringFromFilter( orderedCategoryTable, separator )
-    orderedFilter = orderedFilter or {}
     separator = separator or "\n" -- Backfill default
     local textTable = {}
     -- assemble tally strings in prefered order

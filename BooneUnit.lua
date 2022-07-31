@@ -318,10 +318,10 @@ function BooneUnit.TestInfo:init( parent, testDescription, scenario )
     self.feature = parent  -- not sure I need this, may be useful for delayed reports
     self.description = tostring(testDescription or "")
     self.results = {}
-    if lineBrake then  -- utility for wrapping console output
+    if lineBrake then  -- utility for wrapping console output, an optional dependency
         self.preWrap = lineBrake.prefixedWrapString
     else
-        self.preWrap = function( someText, numChars, prefix ) 
+        self.preWrap = function( someText, numChars, prefix ) -- no lineBrake, its cool
             return prefix .. someText
         end
     end
