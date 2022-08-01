@@ -37,8 +37,8 @@ function TallyTerpreter:init( tallyTable )
     end
 end
 
--- stringFromFilter
-function TallyTerpreter:stringFromFilter( orderedCategoryTable, separator )
+-- orderedSubsetToString
+function TallyTerpreter:orderedSubsetToString( orderedCategoryTable, separator )
     separator = separator or "\n" -- Backfill default
     local textTable = {}
     -- assemble tally strings in prefered order
@@ -52,11 +52,11 @@ function TallyTerpreter:stringFromFilter( orderedCategoryTable, separator )
 end
 
 function TallyTerpreter:bodyToString( separator )
-    return self:stringFromFilter( self.tallyCategoryOrder, separator )
+    return self:orderedSubsetToString( self.tallyCategoryOrder, separator )
 end
 
 function TallyTerpreter:headerToString( separator )
-    return self:stringFromFilter( self.tallyHeaderOrder, separator )
+    return self:orderedSubsetToString( self.tallyHeaderOrder, separator )
 end
 
 function TallyTerpreter:status()
