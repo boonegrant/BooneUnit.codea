@@ -1,5 +1,5 @@
 BooneUnit = class()
-BooneUnit.id = "BooneUnit"
+BooneUnit.id = "BooneUnit" -- is booneunit class or not?
 BooneUnit._errorMsgs = { 
     testInsideTest = '"BooneUnit:test()" declaration cannot be made inside another "test()" declaration',
     expectWithoutTest = '"BooneUnit:expect()" statements should be placed inside a "test()" declaration',

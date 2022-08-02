@@ -60,6 +60,7 @@ function TallyTerpreter:headerToString( separator )
 end
 
 function TallyTerpreter:status()
+    -- Creates a string summarizing the most signifigant outcome in the tally, also returns associated color .
     if (self.total == 0) then 
         return "No Tests Run", self.tallyStatusColors[ "none" ]
     end 
